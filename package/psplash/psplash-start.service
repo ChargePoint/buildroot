@@ -3,8 +3,14 @@ Description=Starts Psplash Boot screen
 DefaultDependencies=no
 RequiresMountsFor=/run
 
+# Psplash may be installed on some devices without a framebuffer
+# so ensure it existed before starting
+ConditionPathExists=/dev/fb0
+
 [Service]
+Type=notify
 ExecStart=/usr/bin/psplash -n
+RemainAfterExit=yes
 
 [Install]
 WantedBy=sysinit.target

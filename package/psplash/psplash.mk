@@ -4,13 +4,15 @@
 #
 ################################################################################
 
-PSPLASH_VERSION = 44afb7506d43cca15582b4c5b90ba5580344d75d
-PSPLASH_SITE = https://git.yoctoproject.org/psplash
-PSPLASH_SITE_METHOD = git
+PSPLASH_VERSION = c2ded1d016139b74c208bf1d38c63b44e2aa8a02
+PSPLASH_SITE = $(call github,ChargePoint,psplash,$(PSPLASH_VERSION))
 PSPLASH_LICENSE = GPL-2.0+
 PSPLASH_LICENSE_FILES = COPYING
 PSPLASH_AUTORECONF = YES
 PSPLASH_DEPENDENCIES = host-gdk-pixbuf host-pkgconf
+
+PSPLASH_CONF_OPTS += --enable-img-fullscreen
+PSPLASH_CONF_OPTS += --with-font=roboto
 
 ifeq ($(BR2_PACKAGE_SYSTEMD),y)
 PSPLASH_DEPENDENCIES += systemd
@@ -23,7 +25,8 @@ PSPLASH_IMAGE = $(call qstrip,$(BR2_PACKAGE_PSPLASH_IMAGE))
 
 ifneq ($(PSPLASH_IMAGE),)
 define PSPLASH_COPY_IMAGE
-	cp $(PSPLASH_IMAGE) $(@D)/base-images/psplash-poky.png
+	cp $(@D)/base-images/$(PSPLASH_IMAGE) \
+			$(@D)/base-images/psplash-chargepoint.png
 endef
 
 PSPLASH_POST_EXTRACT_HOOKS += PSPLASH_COPY_IMAGE
