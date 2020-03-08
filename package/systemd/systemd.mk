@@ -49,7 +49,8 @@ SYSTEMD_CONF_OPTS += \
 	-Dtelinit-path= \
 	-Dtests=false \
 	-Dumount-path=/usr/bin/umount \
-	-Dutmp=false
+	-Dutmp=false \
+	-Dnobody-group=nogroup
 
 ifeq ($(BR2_PACKAGE_ACL),y)
 SYSTEMD_DEPENDENCIES += acl
