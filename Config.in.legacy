@@ -144,6 +144,18 @@ endif
 
 ###############################################################################
 
+
+comment "Legacy options removed in chargepoint/2020.02"
+
+config BR2_PACKAGE_QT5CANVAS3D
+	bool "qt5canvas3d was removed"
+	select BR2_LEGACY
+	help
+	  This Qt5 module was removed by the upstream Qt project since
+	  Qt 5.13, so the corresponding Buildroot package was removed
+	  as well.
+
+
 comment "Legacy options removed in 2020.02"
 
 config BR2_PACKAGE_JAMVM
