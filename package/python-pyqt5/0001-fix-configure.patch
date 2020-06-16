@@ -1,0 +1,75 @@
+diff -purN PyQt5-5.14.2.orig/configure.py PyQt5-5.14.2/configure.py
+--- PyQt5-5.14.2.orig/configure.py	2020-04-02 07:58:06.029642000 -0700
++++ PyQt5-5.14.2/configure.py	2020-06-15 23:04:49.233814860 -0700
+@@ -1,19 +1,19 @@
+ # This script generates the Makefiles for building PyQt5.
+ #
+ # Copyright (c) 2020 Riverbank Computing Limited <info@riverbankcomputing.com>
+-# 
++#
+ # This file is part of PyQt5.
+-# 
++#
+ # This file may be used under the terms of the GNU General Public License
+ # version 3.0 as published by the Free Software Foundation and appearing in
+ # the file LICENSE included in the packaging of this file.  Please review the
+ # following information to ensure the GNU General Public License version 3.0
+ # requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+-# 
++#
+ # If you do not wish to use this file under the terms of the GPL version 3.0
+ # then you may purchase a commercial license.  For more information contact
+ # info@riverbankcomputing.com.
+-# 
++#
+ # This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+ # WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ 
+@@ -627,7 +627,7 @@ class TargetConfiguration:
+                 self.pyqt_sip_dir)
+         self.pyuic_interpreter = parser.get(section, 'pyuic_interpreter',
+                 self.pyuic_interpreter)
+- 
++
+     def from_introspection(self, verbose, debug):
+         """ Initialise the configuration by introspecting the system. """
+ 
+@@ -709,7 +709,9 @@ class TargetConfiguration:
+         if test is None:
+             error("Failed to determine the detail of your Qt installation. Try again using the --verbose flag to see more detail about the problem.")
+ 
+-        lines = run_test_program('QtCore', test, verbose)
++        # Removing run_test_program since it will never work on a cross platform build.
++        #lines = run_test_program('QtCore', test, verbose)
++        lines = ['shared']
+ 
+         self.qt_shared = (lines[0] == 'shared')
+         self.pyqt_disabled_features = lines[1:]
+@@ -1982,7 +1984,7 @@ def inform_user(target_config, sip_versi
+     the target configuration.  sip_version is the SIP version string.
+     """
+ 
+-    inform("Qt v%s is being used." % 
++    inform("Qt v%s is being used." %
+             version_to_string(target_config.qt_version))
+ 
+     inform("The qmake executable is %s." % target_config.qmake)
+@@ -2805,11 +2807,18 @@ target.files = $$PY_MODULE
+         pro_lines.append('INCLUDEPATH += %s' %
+                 qmake_quote(os.path.relpath(source_path('qpy', mname), mname)))
+ 
++    extra_includes = os.getenv("QMAKE_INCLUDES", None)
++
+     if include_paths:
+         pro_lines.append(
+                 'INCLUDEPATH += ' + ' '.join(
+                         [qmake_quote(p) for p in include_paths]))
+ 
++    if extra_includes:
++        pro_lines.append(
++                'INCLUDEPATH += ' + ' '.join(
++                    [qmake_quote(p) for p in extra_includes.split()]))
++
+     if libs != '':
+         pro_lines.append('LIBS += %s' % libs)
+ 
