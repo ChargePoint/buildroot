@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-PYTHON_SIP_VERSION = 4.18
+PYTHON_SIP_VERSION = 4.19.23
 PYTHON_SIP_SOURCE = sip-$(PYTHON_SIP_VERSION).tar.gz
-PYTHON_SIP_SITE = http://downloads.sourceforge.net/project/pyqt/sip/sip-$(PYTHON_SIP_VERSION)
+PYTHON_SIP_SITE = https://www.riverbankcomputing.com/static/Downloads/sip/$(PYTHON_SIP_VERSION)
 PYTHON_SIP_LICENSE = SIP license or GPL-2.0 or GPL-3.0
 PYTHON_SIP_LICENSE_FILES = LICENSE LICENSE-GPL2 LICENSE-GPL3
 
@@ -44,9 +44,9 @@ define PYTHON_SIP_CONFIGURE_CMDS
 			--destdir $(TARGET_DIR)/$(PYTHON_SIP_LIB_DIR) \
 			--incdir $(STAGING_DIR)/$(PYTHON_SIP_INCLUDE_DIR) \
 			--sipdir $(TARGET_DIR)/usr/share/sip \
-			--sysroot $(STAGING_DIR)/usr \
-			--use-qmake && \
-		$(HOST_DIR)/bin/qmake)
+			--sysroot $(STAGING_DIR)/usr $(TARGET_CONFIGURE_OPTS) \
+			--sip-module PyQt5.sip \
+			LINK=$(TARGET_CXX) LINK_SHLIB=$(TARGET_CXX))
 endef
 
 define PYTHON_SIP_BUILD_CMDS

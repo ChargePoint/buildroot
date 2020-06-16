@@ -3,10 +3,9 @@
 # python-pyqt5
 #
 ################################################################################
-
-PYTHON_PYQT5_VERSION = 5.7
-PYTHON_PYQT5_SOURCE = PyQt5_gpl-$(PYTHON_PYQT5_VERSION).tar.gz
-PYTHON_PYQT5_SITE = http://downloads.sourceforge.net/project/pyqt/PyQt5/PyQt-$(PYTHON_PYQT5_VERSION)
+PYTHON_PYQT5_VERSION = 5.14.2
+PYTHON_PYQT5_SOURCE = PyQt5-$(PYTHON_PYQT5_VERSION).tar.gz
+PYTHON_PYQT5_SITE = https://files.pythonhosted.org/packages/4d/81/b9a66a28fb9a7bbeb60e266f06ebc4703e7e42b99e3609bf1b58ddd232b9
 PYTHON_PYQT5_LICENSE = GPL-3.0
 PYTHON_PYQT5_LICENSE_FILES = LICENSE
 
@@ -152,30 +151,40 @@ PYTHON_PYQT5_CONF_OPTS = \
 	--bindir $(TARGET_DIR)/usr/bin \
 	--destdir $(TARGET_DIR)/usr/lib/$(PYTHON_PYQT5_PYTHON_DIR)/site-packages \
 	--qmake $(HOST_DIR)/bin/qmake \
-	--sysroot $(STAGING_DIR)/usr \
+	--sysroot $(STAGING_DIR) \
 	-w --confirm-license \
 	--no-designer-plugin \
 	--no-docstrings \
 	--no-sip-files \
-	$(foreach module,$(PYTHON_PYQT5_MODULES),--enable=$(module))
+	--verbose
+
+ifneq ($(BR2_PACKAGE_PYTHON_PYQT5_CONFIG),)
+PYTHON_PYQT5_CONF_OPTS += --configuration $(BR2_PACKAGE_PYTHON_PYQT5_CONFIG)
+else
+PYTHON_PYQT5_CONF_OPTS += $(foreach module,$(PYTHON_PYQT5_MODULES),--enable=$(module))
+endif
 
 define PYTHON_PYQT5_CONFIGURE_CMDS
 	$(call PYTHON_PYQT5_GENERATE_QTDETAIL,$(@D))
 	(cd $(@D); \
 		$(TARGET_MAKE_ENV) \
 		$(TARGET_CONFIGURE_OPTS) \
+		QMAKE_INCLUDES=$(STAGING_DIR)/usr/include \
 		$(HOST_DIR)/bin/python configure.py \
 			$(PYTHON_PYQT5_CONF_OPTS) \
 	)
 endef
 
 define PYTHON_PYQT5_BUILD_CMDS
-	$(TARGET_MAKE_ENV) $(TARGET_CONFIGURE_OPTS) $(MAKE) -C $(@D)
+	$(TARGET_MAKE_ENV) $(TARGET_CONFIGURE_OPTS) \
+		QMAKE_INCLUDES=$(STAGING_DIR)/usr/include \
+		$(MAKE) -C $(@D)
 endef
 
 # __init__.py is needed to import PyQt5
 # __init__.pyc is needed if BR2_PACKAGE_PYTHON_PYC_ONLY is set
 define PYTHON_PYQT5_INSTALL_TARGET_CMDS
+	find $(BUILD_DIR)/python-pyqt5-$(PYTHON_PYQT5_VERSION) -iname "*.so" -exec cp {} $(TARGET_DIR)/usr/lib/$(PYTHON_PYQT5_PYTHON_DIR)/site-packages/PyQt5/ \;
 	$(TARGET_MAKE_ENV) $(TARGET_CONFIGURE_OPTS) $(MAKE) -C $(@D) install
 	touch $(TARGET_DIR)/usr/lib/$(PYTHON_PYQT5_PYTHON_DIR)/site-packages/PyQt5/__init__.py
 	$(RM) -rf $(TARGET_DIR)/usr/lib/$(PYTHON_PYQT5_PYTHON_DIR)/site-packages/PyQt5/uic/$(PYTHON_PYQT5_RM_PORT_BASE)
