@@ -1,0 +1,8 @@
+config BR2_PACKAGE_PYTHON_CANOPEN
+	bool "python-canopen"
+
+	help
+	  CanOpen module for python.
+
+	  https://github.com/christiansandberg/canopen
+

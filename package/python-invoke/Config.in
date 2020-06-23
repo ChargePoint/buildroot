@@ -1,0 +1,8 @@
+config BR2_PACKAGE_PYTHON_INVOKE
+	bool "python-invoke"
+	help
+	  invoke module for fabric.
+
+	  https://pypi.org/project/invoke/
+
+	  

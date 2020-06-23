@@ -1,0 +1,39 @@
+From f1cdda89dbbfc4f2ea13b19123a31970f01324f4 Mon Sep 17 00:00:00 2001
+From: Jeff Hart <jeffrey.hart@chargepoint.com>
+Date: Thu, 17 Oct 2019 17:16:07 -0700
+Subject: [PATCH] fix finding udev in buildroot
+
+---
+ src/pyudev/_ctypeslib/utils.py | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/src/pyudev/_ctypeslib/utils.py b/src/pyudev/_ctypeslib/utils.py
+index d10b6c9..c70079c 100644
+--- a/src/pyudev/_ctypeslib/utils.py
++++ b/src/pyudev/_ctypeslib/utils.py
+@@ -29,7 +29,7 @@
+ from __future__ import print_function
+ from __future__ import unicode_literals
+
+-from ctypes import CDLL
++from ctypes import CDLL, cdll
+ from ctypes.util import find_library
+
+
+@@ -53,8 +53,11 @@ def load_ctypes_library(name, signatures, error_checkers):
+     """
+     library_name = find_library(name)
+     if not library_name:
+-        raise ImportError('No library named %s' % name)
+-    lib = CDLL(library_name, use_errno=True)
++        if name == "udev":
++            lib = cdll.LoadLibrary('libudev.so')
++    else:
++        lib = CDLL(library_name, use_errno=True)
++
+     # Add function signatures
+     for funcname, signature in signatures.items():
+         function = getattr(lib, funcname, None)
+--
+2.20.1
+

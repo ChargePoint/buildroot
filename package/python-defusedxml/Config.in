@@ -1,0 +1,8 @@
+config BR2_PACKAGE_PYTHON_DEFUSEDXML
+   bool "python-defusedxml"
+   select BR2_PACKAGE_PYTHON_LXML
+
+   help
+      defusedxml python module
+
+

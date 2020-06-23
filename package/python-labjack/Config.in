@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PYTHON_LABJACK
+	bool "python-labjack"
+	help
+	  Labjack module for Python.
+
+	  https://github.com/labjack/LabJackPython
+
