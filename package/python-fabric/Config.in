@@ -1,0 +1,9 @@
+config BR2_PACKAGE_PYTHON_FABRIC
+	bool "python-fabric"
+	depends on BR2_PACKAGE_PYTHON_INVOKE
+	depends on BR2_PACKAGE_PYTHON_PARAMIKO
+
+	help
+	  Fabric module for paramiko.
+
+	  https://github.com/fabric/fabric

@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PYTHON_PYVISA_PY
+	bool "python-pyvisa-py"
+	select BR2_PACKAGE_PYTHON_SERIAL
+	help
+	  Pure Python Visa module.
+
+	  https://github.com/pyvisa/pyvisa-py

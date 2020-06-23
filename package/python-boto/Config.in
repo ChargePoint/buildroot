@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PYTHON_BOTO
+	bool "python-boto"
+	help
+	  Amazon Web Services Library.
+
+	  https://github.com/boto/boto/
