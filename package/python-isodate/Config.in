@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PYTHON_ISODATE
+	bool "python-isodate"
+	help
+	  isodate python module
+
