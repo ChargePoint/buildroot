@@ -1,0 +1,43 @@
+--- a/include/tap++/tap++.h	2020-06-25 21:03:09.350022893 -0700
++++ b/include/tap++/tap++.h	2020-06-26 09:17:04.377749021 -0700
+@@ -371,5 +371,40 @@
+ 
+ #endif /* WANT_TEST_EXTRAS */
+ 
++/* ChargePoint: add yaml block
++ *
++ * YAML_BLOCK_START(message, severity);
++ * yaml_line(key, value, indent);
++ * YAML_BLOCK_END();
++ *
++ *     ---
++ *     message: <msg>
++ *     severity: comment | warn | fail
++ *     data:
++ *         <key>: <value>
++ *         <key>: <value>
++ *         .
++ *         .
++ *     ...
++ */
++#define YAML_BLOCK_START(message, severity)                                        \
++    do {                                                                           \
++        std::cout << std::string(4, ' ') << "---" << std::endl;                    \
++        std::cout << std::string(4, ' ') << "message: " << message << std::endl;   \
++        std::cout << std::string(4, ' ') << "severity: " << severity << std::endl; \
++        std::cout << std::string(4, ' ') << "data: " << std::endl;                 \
++    } while(0);
++
++/* Caller manages the indent level.
++ * This function simply pre-pends 4 spaces per indent (default indent:2)
++ */
++template<class T>
++static inline void yaml_line(const std::string &key, const T &val, int indent = 2)
++{
++    std::cout << std::string(indent * 4, ' ') << key << ": " << val << std::endl;
++}
++
++#define YAML_BLOCK_END()    std::cout << std::string(4, ' ') << "..." << std::endl
++/* ChargePoint: end yaml block */
+ 
+ #endif /* LIB_TAPPP_TAPPP_H */

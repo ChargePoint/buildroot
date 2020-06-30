@@ -1,0 +1,34 @@
+--- a/src/tap++.cpp	2020-06-25 20:09:58.389883301 -0700
++++ b/src/tap++.cpp	2020-06-25 21:00:12.006015135 -0700
+@@ -102,20 +102,28 @@
+ 	}
+ 
+ 	int exit_status() throw () {
++		int ret;
+ //		bool passing;
+ 		if (!is_planned && encountered()) {
+ 			diag("Tests were run but no plan was declared and done_testing() was not seen.");
+ 		}
+ 		if (no_planned) {
+ 			output_plan(encountered());
+-			return std::min(254u, not_oks);
++			ret = std::min(254u, not_oks);
+ 		}
+ 		else if (expected == counter) {
+-			return std::min(254u, not_oks);
++			ret = std::min(254u, not_oks);
+ 		}
+ 		else {
+-			return 255;
++			ret = 255;
+ 		}
++		/* Reset state so testapp can start new test-suit (i.e call plan again)
++		 * w/o terminating. Test-suit must call exit_status explicitly or use
++		 * TEST_START/TEST_END block.
++		 */
++		is_planned = has_output_plan = false;
++		expected = not_oks = counter = 0;
++		return ret;
+ 	}
+ 	bool summary() throw() {
+ 		return (not_oks != 0);
