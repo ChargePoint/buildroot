@@ -1,0 +1,8 @@
+config BR2_PACKAGE_PYTHON_HVAC
+	bool "python-hvac"
+	select BR2_PACKAGE_PYTHON_REQUESTS
+	select BR2_PACKAGE_PYTHON_SIX
+	help
+	  HashiCorp Vault API client.
+
+	  https://github.com/hvac/hvac
