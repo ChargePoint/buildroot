@@ -4,12 +4,14 @@
 #
 ################################################################################
 
-PSPLASH_VERSION = fd33a9b3d68c89fa22ff6873f4f9fd28bd85830c
-PSPLASH_SITE = git://git.yoctoproject.org/psplash
+PSPLASH_VERSION = f6ac8b7b263dc7d07cc9b60e7592f7e11325fb0a
+PSPLASH_SITE = $(call github,ChargePoint,psplash,$(PSPLASH_VERSION))
 PSPLASH_LICENSE = GPL-2.0+
 PSPLASH_LICENSE_FILES = COPYING
 PSPLASH_AUTORECONF = YES
 PSPLASH_DEPENDENCIES = host-gdk-pixbuf host-pkgconf
+
+PSPLASH_CONF_OPTS += --with-font=roboto
 
 ifeq ($(BR2_PACKAGE_SYSTEMD),y)
 PSPLASH_DEPENDENCIES += systemd
