@@ -11,6 +11,7 @@ PSPLASH_LICENSE_FILES = COPYING
 PSPLASH_AUTORECONF = YES
 PSPLASH_DEPENDENCIES = host-gdk-pixbuf host-pkgconf
 
+PSPLASH_CONF_OPTS += --enable-img-fullscreen
 PSPLASH_CONF_OPTS += --with-font=roboto
 
 ifeq ($(BR2_PACKAGE_SYSTEMD),y)
