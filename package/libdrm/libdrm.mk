@@ -93,6 +93,12 @@ else
 LIBDRM_CONF_OPTS += -Dvc4=false
 endif
 
+ifeq ($(BR2_PACKAGE_LIBDRM_VIVANTE),y)
+LIBDRM_CONF_OPTS += -Dvivante=true
+else
+LIBDRM_CONF_OPTS += -Dvivante=false
+endif
+
 ifeq ($(BR2_PACKAGE_HAS_UDEV),y)
 LIBDRM_CONF_OPTS += -Dudev=true
 LIBDRM_DEPENDENCIES += udev
