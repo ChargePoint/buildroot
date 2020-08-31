@@ -4,6 +4,56 @@
 #
 ################################################################################
 
+ifeq ($(BR2_PACKAGE_FREESCALE_IMX_GSTREAMER),y)
+GST1_IMX_VERSION = 4d2e5c1547c5f8a5e4e26a034ab87c809b34fb54
+GST1_IMX_SOURCE = imx-gst1.0-plugin-$(GST1_IMX_VERSION).tar.gz
+GST1_IMX_SITE = https://source.codeaurora.org/external/imx/imx-gst1.0-plugin
+GST1_IMX_SITE_METHOD = git
+GST1_IMX_LICENSE = GPL-2.0, LGPL-2.0, LGPL-2.1+
+GST1_IMX_LICENSE_FILES = COPYING-LGPL-2, COPYING-LGPL-2.1
+GST1_IMX_DEPENDENCIES += \
+	host-pkgconf \
+	libdrm \
+	gstreamer1 \
+	gst1-plugins-base \
+	gst1-plugins-bad
+
+# git, no configure
+GST1_IMX_AUTORECONF = YES
+
+GST1_IMX_PLATFORM = $(call qstrip,$(BR2_PACKAGE_IMX_GST1_0_PLUGIN_PLATFORM))
+GST1_IMX_CONF_OPTS += PLATFORM=$(GST1_IMX_PLATFORM)
+
+ifeq ($(BR2_LINUX_KERNEL),y)
+GST1_IMX_DEPENDENCIES += linux
+GST1_IMX_CPPFLAGS += \
+	-I$(LINUX_DIR)/include/uapi -I${LINUX_DIR}/include
+endif
+
+ifeq ($(BR2_PACKAGE_IMX_CODEC),y)
+GST1_IMX_DEPENDENCIES += imx-codec
+endif
+
+ifeq ($(BR2_PACKAGE_IMX_GPU_VIV),y)
+GST1_IMX_DEPENDENCIES += imx-gpu-viv
+
+ifneq ($(IMX_GPU_VIV_LIB_TARGET),x11)
+GST1_IMX_CONF_OPTS += --disable-x11
+endif
+endif
+
+ifeq ($(BR2_PACKAGE_IMX_GPU_G2D),y)
+GST1_IMX_DEPENDENCIES += imx-gpu-g2d
+endif
+
+ifeq ($(BR2_PACKAGE_WAYLAND),y)
+GST1_IMX_DEPENDENCIES += wayland
+endif
+
+$(eval $(autotools-package))
+
+else # BR2_PACKAGE_FREESCALE_IMX_GSTREAMER
+
 GST1_IMX_VERSION = 0.13.1
 GST1_IMX_SITE = $(call github,Freescale,gstreamer-imx,$(GST1_IMX_VERSION))
 
@@ -102,3 +152,4 @@ GST1_IMX_CONF_OPTS += --disable-imxv4l2videosink
 endif
 
 $(eval $(waf-package))
+endif # BR2_PACKAGE_FREESCALE_IMX_GSTREAMER

@@ -117,6 +117,21 @@ if BR2_PACKAGE_FREESCALE_IMX_HAS_VIV_GPU
 source "package/freescale-imx/imx-gpu-g2d/Config.in"
 source "package/freescale-imx/imx-gpu-viv/Config.in"
 source "package/freescale-imx/kernel-module-imx-gpu-viv/Config.in"
+
+config BR2_PACKAGE_FREESCALE_IMX_GSTREAMER
+	bool "imx-gstreamer"
+	default y
+	help
+	  Configuration to force using the NXP forks for the gstreamer
+	  packages from CodeAurora instead of freedesktop.
+
+	  Check the "gstreamer" recipes for the changes
+	  https://source.codeaurora.org/external/imx/gstreamer
+	  https://source.codeaurora.org/external/imx/gst-plugins-base
+	  https://source.codeaurora.org/external/imx/gst-plugins-bad
+	  https://source.codeaurora.org/external/imx/gst-plugins-good
+	  https://source.codeaurora.org/external/imx/imx-gst1.0-plugin
+
 endif
 
 endif
