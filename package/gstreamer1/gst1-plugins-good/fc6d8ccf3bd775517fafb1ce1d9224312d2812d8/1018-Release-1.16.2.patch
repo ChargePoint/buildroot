@@ -1,0 +1,613 @@
+From ce0723527aa37d5f4d19ef8021c0b2eb8f83b08d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Tim-Philipp=20M=C3=BCller?= <tim@centricular.com>
+Date: Tue, 3 Dec 2019 11:06:36 +0000
+Subject: [PATCH 1018/1018] Release 1.16.2
+
+---
+ ChangeLog             | 240 ++++++++++++++++++++++++++++++++++++++++++
+ NEWS                  | 206 +++++++++++++++++++++++++++++++++---
+ RELEASE               |   2 +-
+ configure.ac          |   8 +-
+ gst-plugins-good.doap |  10 ++
+ meson.build           |   2 +-
+ 6 files changed, 447 insertions(+), 21 deletions(-)
+
+diff --git a/ChangeLog b/ChangeLog
+index 6fd5cfd4b..ad9153367 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -1,3 +1,243 @@
++=== release 1.16.2 ===
++
++2019-12-03 11:06:36 +0000  Tim-Philipp Müller <tim@centricular.com>
++
++	* ChangeLog:
++	* NEWS:
++	* RELEASE:
++	* configure.ac:
++	* gst-plugins-good.doap:
++	* meson.build:
++	  Release 1.16.2
++
++2019-12-03 11:06:35 +0000  Tim-Philipp Müller <tim@centricular.com>
++
++	* docs/plugins/gst-plugins-good-plugins.args:
++	* docs/plugins/inspect/plugin-1394.xml:
++	* docs/plugins/inspect/plugin-aasink.xml:
++	* docs/plugins/inspect/plugin-alaw.xml:
++	* docs/plugins/inspect/plugin-alpha.xml:
++	* docs/plugins/inspect/plugin-alphacolor.xml:
++	* docs/plugins/inspect/plugin-apetag.xml:
++	* docs/plugins/inspect/plugin-audiofx.xml:
++	* docs/plugins/inspect/plugin-audioparsers.xml:
++	* docs/plugins/inspect/plugin-auparse.xml:
++	* docs/plugins/inspect/plugin-autodetect.xml:
++	* docs/plugins/inspect/plugin-avi.xml:
++	* docs/plugins/inspect/plugin-cacasink.xml:
++	* docs/plugins/inspect/plugin-cairo.xml:
++	* docs/plugins/inspect/plugin-cutter.xml:
++	* docs/plugins/inspect/plugin-debug.xml:
++	* docs/plugins/inspect/plugin-deinterlace.xml:
++	* docs/plugins/inspect/plugin-dtmf.xml:
++	* docs/plugins/inspect/plugin-dv.xml:
++	* docs/plugins/inspect/plugin-effectv.xml:
++	* docs/plugins/inspect/plugin-equalizer.xml:
++	* docs/plugins/inspect/plugin-flac.xml:
++	* docs/plugins/inspect/plugin-flv.xml:
++	* docs/plugins/inspect/plugin-flxdec.xml:
++	* docs/plugins/inspect/plugin-gdkpixbuf.xml:
++	* docs/plugins/inspect/plugin-goom.xml:
++	* docs/plugins/inspect/plugin-goom2k1.xml:
++	* docs/plugins/inspect/plugin-gtk.xml:
++	* docs/plugins/inspect/plugin-icydemux.xml:
++	* docs/plugins/inspect/plugin-id3demux.xml:
++	* docs/plugins/inspect/plugin-imagefreeze.xml:
++	* docs/plugins/inspect/plugin-interleave.xml:
++	* docs/plugins/inspect/plugin-isomp4.xml:
++	* docs/plugins/inspect/plugin-jack.xml:
++	* docs/plugins/inspect/plugin-jpeg.xml:
++	* docs/plugins/inspect/plugin-lame.xml:
++	* docs/plugins/inspect/plugin-level.xml:
++	* docs/plugins/inspect/plugin-matroska.xml:
++	* docs/plugins/inspect/plugin-mpg123.xml:
++	* docs/plugins/inspect/plugin-mulaw.xml:
++	* docs/plugins/inspect/plugin-multifile.xml:
++	* docs/plugins/inspect/plugin-multipart.xml:
++	* docs/plugins/inspect/plugin-navigationtest.xml:
++	* docs/plugins/inspect/plugin-oss4.xml:
++	* docs/plugins/inspect/plugin-ossaudio.xml:
++	* docs/plugins/inspect/plugin-png.xml:
++	* docs/plugins/inspect/plugin-pulseaudio.xml:
++	* docs/plugins/inspect/plugin-qmlgl.xml:
++	* docs/plugins/inspect/plugin-replaygain.xml:
++	* docs/plugins/inspect/plugin-rtp.xml:
++	* docs/plugins/inspect/plugin-rtpmanager.xml:
++	* docs/plugins/inspect/plugin-rtsp.xml:
++	* docs/plugins/inspect/plugin-shapewipe.xml:
++	* docs/plugins/inspect/plugin-shout2.xml:
++	* docs/plugins/inspect/plugin-smpte.xml:
++	* docs/plugins/inspect/plugin-soup.xml:
++	* docs/plugins/inspect/plugin-spectrum.xml:
++	* docs/plugins/inspect/plugin-speex.xml:
++	* docs/plugins/inspect/plugin-taglib.xml:
++	* docs/plugins/inspect/plugin-twolame.xml:
++	* docs/plugins/inspect/plugin-udp.xml:
++	* docs/plugins/inspect/plugin-video4linux2.xml:
++	* docs/plugins/inspect/plugin-videobox.xml:
++	* docs/plugins/inspect/plugin-videocrop.xml:
++	* docs/plugins/inspect/plugin-videofilter.xml:
++	* docs/plugins/inspect/plugin-videomixer.xml:
++	* docs/plugins/inspect/plugin-vpx.xml:
++	* docs/plugins/inspect/plugin-wavenc.xml:
++	* docs/plugins/inspect/plugin-wavpack.xml:
++	* docs/plugins/inspect/plugin-wavparse.xml:
++	* docs/plugins/inspect/plugin-ximagesrc.xml:
++	* docs/plugins/inspect/plugin-y4menc.xml:
++	  Update docs
++
++2019-12-03 11:06:34 +0000  Tim-Philipp Müller <tim@centricular.com>
++
++	* po/hu.po:
++	  Update translations
++
++2016-11-30 15:55:01 +0100  Havard Graff <havard.graff@gmail.com>
++
++	* gst/rtp/gstrtpL16depay.c:
++	  rtpL16depay: don't crash if data is not modulo channels*width
++
++2019-11-29 20:46:26 +0900  Seungha Yang <seungha.yang@navercorp.com>
++
++	* ext/vpx/gstvp9dec.c:
++	  vp9dec: Fix broken 4:4:4 8bits decoding
++	  VPX_IMG_FMT_I444 pixel format with sRGB colorspace means
++	  GBR data.
++	  Fixes: https://gitlab.freedesktop.org/gstreamer/gst-plugins-good/issues/651
++
++2019-11-29 14:23:49 +0100  Havard Graff <havard@pexip.com>
++
++	* gst/rtpmanager/gstrtpsession.c:
++	* tests/check/elements/rtpsession.c:
++	  rtpsession: add locking for clear-pt-map
++	  ...or it will segfault from time to time...
++
++2019-08-19 07:30:17 +0000  Amr Mahdi <amramahdi@gmail.com>
++
++	* gst/wavparse/gstwavparse.c:
++	  wavparse: Fix push mode ignoring audio with a size smaller than segment buffer
++	  In push mode (streaming), if the audio size is smaller than segment buffer size, it would be ignored.
++	  This happens because when the plugin receives an EOS signal while a single audio chunk that is less than the segment buffer size is buffered, it does not
++	  flush this chunk. The fix is to flush the data chunk when it receives an EOS signal and has a single (first) chunk buffered.
++	  How to reproduce:
++	  1. Run gst-launch with tcp source
++	  ```
++	  gst-launch-1.0  tcpserversrc port=3000 !  wavparse ignore-length=0 ! audioconvert ! filesink location=bug.wav
++	  ```
++	  2. Send a wav file with unspecified data chunk length (0). Attached a test file
++	  ```
++	  cat test.wav | nc localhost 3000
++	  ```
++	  3. Compare the length of the source file and output file
++	  ```
++	  ls -l test.wav bug.wav
++	  -rw-rw-r-- 1 amr amr    0 Aug 15 11:07 bug.wav
++	  -rwxrwxr-x 1 amr amr 3564 Aug 15 11:06 test.wav
++	  ```
++	  The expected length of the result of the gst-lauch pipeline should be the same as the test file minus the headers (44), which is ```3564 - 44 = 3520``` but the actual output length is ```0```
++	  After the fix:
++	  ```
++	  ls -l test.wav fix.wav
++	  -rw-rw-r-- 1 amr amr 3520 Aug 15 11:09 fix.wav
++	  -rwxrwxr-x 1 amr amr 3564 Aug 15 11:06 test.wav
++	  ```
++
++2019-08-07 12:09:46 +0000  Amr Mahdi <amramahdi@gmail.com>
++
++	* gst/wavparse/gstwavparse.c:
++	  wavparse: Fix ignoring of last chunk in push mode
++	  In push mode (streaming), if the last audio payload chunk is less than the segment rate buffer size, it would be ignored since the plugin waits until it has at least segment rate bufer size of audio.
++	  The fix is to introduce a flushing flag that indicates that no more audio will be available so that the plugin can recognize this condition and flush the data is has even if it is less
++	  than the desired segment rate buffer size.
++
++2018-10-17 02:28:13 +0000  Nicolas Dufresne <nicolas@ndufresne.ca>
++
++	* sys/v4l2/gstv4l2bufferpool.c:
++	* sys/v4l2/gstv4l2bufferpool.h:
++	  v4l2bufferpool: Queue number of allocated buffers to capture
++	  Before we do streamon, we queue all capture buffers by calling
++	  resurrect. When the driver supports CREATE_BUFS, this would lead
++	  to buffers being allocated till the maximum of 32 is reached.
++	  Instead, we now save the number of allocated buffers and queue this
++	  amount.
++
++2019-11-18 13:27:42 -0500  Nicolas Dufresne <nicolas.dufresne@collabora.com>
++
++	* sys/v4l2/gstv4l2object.c:
++	  v4l2object: Workaround bad TRY_FMT colorimetry implementation
++	  libv4l2 reset the colorpace to 0 and does not do any request to the
++	  driver. This yields an invalid colorspace which currently cause a
++	  negotiation failure. This workaround by ignoring bad values during the
++	  TRY_FMT step.
++
++2019-11-04 17:18:30 +0800  aogun <gun.ao@magewell.com>
++
++	* gst/audioparsers/gstaacparse.c:
++	  aacparse: fix wrong offset of adts channel
++
++2019-09-12 15:21:24 -0400  Scott Kanowitz <skanowitz@echo360.com>
++
++	* ext/jpeg/gstjpegdec.c:
++	  jpegdec: Fix incorrect logic in EOI tag detection
++	  This change fixes the reversed logic in the EOI tag detection
++	  code.
++
++2019-11-12 17:28:22 -0500  Nicolas Dufresne <nicolas.dufresne@collabora.com>
++
++	* gst/videocrop/gstvideocrop.c:
++	  videocrop: Also update the coordinate when in-place
++	  This update is needed when the output caps is not changed (e.g. we are
++	  moving a viewport around).
++	  Fixes #669
++
++2019-11-05 21:41:55 +0530  Nirbheek Chauhan <nirbheek@centricular.com>
++
++	* ext/vpx/meson.build:
++	  vpx: Error out if enabled and no features found
++	  See: https://gitlab.freedesktop.org/gstreamer/cerbero/issues/200
++
++2018-11-07 09:00:02 +0100  Michael Olbrich <m.olbrich@pengutronix.de>
++
++	* ext/jpeg/gstjpegdec.c:
++	* ext/jpeg/gstjpegdec.h:
++	  jpegdec: don't overwrite the last valid line
++	  If the the height is not a multiple of the macro block size then the memory
++	  of the last line is reused for all extra lines. This is no problem if the
++	  last line is duplicated properly. However, if the extra lines are not
++	  initialized properly during encoding, then the last visible line is
++	  overwritten with undefined data.
++	  Use a extra buffer to avoid this problem.
++
++2019-10-29 14:05:48 +0000  James Cowgill <james.cowgill@thinci.com>
++
++	* sys/v4l2/gstv4l2videodec.c:
++	  v4l2videodec: ensure pool exists before orphaning it
++	  In commit e2ff87732d0b ("v4l2videodec: support orphaning") support for
++	  orphaning the capture buffer pool was added when the format is
++	  renegotiated. However, the commit forgot to check that a pool existed
++	  before doing this. This is needed because it's possible for the format
++	  to be renegotiated before a capture pool is allocated, which would
++	  result in trying to orphan a NULL pool and lead to a NULL pointer
++	  dereference.
++	  Fix this by checking a pool exists first. If the pool doesn't exist,
++	  there are no buffers to be reclaimed, so skip the allocation query in
++	  that case.
++
++2019-09-25 12:36:32 +0000  HuQian <huqian123hq@hotmail.com>
++
++	* sys/v4l2/gstv4l2object.c:
++	  is a typo here? gstv4l2object.c
++
++2019-10-13 12:46:58 +0100  Tim-Philipp Müller <tim@centricular.com>
++
++	* sys/v4l2/gstv4l2videoenc.c:
++	  v4l2videoenc: fix wrong type cast
++	  Follow-up to commit 1b752c0f !361
++
++2019-10-11 10:33:20 +0800  Fuwei Tang <fuweix.tang@intel.com>
++
++	* sys/v4l2/gstv4l2videoenc.c:
++	  v4l2videoenc: fix type conversion errors
++
+ === release 1.16.1 ===
+ 
+ 2019-09-23 11:09:38 +0100  Tim-Philipp Müller <tim@centricular.com>
+diff --git a/NEWS b/NEWS
+index c93be83e6..98dc512e6 100644
+--- a/NEWS
++++ b/NEWS
+@@ -5,13 +5,13 @@ GSTREAMER 1.16 RELEASE NOTES
+ 
+ GStreamer 1.16.0 was originally released on 19 April 2019.
+ 
+-The latest bug-fix release in the 1.16 series is 1.16.1 and was released
+-on 23 September 2019.
++The latest bug-fix release in the 1.16 series is 1.16.2 and was released
++on 3 December 2019.
+ 
+ See https://gstreamer.freedesktop.org/releases/1.16/ for the latest
+ version of this document.
+ 
+-_Last updated: Sunday 22 September 2019, 21:00 UTC (log)_
++_Last updated: Tuesday 03 December 2019, 08:00 UTC (log)_
+ 
+ 
+ Introduction
+@@ -142,9 +142,9 @@ Support for Planar (Non-Interleaved) Raw Audio
+ 
+ Raw audio samples are usually passed around in interleaved form in
+ GStreamer, which means that if there are multiple audio channels the
+-samples for each channel are interleaved in memory, e.g.
+-|LEFT|RIGHT|LEFT|RIGHT|LEFT|RIGHT| for stereo audio. A non-interleaved
+-or planar arrangement in memory would look like
++samples for each channel are interleaved in memory,
++e.g. |LEFT|RIGHT|LEFT|RIGHT|LEFT|RIGHT| for stereo audio. A
++non-interleaved or planar arrangement in memory would look like
+ |LEFT|LEFT|LEFT|RIGHT|RIGHT|RIGHT| instead, possibly with
+ |LEFT|LEFT|LEFT| and |RIGHT|RIGHT|RIGHT| residing in separate memory
+ chunks or separated by some padding.
+@@ -243,7 +243,7 @@ New Elements
+     GstVideoOverlayCompositions on a stream. The element will emit the
+     "draw" signal for each video buffer, and the application then
+     generates an overlay for that frame (or not). This is much more
+-    performant than e.g. cairooverlay for many use cases, e.g. because
++    performant than e.g. cairooverlay for many use cases, e.g. because
+     pixel format conversions can be avoided or the blitting of the
+     overlay can be delegated to downstream elements (such as
+     gloverlaycompositor). It’s particularly useful for cases where only
+@@ -336,7 +336,7 @@ New element features and additions
+ 
+     -   "reset-muxer" property: when unset, the muxer is reset using
+         flush events instead of setting its state to NULL and back. This
+-        means the muxer can keep state across resets, e.g. mpegtsmux
++        means the muxer can keep state across resets, e.g. mpegtsmux
+         will keep the continuity counter continuous across segments as
+         required by hlssink2.
+ 
+@@ -700,9 +700,9 @@ Tracing framework and debugging improvements
+ -   There is now a GDB PRETTY PRINTER FOR VARIOUS GSTREAMER TYPES: For
+     GstObject pointers the type and name is added, e.g.
+     0x5555557e4110 [GstDecodeBin|decodebin0]. For GstMiniObject pointers
+-    the object type is added, e.g. 0x7fffe001fc50 [GstBuffer]. For
++    the object type is added, e.g. 0x7fffe001fc50 [GstBuffer]. For
+     GstClockTime and GstClockTimeDiff the time is also printed in human
+-    readable form, e.g. 150116219955 [+0:02:30.116219955].
++    readable form, e.g. 150116219955 [+0:02:30.116219955].
+ 
+ -   GDB EXTENSION WITH TWO CUSTOM GDB COMMANDS gst-dot AND gst-print:
+ 
+@@ -1044,7 +1044,7 @@ Changed
+ -   Rust 1.31 is the minimum supported Rust version now
+ -   Update to latest gir code generator and glib bindings
+ 
+--   Functions returning e.g. gst::FlowReturn or other “combined” enums
++-   Functions returning e.g. gst::FlowReturn or other “combined” enums
+     were changed to return split enums like
+     Result<gst::FlowSuccess, gst::FlowError> to allow usage of the
+     standard Rust error handling.
+@@ -1388,7 +1388,8 @@ Highlighted bugfixes in 1.16.1
+ -   decklinkaudiosink: Drop late buffers
+ -   openh264enc: Fix compilation with openh264 v2.0
+ -   wasapisrc: fix segtotal value being always 2
+--   Fix issues on Android Q
++-   android: Fix gnutls issue causing a FORTIFY crash on Android Q
++-   windows: Fix two crashes due to cross-CRT free when using MSVC
+ 
+ gstreamer core
+ 
+@@ -1698,6 +1699,182 @@ List of merge requests and issues fixed in 1.16.1
+ -   List of Merge Requests applied in 1.16
+ -   List of Issues fixed in 1.16.1
+ 
++1.16.2
++
++The second 1.16 bug-fix release (1.16.2) was released on 03 December
++2019.
++
++This release only contains bugfixes and it _should_ be safe to update
++from 1.16.1.
++
++Highlighted bugfixes in 1.16.2
++
++-   Interlaced video scaling fixes
++-   CineForm video support in AVI
++-   audioresample: avoid glitches due to rounding errors after changing
++    rate
++-   Command line tool output printing improvements on Windows
++-   various performance improvements, memory leak fixes and security
++    fixes
++-   VP9 decoding fixes
++-   avfvideosrc: Explicitly request video permission on macOS 10.14+
++-   wasapi: bug fixes and stability improvements
++-   webrtc-audio-processing: fix segmentation fault on 32-bit windows
++-   tsdemux: improved handling of certain discontinuities
++-   vaapi h265 decoder: wait for I-frame before trying to decode
++
++gstreamer
++
++-   gst-launch: Fix ugly stdout on Windows
++-   tee: Make sure to actually deactivate pads that are released
++-   bin: Drop need-context messages without source instead of crashing
++-   gst: Don’t pass miniobjects to GST_DEBUG_OBJECT() and similar macros
++-   tracers: Don’t leak temporary GstStructure
++
++gst-plugins-base
++
++-   xvimagepool: Update size, stride, and offset with allocated XvImage
++-   video-converter: Fix RGB-XYZ-RGB conversion
++-   audiorate: Update next_offset on rate change
++-   audioringbuffer: Reset reorder flag before check
++-   audio-buffer: Don’t fail to map buffers with zero samples
++-   videorate: Fix max-duplication-time handling
++-   gl/gbm: ensure we call the resize callback before attempting to draw
++-   video-converter: Various fixes for interlaced scaling
++-   gstrtspconnection: messages_bytes not decreased
++-   check: Don’t use real audio devices for tests
++-   riff: add CineForm mapping
++-   glfilters: Don’t use static variables for storing per-element state
++-   glupload: Add VideoMetas and GLSyncMeta to the raw uploaded buffers
++-   streamsynchronizer: avoid pad release race during logging.
++-   gst-play: Use gst_print* to avoid broken stdout string on Windows
++
++gst-plugins-good
++
++-   vp9dec: Fix broken 4:4:4 8bits decoding
++-   rtpsession: add locking for clear-pt-map
++-   rtpL16depay: don’t crash if data is not modulo channels*width
++-   wavparse: Fix push mode ignoring audio with a size smaller than
++    segment buffer
++-   wavparse: Fix push mode ignoring last audio payload chunk
++-   aacparse: fix wrong offset of the channel number in adts header
++-   jpegdec: Fix incorrect logic in EOI tag detection
++-   videocrop: Also update the coordinate when in-place
++-   jpegdec: don’t overwrite the last valid line
++-   vpx: Error out if enabled and no features found
++-   v4l2videodec: ensure pool exists before orphaning it
++-   v4l2videoenc: fix type conversion errors
++-   v4l2bufferpool: Queue number of allocated buffers to capture
++-   v4l2object: fix mpegversion number typo
++-   v4l2object: Work around bad TRY_FMT colorimetry implementations
++
++gst-plugins-bad
++
++-   avfvideosrc: Explicitly request video permission on macOS 10.14+
++-   wasapi: Various fixes and a workaround for a specific driver bug
++-   wasapi: Move to CoInitializeEx for COM initialization
++-   wasapi: Fix runtime/build warnings
++-   waylandsink: Commit the parent after creating subsurface
++-   msdkdec: fix surface leak in msdkdec_handle_frame
++-   tsmux: Fix copying of buffer region
++-   tsdemux: Handle continuity mismatch in more cases
++-   tsdemux: Always issue a DTS even when it’s equal to PTS
++-   openexr: Fix build with OpenEXR 2.4 (and also OpenEXR 2.2 on Ubuntu
++    18.04)
++-   ccextractor: Always forward all sticky events to the caption pad
++-   pnmdec: Return early on ::finish() if we have no actual data to
++    parse
++-   ass: avoid infinite unref loop with bad data
++-   fluidsynth: add sf3 to soundfont search path
++-   webrtcdsp/webrtcechoprobe segmentation fault on windows (1.16.0 x86)
++
++gst-libav
++
++-   avvidenc: Fix error propagation
++-   avdemux: Fix segmentation fault if long_name is NULL
++-   avviddec: Fix huge leak caused by circular reference
++-   avviddec: Enforce allocate new AVFrame per input frame
++-   avdec_mpeg2video (and probably more): Huge memory leak in git master
++
++gst-rtsp-server
++
++-   rtsp-media: Use lock in gst_rtsp_media_is_receive_only
++-   rtsp-client: RTP Info when completed_sender
++-   rtsp-client: fix location uri-format by getting uri directly from
++    context instead
++
++gstreamer-vaapi
++
++-   meson build: halt configuration if no renderer API
++-   libs: decoder: h265: skip all pictures prior the first I-frame
++-   libs: window: x11: Avoid usage of deprecated API
++
++gst-editing-services
++
++-   Initialize debug categories before usage
++
++gst-build
++
++-   gst-env: Use locally built GStreamer utility programs
++
++Cerbero build tool and packaging changes in 1.16.2
++
++General
++
++-   openssl: Update to 1.1.1d
++-   Updated ffmpeg, expat, flac, freetype, croco, ogg, xml2, mpg123,
++    openjpeg, opus, pixman, speex, tiff recipes
++-   Fix setting of git credentials in local source repos
++
++Windows
++
++-   webrtc-audio-processing: fix segmentation fault on 32-bit windows
++    with webrtcdsp/webrtcechoprobe elemens
++-   vpx plugin has no features when built with Visual Studio 2019
++-   libvpx: Add support for Visual Studio 2019
++-   mingw-runtime.recipe: Correctly package pkg-config in the MSI
++-   GIO doesn’t load any modules on Windows with MSVC, which breaks TLS
++    support since glib-networking’s giognutls module isn’t loaded
++-   Make the instructions for running Cerbero the same on all platforms
++
++macOS + iOS
++
++-   Add support for macOS 10.15 Catalina
++-   Updates for Xcode 11
++-   macos/ios: expose objc++ compilers in env variables
++-   srt.recipe: Fix crash in constructor on iOS
++-   osx-framework.recipe: Dynamically generate the list of libraries and
++    ship pkg-config
++-   macos: add -mmacosx-version-min for framework
++-   gstreamer-1.0-osx-framework.recipe contains an outdated hard-coded
++    list of libraries
++-   We need to ship pkg-config with macOS
++
++Linux
++
++-   Fix filesprovider.find_shlib_regex when a lib_suffix is used in the
++    cerbero config file
++
++Contributors to 1.16.2
++
++Adam Nilsson, Amr Mahdi, Angus Ao, Charlie Turner, Edward Hervey, Fabian
++Greffrath, Fuwei Tang, Havard Graff, Hu Qian, James Cowgill, Jan
++Alexander Steffens (heftig), Jeffy Chen, Jeremy Lempereur, Joakim
++Johansson, Jochen Henneberg, Julien Isorce, Kevin Joly, Kristofer
++Bjorkstrom, Kyrylo Polezhaiev, Matthew Waters, Michael Olbrich, Muhammet
++Ilendemli, Nicolas Dufresne, Nirbheek Chauhan, Pablo Marcos Oltra, Roman
++Shpuntov, Ruben Gonzalez, Scott Kanowitz, Sebastian Dröge, Seungha Yang,
++Thibault Saunier, Tim-Philipp Müller, Víctor Manuel Jáquez Leal, Vivia
++Nikolaidou,
++
++… and many others who have contributed bug reports, translations, sent
++suggestions or helped testing. Thank you all!
++
++List of merge requests and issues fixed in 1.16.2
++
++-   List of Merge Requests applied in 1.16
++-   List of Issues fixed in 1.16.2
++
+ 
+ Known Issues
+ 
+@@ -1721,9 +1898,8 @@ unstable development version leading up to the stable 1.18 release. The
+ development of 1.17/1.18 will happen in the git master branch.
+ 
+ The plan for the 1.18 development cycle is yet to be confirmed, but it
+-is now expected that feature freeze will take place shortly after the
+-GStreamer conference/hackfest in early November 2019, with the first
+-1.18 stable release ready in late November or early December.
++is now expected that feature freeze will take place in December 2019,
++with the first 1.18 stable release ready in late January or February.
+ 
+ 1.18 will be backwards-compatible to the stable 1.16, 1.14, 1.12, 1.10,
+ 1.8, 1.6, 1.4, 1.2 and 1.0 release series.
+diff --git a/RELEASE b/RELEASE
+index 9054eb09b..e6d67760f 100644
+--- a/RELEASE
++++ b/RELEASE
+@@ -1,4 +1,4 @@
+-This is GStreamer gst-plugins-good 1.16.1.
++This is GStreamer gst-plugins-good 1.16.2.
+ 
+ The GStreamer team is pleased to announce another bug-fix release in the
+ stable 1.x API series of your favourite cross-platform multimedia framework!
+diff --git a/configure.ac b/configure.ac
+index 18cf08927..56a09e846 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
+ dnl initialize autoconf
+ dnl releases only do -Wall, git and prerelease does -Werror too
+ dnl use a three digit version number for releases, and four for git/pre
+-AC_INIT([GStreamer Good Plug-ins],[1.16.1],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-good])
++AC_INIT([GStreamer Good Plug-ins],[1.16.2],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-good])
+ 
+ AG_GST_INIT
+ 
+@@ -46,11 +46,11 @@ AC_DEFINE_UNQUOTED(GST_API_VERSION, "$GST_API_VERSION",
+   [GStreamer API Version])
+ 
+ AG_GST_LIBTOOL_PREPARE
+-AS_LIBTOOL(GST, 1601, 0, 1601)
++AS_LIBTOOL(GST, 1602, 0, 1602)
+ 
+ dnl *** required versions of GStreamer stuff ***
+-GST_REQ=1.16.1
+-GSTPB_REQ=1.16.1
++GST_REQ=1.16.2
++GSTPB_REQ=1.16.2
+ 
+ dnl *** autotools stuff ****
+ 
+diff --git a/gst-plugins-good.doap b/gst-plugins-good.doap
+index 3251fc47c..c267c07a5 100644
+--- a/gst-plugins-good.doap
++++ b/gst-plugins-good.doap
+@@ -32,6 +32,16 @@ the plug-in code, LGPL or LGPL-compatible for the supporting library).
+    </GitRepository>
+  </repository>
+ 
++ <release>
++  <Version>
++   <revision>1.16.2</revision>
++   <branch>1.16</branch>
++   <name></name>
++   <created>2019-12-03</created>
++   <file-release rdf:resource="https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.16.2.tar.xz" />
++  </Version>
++ </release>
++
+  <release>
+   <Version>
+    <revision>1.16.1</revision>
+diff --git a/meson.build b/meson.build
+index 2c6f560a2..3a422ce84 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1,5 +1,5 @@
+ project('gst-plugins-good', 'c',
+-  version : '1.16.1',
++  version : '1.16.2',
+   meson_version : '>= 0.47',
+   default_options : [ 'warning_level=1',
+                       'buildtype=debugoptimized' ])
+-- 
+2.17.1
+

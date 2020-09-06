@@ -1,0 +1,24 @@
+From 20d7d5d8fb4d07bab9063ccb8f1270f1a042e8a1 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Tim-Philipp=20M=C3=BCller?= <tim@centricular.com>
+Date: Tue, 8 Oct 2019 19:35:49 +0100
+Subject: [PATCH 1004/1024] pbutils: add description for CineForm codec
+
+---
+ gst-libs/gst/pbutils/descriptions.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/gst-libs/gst/pbutils/descriptions.c b/gst-libs/gst/pbutils/descriptions.c
+index 7ea4a00c6..d79a6cc67 100644
+--- a/gst-libs/gst/pbutils/descriptions.c
++++ b/gst-libs/gst/pbutils/descriptions.c
+@@ -194,6 +194,7 @@ static const FormatInfo formats[] = {
+   {"video/x-camtasia", "TechSmith Camtasia", FLAG_VIDEO, ""},
+   {"video/x-cavs", "Chinese AVS (CAVS)", FLAG_VIDEO, ""},
+   {"video/x-cdxa", "RIFF/CDXA (VCD)", AV_CONTAINER, ""},
++  {"video/x-cineform", "CineForm", FLAG_VIDEO, ""},
+   {"video/x-cinepak", "Cinepak Video", FLAG_VIDEO, ""},
+   {"video/x-cirrus-logic-accupak", "Cirrus Logipak AccuPak", FLAG_VIDEO, ""},
+   {"video/x-compressed-yuv", N_("CYUV Lossless"), FLAG_VIDEO, ""},
+-- 
+2.17.1
+

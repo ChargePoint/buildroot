@@ -1,0 +1,101 @@
+From 758cc680dc07d176b3e68de7dbbcd827d0d748f3 Mon Sep 17 00:00:00 2001
+From: Seungha Yang <seungha.yang@navercorp.com>
+Date: Fri, 8 Nov 2019 17:28:44 +0900
+Subject: [PATCH 1020/1024] xvimagepool: Update size, stride, and offset with
+ allocated XvImage
+
+Memory layout of XvImage might be different from that of GstVideoInfo.
+If so, the image size, stride, and offset would be wrongly informed.
+
+Fixes: https://gitlab.freedesktop.org/gstreamer/gst-plugins-base/issues/677
+---
+ sys/xvimage/xvimagepool.c | 44 +++++++++++++++++++++++++++++++++++++--
+ sys/xvimage/xvimagepool.h |  3 +++
+ 2 files changed, 45 insertions(+), 2 deletions(-)
+
+diff --git a/sys/xvimage/xvimagepool.c b/sys/xvimage/xvimagepool.c
+index 75479279b..c933048f8 100644
+--- a/sys/xvimage/xvimagepool.c
++++ b/sys/xvimage/xvimagepool.c
+@@ -128,6 +128,39 @@ xvimage_buffer_pool_set_config (GstBufferPool * pool, GstStructure * config)
+   xvpool->crop.w = xvpool->info.width;
+   xvpool->crop.h = xvpool->info.height;
+ 
++  /* update offset, stride and size with actual xvimage buffer */
++  if (xvpool->pre_alloc_mem)
++    gst_memory_unref (xvpool->pre_alloc_mem);
++
++  xvpool->pre_alloc_mem = gst_xvimage_allocator_alloc (xvpool->allocator,
++      xvpool->im_format, &info, xvpool->padded_width,
++      xvpool->padded_height, &xvpool->crop, NULL);
++
++  if (!xvpool->pre_alloc_mem) {
++    GST_ERROR_OBJECT (pool, "couldn't allocate image");
++    gst_structure_free (config);
++    return FALSE;
++  } else {
++    gint i;
++    XvImage *img;
++
++    img = gst_xvimage_memory_get_xvimage ((GstXvImageMemory *)
++        xvpool->pre_alloc_mem);
++
++    info.size = img->data_size;
++
++    for (i = 0; i < img->num_planes; i++) {
++      info.stride[i] = img->pitches[i];
++      info.offset[i] = img->offsets[i];
++    }
++
++    if (!gst_video_info_is_equal (&xvpool->info, &info) ||
++        xvpool->info.size != info.size) {
++      GST_WARNING_OBJECT (pool, "different size, stride and/or offset, update");
++      xvpool->info = info;
++    }
++  }
++
+   gst_buffer_pool_config_set_params (config, caps, info.size, min_buffers,
+       max_buffers);
+ 
+@@ -173,8 +206,13 @@ xvimage_buffer_pool_alloc (GstBufferPool * pool, GstBuffer ** buffer,
+ 
+   xvimage = gst_buffer_new ();
+ 
+-  mem = gst_xvimage_allocator_alloc (xvpool->allocator, xvpool->im_format,
+-      info, xvpool->padded_width, xvpool->padded_height, &xvpool->crop, &err);
++  if (xvpool->pre_alloc_mem) {
++    mem = xvpool->pre_alloc_mem;
++    xvpool->pre_alloc_mem = NULL;
++  } else {
++    mem = gst_xvimage_allocator_alloc (xvpool->allocator, xvpool->im_format,
++        info, xvpool->padded_width, xvpool->padded_height, &xvpool->crop, &err);
++  }
+ 
+   if (mem == NULL) {
+     gst_buffer_unref (xvimage);
+@@ -243,6 +281,8 @@ gst_xvimage_buffer_pool_finalize (GObject * object)
+ 
+   GST_LOG_OBJECT (pool, "finalize XvImage buffer pool %p", pool);
+ 
++  if (pool->pre_alloc_mem)
++    gst_memory_unref (pool->pre_alloc_mem);
+   if (pool->caps)
+     gst_caps_unref (pool->caps);
+   if (pool->allocator)
+diff --git a/sys/xvimage/xvimagepool.h b/sys/xvimage/xvimagepool.h
+index 9c788d952..212066fc1 100644
+--- a/sys/xvimage/xvimagepool.h
++++ b/sys/xvimage/xvimagepool.h
+@@ -50,6 +50,9 @@ struct _GstXvImageBufferPool
+   guint padded_height;
+   gboolean add_metavideo;
+   gboolean need_alignment;
++
++  /* used for calculating actual size, stride, and offset */
++  GstMemory *pre_alloc_mem;
+ };
+ 
+ struct _GstXvImageBufferPoolClass
+-- 
+2.17.1
+

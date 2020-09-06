@@ -1,0 +1,25 @@
+From 52caa50feb3d145c1c67f68b34a77d1646b2c8d0 Mon Sep 17 00:00:00 2001
+From: aogun <gun.ao@magewell.com>
+Date: Mon, 4 Nov 2019 17:18:30 +0800
+Subject: [PATCH 1008/1018] aacparse: fix wrong offset of adts channel
+
+---
+ gst/audioparsers/gstaacparse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gst/audioparsers/gstaacparse.c b/gst/audioparsers/gstaacparse.c
+index ad81a5468..3c1675538 100644
+--- a/gst/audioparsers/gstaacparse.c
++++ b/gst/audioparsers/gstaacparse.c
+@@ -1237,7 +1237,7 @@ gst_aac_parse_prepend_adts_headers (GstAacParse * aacparse,
+   adts_headers[0] = 0xFFU;
+   adts_headers[1] = 0xF0U | (id << 3) | 0x1U;
+   adts_headers[2] = (profile << 6) | (sampling_frequency_index << 2) | 0x2U |
+-      (channel_configuration & 0x4U);
++      ((channel_configuration & 0x4U) >> 2);
+   adts_headers[3] = ((channel_configuration & 0x3U) << 6) | 0x30U |
+       (guint8) (frame_size >> 11);
+   adts_headers[4] = (guint8) ((frame_size >> 3) & 0x00FF);
+-- 
+2.17.1
+

@@ -1,0 +1,30 @@
+From 94a1e5a8c3e16ca17cc419ae1db8661b9b38de25 Mon Sep 17 00:00:00 2001
+From: Jeffy Chen <jeffy.chen@rock-chips.com>
+Date: Mon, 25 Nov 2019 19:08:48 +0800
+Subject: [PATCH 1013/1024] waylandsink: Commit the parent after creating
+ subsurface
+
+We should commit the parent to activate new subsurface, this is
+documented in the protocol.
+
+Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+---
+ ext/wayland/wlwindow.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/ext/wayland/wlwindow.c b/ext/wayland/wlwindow.c
+index 9ebbcaf4b..3249d8ec6 100644
+--- a/ext/wayland/wlwindow.c
++++ b/ext/wayland/wlwindow.c
+@@ -344,6 +344,8 @@ gst_wl_window_new_in_surface (GstWlDisplay * display,
+       window->area_surface, parent);
+   wl_subsurface_set_desync (window->area_subsurface);
+ 
++  wl_surface_commit (parent);
++
+   return window;
+ }
+ 
+-- 
+2.17.1
+

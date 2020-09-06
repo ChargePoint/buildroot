@@ -1,0 +1,81 @@
+From 9f50cd49cb2050a1b6396f5eb71af3655699bf97 Mon Sep 17 00:00:00 2001
+From: Amr Mahdi <amramahdi@gmail.com>
+Date: Wed, 7 Aug 2019 12:09:46 +0000
+Subject: [PATCH 1011/1018] wavparse: Fix ignoring of last chunk in push mode
+
+In push mode (streaming), if the last audio payload chunk is less than the segment rate buffer size, it would be ignored since the plugin waits until it has at least segment rate bufer size of audio.
+
+The fix is to introduce a flushing flag that indicates that no more audio will be available so that the plugin can recognize this condition and flush the data is has even if it is less
+than the desired segment rate buffer size.
+---
+ gst/wavparse/gstwavparse.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
+
+diff --git a/gst/wavparse/gstwavparse.c b/gst/wavparse/gstwavparse.c
+index 22ed04287..42734559b 100644
+--- a/gst/wavparse/gstwavparse.c
++++ b/gst/wavparse/gstwavparse.c
+@@ -1972,7 +1972,7 @@ gst_wavparse_add_src_pad (GstWavParse * wav, GstBuffer * buf)
+ }
+ 
+ static GstFlowReturn
+-gst_wavparse_stream_data (GstWavParse * wav)
++gst_wavparse_stream_data (GstWavParse * wav, gboolean flushing)
+ {
+   GstBuffer *buf = NULL;
+   GstFlowReturn res = GST_FLOW_OK;
+@@ -2054,10 +2054,21 @@ iterate_adapter:
+ 
+     if (avail < desired) {
+       GST_LOG_OBJECT (wav, "Got only %u bytes of data from the sinkpad", avail);
+-      return GST_FLOW_OK;
+-    }
+ 
+-    buf = gst_adapter_take_buffer (wav->adapter, desired);
++      /* If we are at the end of the stream, we need to flush whatever we have left */
++      if (avail > 0 && flushing) {
++        if (avail >= wav->blockalign && wav->blockalign > 0) {
++          avail -= (avail % wav->blockalign);
++          buf = gst_adapter_take_buffer (wav->adapter, avail);
++        } else {
++          return GST_FLOW_OK;
++        }
++      } else {
++        return GST_FLOW_OK;
++      }
++    } else {
++      buf = gst_adapter_take_buffer (wav->adapter, desired);
++    }
+   } else {
+     if ((res = gst_pad_pull_range (wav->sinkpad, wav->offset,
+                 desired, &buf)) != GST_FLOW_OK)
+@@ -2237,7 +2248,7 @@ gst_wavparse_loop (GstPad * pad)
+       /* fall-through */
+ 
+     case GST_WAVPARSE_DATA:
+-      if ((ret = gst_wavparse_stream_data (wav)) != GST_FLOW_OK)
++      if ((ret = gst_wavparse_stream_data (wav, FALSE)) != GST_FLOW_OK)
+         goto pause;
+       break;
+     default:
+@@ -2337,7 +2348,7 @@ gst_wavparse_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
+     case GST_WAVPARSE_DATA:
+       if (buf && GST_BUFFER_FLAG_IS_SET (buf, GST_BUFFER_FLAG_DISCONT))
+         wav->discont = TRUE;
+-      if ((ret = gst_wavparse_stream_data (wav)) != GST_FLOW_OK)
++      if ((ret = gst_wavparse_stream_data (wav, FALSE)) != GST_FLOW_OK)
+         goto done;
+       break;
+     default:
+@@ -2361,7 +2372,7 @@ gst_wavparse_flush_data (GstWavParse * wav)
+   guint av;
+ 
+   if ((av = gst_adapter_available (wav->adapter)) > 0) {
+-    ret = gst_wavparse_stream_data (wav);
++    ret = gst_wavparse_stream_data (wav, TRUE);
+   }
+ 
+   return ret;
+-- 
+2.17.1
+

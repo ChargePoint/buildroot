@@ -1,0 +1,46 @@
+From 3997224eb440c60d41852bb5cfe6e7ab879992df Mon Sep 17 00:00:00 2001
+From: Seungha Yang <seungha.yang@navercorp.com>
+Date: Thu, 7 Nov 2019 22:00:03 +0900
+Subject: [PATCH 1017/1024] audiorate: Update next_offset per rate change
+
+To support runtime audio samplerate change, re-calculate next target offset
+per caps. Calculating the next buffer offset using the previous
+offset seems to be tricky and rounding error prone.
+
+Fixes: https://gitlab.freedesktop.org/gstreamer/gst-plugins-base/issues/693
+---
+ gst/audiorate/gstaudiorate.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/gst/audiorate/gstaudiorate.c b/gst/audiorate/gstaudiorate.c
+index eceeed2ad..30a5d6ffd 100644
+--- a/gst/audiorate/gstaudiorate.c
++++ b/gst/audiorate/gstaudiorate.c
+@@ -216,12 +216,24 @@ static gboolean
+ gst_audio_rate_setcaps (GstAudioRate * audiorate, GstCaps * caps)
+ {
+   GstAudioInfo info;
++  gint prev_rate = 0;
+ 
+   if (!gst_audio_info_from_caps (&info, caps))
+     goto wrong_caps;
+ 
++  prev_rate = audiorate->info.rate;
+   audiorate->info = info;
+ 
++  if (audiorate->next_offset >= 0 && prev_rate > 0 && prev_rate != info.rate) {
++    GST_DEBUG_OBJECT (audiorate,
++        "rate changed from %d to %d", prev_rate, info.rate);
++
++    /* calculate next_offset based on new rate value */
++    audiorate->next_offset =
++        gst_util_uint64_scale_int_round (audiorate->next_ts,
++        info.rate, GST_SECOND);
++  }
++
+   return TRUE;
+ 
+   /* ERRORS */
+-- 
+2.17.1
+

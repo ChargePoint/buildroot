@@ -1,0 +1,49 @@
+From 5f92188a1ed42c8cf0b41f7f7e83bceb88803a6e Mon Sep 17 00:00:00 2001
+From: Nirbheek Chauhan <nirbheek@centricular.com>
+Date: Mon, 25 Nov 2019 21:25:43 +0530
+Subject: [PATCH 1018/1024] wasapisrc: Try harder to avoid debug output in the
+ hot loop
+
+The whole `src_read()` function is a hot loop since the ringbuffer
+thread is waiting on us, and printing to the console from inside it
+can easily cause us to miss our deadline.
+
+F.ex., if you had GST_DEBUG=3 and we accidentally missed a device
+period, we'd trigger the "reported glitch" warning, which would cause
+us to miss another device period, and so on. Let's reduce the log
+level so that GST_DEBUG=3 is more usable, and only print buffer flag
+info when it's actually relevant.
+---
+ sys/wasapi/gstwasapisrc.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/sys/wasapi/gstwasapisrc.c b/sys/wasapi/gstwasapisrc.c
+index cd70448ce..63357c1ef 100644
+--- a/sys/wasapi/gstwasapisrc.c
++++ b/sys/wasapi/gstwasapisrc.c
+@@ -611,15 +611,17 @@ gst_wasapi_src_read (GstAudioSrc * asrc, gpointer data, guint length,
+           goto err);
+     }
+ 
+-    if (flags != 0)
+-      GST_INFO_OBJECT (self, "buffer flags=%#08x", (guint) flags);
+-
+     /* XXX: How do we handle AUDCLNT_BUFFERFLAGS_SILENT? We're supposed to write
+      * out silence when that flag is set? See:
+      * https://msdn.microsoft.com/en-us/library/windows/desktop/dd370800(v=vs.85).aspx */
+ 
+-    if (flags & AUDCLNT_BUFFERFLAGS_DATA_DISCONTINUITY)
+-      GST_WARNING_OBJECT (self, "WASAPI reported glitch in buffer");
++    if (G_UNLIKELY (flags != 0)) {
++      /* https://docs.microsoft.com/en-us/windows/win32/api/audioclient/ne-audioclient-_audclnt_bufferflags */
++      if (flags & AUDCLNT_BUFFERFLAGS_DATA_DISCONTINUITY)
++        GST_DEBUG_OBJECT (self, "WASAPI reported discontinuity (glitch?)");
++      if (flags & AUDCLNT_BUFFERFLAGS_TIMESTAMP_ERROR)
++        GST_DEBUG_OBJECT (self, "WASAPI reported a timestamp error");
++    }
+ 
+     /* Copy all the frames we got into the adapter, and then extract at most
+      * @wanted size of frames from it. This helps when ::GetBuffer returns more
+-- 
+2.17.1
+

@@ -1,0 +1,59 @@
+From fe014ec6d9c115092098e4917755394cf7ead921 Mon Sep 17 00:00:00 2001
+From: Amr Mahdi <amramahdi@gmail.com>
+Date: Mon, 19 Aug 2019 07:30:17 +0000
+Subject: [PATCH 1012/1018] wavparse: Fix push mode ignoring audio with a size
+ smaller than segment buffer
+
+In push mode (streaming), if the audio size is smaller than segment buffer size, it would be ignored.
+This happens because when the plugin receives an EOS signal while a single audio chunk that is less than the segment buffer size is buffered, it does not
+flush this chunk. The fix is to flush the data chunk when it receives an EOS signal and has a single (first) chunk buffered.
+
+How to reproduce:
+1. Run gst-launch with tcp source
+```
+gst-launch-1.0  tcpserversrc port=3000 !  wavparse ignore-length=0 ! audioconvert ! filesink location=bug.wav
+```
+2. Send a wav file with unspecified data chunk length (0). Attached a test file
+```
+cat test.wav | nc localhost 3000
+```
+3. Compare the length of the source file and output file
+```
+ls -l test.wav bug.wav
+-rw-rw-r-- 1 amr amr    0 Aug 15 11:07 bug.wav
+-rwxrwxr-x 1 amr amr 3564 Aug 15 11:06 test.wav
+```
+
+The expected length of the result of the gst-lauch pipeline should be the same as the test file minus the headers (44), which is ```3564 - 44 = 3520``` but the actual output length is ```0```
+
+After the fix:
+```
+ls -l test.wav fix.wav
+-rw-rw-r-- 1 amr amr 3520 Aug 15 11:09 fix.wav
+-rwxrwxr-x 1 amr amr 3564 Aug 15 11:06 test.wav
+```
+---
+ gst/wavparse/gstwavparse.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/gst/wavparse/gstwavparse.c b/gst/wavparse/gstwavparse.c
+index 42734559b..3c11b2713 100644
+--- a/gst/wavparse/gstwavparse.c
++++ b/gst/wavparse/gstwavparse.c
+@@ -2494,10 +2494,10 @@ gst_wavparse_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
+         if (G_UNLIKELY (wav->first)) {
+           wav->first = FALSE;
+           gst_wavparse_add_src_pad (wav, NULL);
+-        } else {
+-          /* stream leftover data in current segment */
+-          gst_wavparse_flush_data (wav);
+         }
++
++        /* stream leftover data in current segment */
++        gst_wavparse_flush_data (wav);
+       }
+ 
+       /* fall-through */
+-- 
+2.17.1
+

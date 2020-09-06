@@ -1,0 +1,41 @@
+From 999d8beaa7296ca444269acb8fd8567c269ab490 Mon Sep 17 00:00:00 2001
+From: Seungha Yang <seungha.yang@navercorp.com>
+Date: Fri, 29 Nov 2019 20:46:26 +0900
+Subject: [PATCH 1014/1018] vp9dec: Fix broken 4:4:4 8bits decoding
+
+VPX_IMG_FMT_I444 pixel format with sRGB colorspace means
+GBR data.
+
+Fixes: https://gitlab.freedesktop.org/gstreamer/gst-plugins-good/issues/651
+---
+ ext/vpx/gstvp9dec.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/ext/vpx/gstvp9dec.c b/ext/vpx/gstvp9dec.c
+index 69bb0fbd5..ff194be71 100644
+--- a/ext/vpx/gstvp9dec.c
++++ b/ext/vpx/gstvp9dec.c
+@@ -74,7 +74,7 @@ static GstStaticPadTemplate gst_vp9_dec_src_template =
+ GST_STATIC_PAD_TEMPLATE ("src",
+     GST_PAD_SRC,
+     GST_PAD_ALWAYS,
+-    GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE ("{ I420, YV12, Y42B, Y444 }"))
++    GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE ("{ I420, YV12, Y42B, Y444, GBR }"))
+     );
+ 
+ #define parent_class gst_vp9_dec_parent_class
+@@ -145,7 +145,10 @@ gst_vp9_dec_get_valid_format (GstVPXDec * dec, vpx_image_t * img,
+       return TRUE;
+ 
+     case VPX_IMG_FMT_I444:
+-      *fmt = GST_VIDEO_FORMAT_Y444;
++      if (img->cs == VPX_CS_SRGB)
++        *fmt = GST_VIDEO_FORMAT_GBR;
++      else
++        *fmt = GST_VIDEO_FORMAT_Y444;
+       return TRUE;
+ #ifdef VPX_IMG_FMT_I440
+     case VPX_IMG_FMT_I440:
+-- 
+2.17.1
+

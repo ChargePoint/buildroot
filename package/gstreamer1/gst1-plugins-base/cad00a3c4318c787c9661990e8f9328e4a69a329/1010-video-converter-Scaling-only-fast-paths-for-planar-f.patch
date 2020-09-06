@@ -1,0 +1,112 @@
+From 3c17461787c9a474796ae0a8a76909782463c832 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Sebastian=20Dr=C3=B6ge?= <sebastian@centricular.com>
+Date: Mon, 21 Oct 2019 17:40:35 +0300
+Subject: [PATCH 1010/1024] video-converter: Scaling-only fast-paths for planar
+ formats are keeping interlacing
+
+So we can also use them for interlaced content and speed up scaling a
+bit.
+---
+ gst-libs/gst/video/video-converter.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/gst-libs/gst/video/video-converter.c b/gst-libs/gst/video/video-converter.c
+index 47d8dfc3e..3040c205d 100644
+--- a/gst-libs/gst/video/video-converter.c
++++ b/gst-libs/gst/video/video-converter.c
+@@ -6312,9 +6312,9 @@ static const VideoTransform transforms[] = {
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_AYUV_Y444},
+ 
+   /* planar -> planar */
+-  {GST_VIDEO_FORMAT_I420, GST_VIDEO_FORMAT_I420, FALSE, FALSE, FALSE, TRUE,
++  {GST_VIDEO_FORMAT_I420, GST_VIDEO_FORMAT_I420, TRUE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+-  {GST_VIDEO_FORMAT_I420, GST_VIDEO_FORMAT_YV12, FALSE, FALSE, FALSE, TRUE,
++  {GST_VIDEO_FORMAT_I420, GST_VIDEO_FORMAT_YV12, TRUE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+   {GST_VIDEO_FORMAT_I420, GST_VIDEO_FORMAT_Y41B, FALSE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+@@ -6331,9 +6331,9 @@ static const VideoTransform transforms[] = {
+   {GST_VIDEO_FORMAT_I420, GST_VIDEO_FORMAT_YVU9, FALSE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+ 
+-  {GST_VIDEO_FORMAT_YV12, GST_VIDEO_FORMAT_I420, FALSE, FALSE, FALSE, TRUE,
++  {GST_VIDEO_FORMAT_YV12, GST_VIDEO_FORMAT_I420, TRUE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+-  {GST_VIDEO_FORMAT_YV12, GST_VIDEO_FORMAT_YV12, FALSE, FALSE, FALSE, TRUE,
++  {GST_VIDEO_FORMAT_YV12, GST_VIDEO_FORMAT_YV12, TRUE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+   {GST_VIDEO_FORMAT_YV12, GST_VIDEO_FORMAT_Y41B, FALSE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+@@ -6354,7 +6354,7 @@ static const VideoTransform transforms[] = {
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+   {GST_VIDEO_FORMAT_Y41B, GST_VIDEO_FORMAT_YV12, FALSE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+-  {GST_VIDEO_FORMAT_Y41B, GST_VIDEO_FORMAT_Y41B, FALSE, FALSE, FALSE, TRUE,
++  {GST_VIDEO_FORMAT_Y41B, GST_VIDEO_FORMAT_Y41B, TRUE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+   {GST_VIDEO_FORMAT_Y41B, GST_VIDEO_FORMAT_Y42B, FALSE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+@@ -6375,7 +6375,7 @@ static const VideoTransform transforms[] = {
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+   {GST_VIDEO_FORMAT_Y42B, GST_VIDEO_FORMAT_Y41B, FALSE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+-  {GST_VIDEO_FORMAT_Y42B, GST_VIDEO_FORMAT_Y42B, FALSE, FALSE, FALSE, TRUE,
++  {GST_VIDEO_FORMAT_Y42B, GST_VIDEO_FORMAT_Y42B, TRUE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+   {GST_VIDEO_FORMAT_Y42B, GST_VIDEO_FORMAT_Y444, FALSE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+@@ -6396,7 +6396,7 @@ static const VideoTransform transforms[] = {
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+   {GST_VIDEO_FORMAT_Y444, GST_VIDEO_FORMAT_Y42B, FALSE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+-  {GST_VIDEO_FORMAT_Y444, GST_VIDEO_FORMAT_Y444, FALSE, FALSE, FALSE, TRUE,
++  {GST_VIDEO_FORMAT_Y444, GST_VIDEO_FORMAT_Y444, TRUE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+   {GST_VIDEO_FORMAT_Y444, GST_VIDEO_FORMAT_GRAY8, FALSE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+@@ -6417,7 +6417,7 @@ static const VideoTransform transforms[] = {
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+   {GST_VIDEO_FORMAT_GRAY8, GST_VIDEO_FORMAT_Y444, FALSE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+-  {GST_VIDEO_FORMAT_GRAY8, GST_VIDEO_FORMAT_GRAY8, FALSE, FALSE, FALSE, TRUE,
++  {GST_VIDEO_FORMAT_GRAY8, GST_VIDEO_FORMAT_GRAY8, TRUE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+   {GST_VIDEO_FORMAT_GRAY8, GST_VIDEO_FORMAT_A420, FALSE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, TRUE, FALSE, 0, 0, convert_scale_planes},
+@@ -6438,7 +6438,7 @@ static const VideoTransform transforms[] = {
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+   {GST_VIDEO_FORMAT_A420, GST_VIDEO_FORMAT_GRAY8, FALSE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+-  {GST_VIDEO_FORMAT_A420, GST_VIDEO_FORMAT_A420, FALSE, FALSE, FALSE, TRUE,
++  {GST_VIDEO_FORMAT_A420, GST_VIDEO_FORMAT_A420, TRUE, FALSE, FALSE, TRUE,
+       TRUE, TRUE, FALSE, FALSE, 0, 0, convert_scale_planes},
+   {GST_VIDEO_FORMAT_A420, GST_VIDEO_FORMAT_YUV9, FALSE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+@@ -6459,9 +6459,9 @@ static const VideoTransform transforms[] = {
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+   {GST_VIDEO_FORMAT_YUV9, GST_VIDEO_FORMAT_A420, FALSE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, TRUE, FALSE, 0, 0, convert_scale_planes},
+-  {GST_VIDEO_FORMAT_YUV9, GST_VIDEO_FORMAT_YUV9, FALSE, FALSE, FALSE, TRUE,
++  {GST_VIDEO_FORMAT_YUV9, GST_VIDEO_FORMAT_YUV9, TRUE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+-  {GST_VIDEO_FORMAT_YUV9, GST_VIDEO_FORMAT_YVU9, FALSE, FALSE, FALSE, TRUE,
++  {GST_VIDEO_FORMAT_YUV9, GST_VIDEO_FORMAT_YVU9, TRUE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+ 
+   {GST_VIDEO_FORMAT_YVU9, GST_VIDEO_FORMAT_I420, FALSE, FALSE, FALSE, TRUE,
+@@ -6478,9 +6478,9 @@ static const VideoTransform transforms[] = {
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+   {GST_VIDEO_FORMAT_YVU9, GST_VIDEO_FORMAT_A420, FALSE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, TRUE, FALSE, 0, 0, convert_scale_planes},
+-  {GST_VIDEO_FORMAT_YVU9, GST_VIDEO_FORMAT_YUV9, FALSE, FALSE, FALSE, TRUE,
++  {GST_VIDEO_FORMAT_YVU9, GST_VIDEO_FORMAT_YUV9, TRUE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+-  {GST_VIDEO_FORMAT_YVU9, GST_VIDEO_FORMAT_YVU9, FALSE, FALSE, FALSE, TRUE,
++  {GST_VIDEO_FORMAT_YVU9, GST_VIDEO_FORMAT_YVU9, TRUE, FALSE, FALSE, TRUE,
+       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+ 
+   /* sempiplanar -> semiplanar */
+-- 
+2.17.1
+

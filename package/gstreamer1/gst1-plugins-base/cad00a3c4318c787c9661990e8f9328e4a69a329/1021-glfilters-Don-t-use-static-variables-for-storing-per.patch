@@ -1,0 +1,336 @@
+From 07a4ce3e1c6da029d9f68a59c76f6a87fba76229 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Sebastian=20Dr=C3=B6ge?= <sebastian@centricular.com>
+Date: Wed, 2 Oct 2019 23:21:09 +0300
+Subject: [PATCH 1021/1024] glfilters: Don't use static variables for storing
+ per-element state
+
+---
+ ext/gl/effects/gstgleffectblur.c | 19 ++++++++++++-------
+ ext/gl/gstglbumper.c             | 19 +++++++++----------
+ ext/gl/gstglbumper.h             |  1 +
+ ext/gl/gstglfiltercube.c         | 23 +++++++++++++----------
+ ext/gl/gstglfiltercube.h         |  2 ++
+ ext/gl/gstglfilterglass.c        | 19 +++++++++----------
+ ext/gl/gstglfilterglass.h        |  1 +
+ ext/gl/gstglmosaic.c             | 27 +++++++++++++++++----------
+ ext/gl/gstglmosaic.h             |  1 +
+ 9 files changed, 65 insertions(+), 47 deletions(-)
+
+diff --git a/ext/gl/effects/gstgleffectblur.c b/ext/gl/effects/gstgleffectblur.c
+index 074519ad4..1aa03b1f5 100644
+--- a/ext/gl/effects/gstgleffectblur.c
++++ b/ext/gl/effects/gstgleffectblur.c
+@@ -25,19 +25,24 @@
+ 
+ #include "../gstgleffects.h"
+ 
++static gpointer
++init_kernel (gpointer data)
++{
++  float *kernel = g_malloc (sizeof (gfloat) * 9);
++  fill_gaussian_kernel (kernel, 7, 3.f);
++  return kernel;
++}
++
+ static float *
+ gst_gl_effects_blur_kernel (void)
+ {
+   /* gaussian kernel (well, actually vector), size 9, standard
+    * deviation 3.0 */
+   /* FIXME: make this a runtime property */
+-  static gfloat *kernel = NULL;
+-  if (G_UNLIKELY (NULL == kernel)) {
+-    /* 3x3 matrix */
+-    kernel = g_malloc (sizeof (gfloat) * 9);
+-    fill_gaussian_kernel (kernel, 7, 3.f);
+-  }
+-  return kernel;
++  static GOnce my_once = G_ONCE_INIT;
++
++  g_once (&my_once, init_kernel, NULL);
++  return my_once.retval;
+ }
+ 
+ void
+diff --git a/ext/gl/gstglbumper.c b/ext/gl/gstglbumper.c
+index 2b7bd6ed5..dbf01bacd 100644
+--- a/ext/gl/gstglbumper.c
++++ b/ext/gl/gstglbumper.c
+@@ -321,6 +321,9 @@ gst_gl_bumper_reset (GstGLFilter * filter)
+   if (bumper_filter->shader)
+     gst_gl_context_del_shader (filter->context, bumper_filter->shader);
+   bumper_filter->shader = NULL;
++  bumper_filter->xrot = 0.0;
++  bumper_filter->yrot = 0.0;
++  bumper_filter->zrot = 0.0;
+ }
+ 
+ static void
+@@ -399,10 +402,6 @@ typedef struct _MeshData
+ static void
+ gst_gl_bumper_callback (gint width, gint height, guint texture, gpointer stuff)
+ {
+-  static GLfloat xrot = 0;
+-  static GLfloat yrot = 0;
+-  static GLfloat zrot = 0;
+-
+   GstGLFuncs *gl;
+   GstGLBumper *bumper = GST_GL_BUMPER (stuff);
+   GstGLContext *context = GST_GL_FILTER (bumper)->context;
+@@ -501,9 +500,9 @@ gst_gl_bumper_callback (gint width, gint height, guint texture, gpointer stuff)
+   gst_gl_shader_set_uniform_1i (bumper->shader, "texture0", 0);
+   gl->BindTexture (GL_TEXTURE_2D, texture);
+ 
+-  gl->Rotatef (xrot, 1.0f, 0.0f, 0.0f);
+-  gl->Rotatef (yrot, 0.0f, 1.0f, 0.0f);
+-  gl->Rotatef (zrot, 0.0f, 0.0f, 1.0f);
++  gl->Rotatef (bumper->xrot, 1.0f, 0.0f, 0.0f);
++  gl->Rotatef (bumper->yrot, 0.0f, 1.0f, 0.0f);
++  gl->Rotatef (bumper->zrot, 0.0f, 0.0f, 1.0f);
+ 
+   gl->EnableVertexAttribArray (locTangent);
+ 
+@@ -540,7 +539,7 @@ gst_gl_bumper_callback (gint width, gint height, guint texture, gpointer stuff)
+   gl->Disable (GL_LIGHTING);
+   gl->Disable (GL_COLOR_MATERIAL);
+ 
+-  xrot += 1.0f;
+-  yrot += 0.9f;
+-  zrot += 0.6f;
++  bumper->xrot += 1.0f;
++  bumper->yrot += 0.9f;
++  bumper->zrot += 0.6f;
+ }
+diff --git a/ext/gl/gstglbumper.h b/ext/gl/gstglbumper.h
+index b1a1dc0e3..b59fea3e2 100644
+--- a/ext/gl/gstglbumper.h
++++ b/ext/gl/gstglbumper.h
+@@ -43,6 +43,7 @@ struct _GstGLBumper
+   gint bumpmap_width;
+   gint bumpmap_height;
+   gchar *location;
++  GLfloat xrot, yrot, zrot;
+ };
+ 
+ struct _GstGLBumperClass
+diff --git a/ext/gl/gstglfiltercube.c b/ext/gl/gstglfiltercube.c
+index c0ea031e8..d82c37d4a 100644
+--- a/ext/gl/gstglfiltercube.c
++++ b/ext/gl/gstglfiltercube.c
+@@ -311,6 +311,10 @@ gst_gl_filter_cube_gl_start (GstGLBaseFilter * filter)
+   gchar *frag_str;
+   gboolean ret;
+ 
++  cube_filter->xrot = 0.0;
++  cube_filter->yrot = 0.0;
++  cube_filter->zrot = 0.0;
++
+   frag_str =
+       g_strdup_printf ("%s%s",
+       gst_gl_shader_string_get_highest_precision (context,
+@@ -433,10 +437,6 @@ _callback (gpointer stuff)
+   GstGLFilterCube *cube_filter = GST_GL_FILTER_CUBE (filter);
+   GstGLFuncs *gl = GST_GL_BASE_FILTER (filter)->context->gl_vtable;
+ 
+-  static GLfloat xrot = 0;
+-  static GLfloat yrot = 0;
+-  static GLfloat zrot = 0;
+-
+   const GLfloat matrix[] = {
+     0.5f, 0.0f, 0.0f, 0.0f,
+     0.0f, 0.5f, 0.0f, 0.0f,
+@@ -454,9 +454,12 @@ _callback (gpointer stuff)
+   gl->ActiveTexture (GL_TEXTURE0);
+   gl->BindTexture (GL_TEXTURE_2D, cube_filter->in_tex->tex_id);
+   gst_gl_shader_set_uniform_1i (cube_filter->shader, "s_texture", 0);
+-  gst_gl_shader_set_uniform_1f (cube_filter->shader, "xrot_degree", xrot);
+-  gst_gl_shader_set_uniform_1f (cube_filter->shader, "yrot_degree", yrot);
+-  gst_gl_shader_set_uniform_1f (cube_filter->shader, "zrot_degree", zrot);
++  gst_gl_shader_set_uniform_1f (cube_filter->shader, "xrot_degree",
++      cube_filter->xrot);
++  gst_gl_shader_set_uniform_1f (cube_filter->shader, "yrot_degree",
++      cube_filter->yrot);
++  gst_gl_shader_set_uniform_1f (cube_filter->shader, "zrot_degree",
++      cube_filter->zrot);
+   gst_gl_shader_set_uniform_matrix_4fv (cube_filter->shader, "u_matrix", 1,
+       GL_FALSE, matrix);
+ 
+@@ -498,9 +501,9 @@ _callback (gpointer stuff)
+ 
+   gl->Disable (GL_DEPTH_TEST);
+ 
+-  xrot += 0.3f;
+-  yrot += 0.2f;
+-  zrot += 0.4f;
++  cube_filter->xrot += 0.3f;
++  cube_filter->yrot += 0.2f;
++  cube_filter->zrot += 0.4f;
+ 
+   return TRUE;
+ }
+diff --git a/ext/gl/gstglfiltercube.h b/ext/gl/gstglfiltercube.h
+index 2dcd6c5d5..cb8830fad 100644
+--- a/ext/gl/gstglfiltercube.h
++++ b/ext/gl/gstglfiltercube.h
+@@ -59,6 +59,8 @@ struct _GstGLFilterCube
+     GLuint             vertex_buffer;
+     GLint              attr_position;
+     GLint              attr_texture;
++
++    GLfloat            xrot, yrot, zrot;
+ };
+ 
+ struct _GstGLFilterCubeClass
+diff --git a/ext/gl/gstglfilterglass.c b/ext/gl/gstglfilterglass.c
+index 31f63b542..fef81fc4b 100644
+--- a/ext/gl/gstglfilterglass.c
++++ b/ext/gl/gstglfilterglass.c
+@@ -193,6 +193,8 @@ gst_gl_filter_glass_reset (GstBaseTransform * trans)
+     gst_object_unref (glass_filter->passthrough_shader);
+   glass_filter->passthrough_shader = NULL;
+ 
++  glass_filter->start_time = 0;
++
+   return GST_BASE_TRANSFORM_CLASS (parent_class)->stop (trans);
+ }
+ 
+@@ -258,10 +260,7 @@ gst_gl_filter_glass_filter_texture (GstGLFilter * filter, GstGLMemory * in_tex,
+ static gint64
+ get_time (void)
+ {
+-  static GTimeVal val;
+-  g_get_current_time (&val);
+-
+-  return (val.tv_sec * G_USEC_PER_SEC) + val.tv_usec;
++  return g_get_real_time ();
+ }
+ 
+ static void
+@@ -356,7 +355,6 @@ gst_gl_filter_glass_draw_video_plane (GstGLFilter * filter,
+ static gboolean
+ gst_gl_filter_glass_callback (gpointer stuff)
+ {
+-  static gint64 start_time = 0;
+   gfloat rotation;
+ 
+   GstGLFilter *filter = GST_GL_FILTER (stuff);
+@@ -367,11 +365,12 @@ gst_gl_filter_glass_callback (gpointer stuff)
+   gint height = GST_VIDEO_INFO_HEIGHT (&filter->out_info);
+   guint texture = glass_filter->in_tex->tex_id;
+ 
+-  if (start_time == 0)
+-    start_time = get_time ();
++  if (glass_filter->start_time == 0)
++    glass_filter->start_time = get_time ();
+   else {
+     gint64 time_left =
+-        (glass_filter->timestamp / 1000) - (get_time () - start_time);
++        (glass_filter->timestamp / 1000) - (get_time () -
++        glass_filter->start_time);
+     time_left -= 1000000 / 25;
+     if (time_left > 2000) {
+       GST_LOG ("escape");
+@@ -384,8 +383,8 @@ gst_gl_filter_glass_callback (gpointer stuff)
+   gst_gl_filter_glass_draw_background_gradient (glass_filter);
+ 
+   //Rotation
+-  if (start_time != 0) {
+-    gint64 time_passed = get_time () - start_time;
++  if (glass_filter->start_time != 0) {
++    gint64 time_passed = get_time () - glass_filter->start_time;
+     rotation = sin (time_passed / 1200000.0) * 45.0f;
+   } else {
+     rotation = 0.0f;
+diff --git a/ext/gl/gstglfilterglass.h b/ext/gl/gstglfilterglass.h
+index 1f1c91d2f..bfbc6f249 100644
+--- a/ext/gl/gstglfilterglass.h
++++ b/ext/gl/gstglfilterglass.h
+@@ -43,6 +43,7 @@ struct _GstGLFilterGlass
+   gint64 timestamp;
+   GstGLMemory *in_tex;
+   GstGLMemory *out_tex;
++  gint64 start_time;
+ };
+ 
+ struct _GstGLFilterGlassClass
+diff --git a/ext/gl/gstglmosaic.c b/ext/gl/gstglmosaic.c
+index 63075ba5a..1dfe4ecc7 100644
+--- a/ext/gl/gstglmosaic.c
++++ b/ext/gl/gstglmosaic.c
+@@ -231,6 +231,10 @@ gst_gl_mosaic_reset (GstGLMixer * mixer)
+   if (mosaic->shader)
+     gst_object_unref (mosaic->shader);
+   mosaic->shader = NULL;
++
++  mosaic->xrot = 0.0;
++  mosaic->yrot = 0.0;
++  mosaic->zrot = 0.0;
+ }
+ 
+ static gboolean
+@@ -276,10 +280,6 @@ gst_gl_mosaic_callback (gpointer stuff)
+   GstGLFuncs *gl = GST_GL_BASE_MIXER (mixer)->context->gl_vtable;
+   GList *walk;
+ 
+-  static GLfloat xrot = 0;
+-  static GLfloat yrot = 0;
+-  static GLfloat zrot = 0;
+-
+   GLint attr_position_loc = 0;
+   GLint attr_texture_loc = 0;
+ 
+@@ -311,6 +311,13 @@ gst_gl_mosaic_callback (gpointer stuff)
+   attr_texture_loc =
+       gst_gl_shader_get_attribute_location (mosaic->shader, "a_texCoord");
+ 
++  gst_gl_shader_set_uniform_1i (mosaic->shader, "s_texture", 0);
++  gst_gl_shader_set_uniform_1f (mosaic->shader, "xrot_degree", mosaic->xrot);
++  gst_gl_shader_set_uniform_1f (mosaic->shader, "yrot_degree", mosaic->yrot);
++  gst_gl_shader_set_uniform_1f (mosaic->shader, "zrot_degree", mosaic->zrot);
++  gst_gl_shader_set_uniform_matrix_4fv (mosaic->shader, "u_matrix", 1,
++      GL_FALSE, matrix);
++
+   GST_OBJECT_LOCK (mosaic);
+   walk = GST_ELEMENT (mosaic)->sinkpads;
+   while (walk) {
+@@ -378,9 +385,9 @@ gst_gl_mosaic_callback (gpointer stuff)
+     gl->ActiveTexture (GL_TEXTURE0);
+     gl->BindTexture (GL_TEXTURE_2D, in_tex);
+     gst_gl_shader_set_uniform_1i (mosaic->shader, "s_texture", 0);
+-    gst_gl_shader_set_uniform_1f (mosaic->shader, "xrot_degree", xrot);
+-    gst_gl_shader_set_uniform_1f (mosaic->shader, "yrot_degree", yrot);
+-    gst_gl_shader_set_uniform_1f (mosaic->shader, "zrot_degree", zrot);
++    gst_gl_shader_set_uniform_1f (mosaic->shader, "xrot_degree", mosaic->xrot);
++    gst_gl_shader_set_uniform_1f (mosaic->shader, "yrot_degree", mosaic->yrot);
++    gst_gl_shader_set_uniform_1f (mosaic->shader, "zrot_degree", mosaic->zrot);
+     gst_gl_shader_set_uniform_matrix_4fv (mosaic->shader, "u_matrix", 1,
+         GL_FALSE, matrix);
+ 
+@@ -401,9 +408,9 @@ gst_gl_mosaic_callback (gpointer stuff)
+ 
+   gst_gl_context_clear_shader (GST_GL_BASE_MIXER (mixer)->context);
+ 
+-  xrot += 0.6f;
+-  yrot += 0.4f;
+-  zrot += 0.8f;
++  mosaic->xrot += 0.6f;
++  mosaic->yrot += 0.4f;
++  mosaic->zrot += 0.8f;
+ 
+   return TRUE;
+ }
+diff --git a/ext/gl/gstglmosaic.h b/ext/gl/gstglmosaic.h
+index 40f5d6c33..fc9ef8b8b 100644
+--- a/ext/gl/gstglmosaic.h
++++ b/ext/gl/gstglmosaic.h
+@@ -41,6 +41,7 @@ struct _GstGLMosaic
+ 
+     GstGLShader *shader;
+     GstGLMemory *out_tex;
++    GLfloat xrot, yrot, zrot;
+ };
+ 
+ struct _GstGLMosaicClass
+-- 
+2.17.1
+

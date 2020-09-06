@@ -1,0 +1,25 @@
+From ebd0d664d4a620f1c3f27a40cee63265e40e05c4 Mon Sep 17 00:00:00 2001
+From: Edward Hervey <bilboed@bilboed.com>
+Date: Wed, 27 Nov 2019 15:47:32 +0100
+Subject: [PATCH 1008/1012] tracers: Don't leak temporary GstStructure
+
+CID: 1455462
+---
+ plugins/tracers/gstlatency.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/plugins/tracers/gstlatency.c b/plugins/tracers/gstlatency.c
+index 0f6d5176d..e2f088984 100644
+--- a/plugins/tracers/gstlatency.c
++++ b/plugins/tracers/gstlatency.c
+@@ -529,6 +529,7 @@ gst_latency_tracer_constructed (GObject * object)
+ 
+       g_strfreev (split);
+     }
++    gst_structure_free (params_struct);
+   }
+ 
+   g_free (params);
+-- 
+2.17.1
+

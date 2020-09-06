@@ -1,0 +1,65 @@
+From b2a5c9f856ce07eb40d43a2cc1c6a250d204c3d5 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Sebastian=20Dr=C3=B6ge?= <sebastian@centricular.com>
+Date: Mon, 21 Oct 2019 16:43:02 +0300
+Subject: [PATCH 1008/1024] video-converter: Don't use fast-path
+ halfing/doubling rescalers for interlaced planar formats
+
+They will mix lines from the top and bottom field and by that
+effectively deinterlace the video, badly.
+---
+ gst-libs/gst/video/video-converter.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/gst-libs/gst/video/video-converter.c b/gst-libs/gst/video/video-converter.c
+index f36d4d421..47d8dfc3e 100644
+--- a/gst-libs/gst/video/video-converter.c
++++ b/gst-libs/gst/video/video-converter.c
+@@ -6129,14 +6129,14 @@ setup_scale (GstVideoConverter * convert)
+       need_v_scaler = FALSE;
+       need_h_scaler = FALSE;
+       if (iw == ow) {
+-        if (ih == oh) {
++        if (!interlaced && ih == oh) {
+           convert->fconvert[i] = convert_plane_hv;
+           GST_DEBUG ("plane %d: copy", i);
+-        } else if (ih == 2 * oh && pstride == 1
++        } else if (!interlaced && ih == 2 * oh && pstride == 1
+             && resample_method == GST_VIDEO_RESAMPLER_METHOD_LINEAR) {
+           convert->fconvert[i] = convert_plane_v_halve;
+           GST_DEBUG ("plane %d: vertical halve", i);
+-        } else if (2 * ih == oh && pstride == 1
++        } else if (!interlaced && 2 * ih == oh && pstride == 1
+             && resample_method == GST_VIDEO_RESAMPLER_METHOD_NEAREST) {
+           convert->fconvert[i] = convert_plane_v_double;
+           GST_DEBUG ("plane %d: vertical double", i);
+@@ -6146,11 +6146,11 @@ setup_scale (GstVideoConverter * convert)
+           need_v_scaler = TRUE;
+         }
+       } else if (ih == oh) {
+-        if (iw == 2 * ow && pstride == 1
++        if (!interlaced && iw == 2 * ow && pstride == 1
+             && resample_method == GST_VIDEO_RESAMPLER_METHOD_LINEAR) {
+           convert->fconvert[i] = convert_plane_h_halve;
+           GST_DEBUG ("plane %d: horizontal halve", i);
+-        } else if (2 * iw == ow && pstride == 1
++        } else if (!interlaced && 2 * iw == ow && pstride == 1
+             && resample_method == GST_VIDEO_RESAMPLER_METHOD_NEAREST) {
+           convert->fconvert[i] = convert_plane_h_double;
+           GST_DEBUG ("plane %d: horizontal double", i);
+@@ -6160,11 +6160,11 @@ setup_scale (GstVideoConverter * convert)
+           need_h_scaler = TRUE;
+         }
+       } else {
+-        if (iw == 2 * ow && ih == 2 * oh && pstride == 1
++        if (!interlaced && iw == 2 * ow && ih == 2 * oh && pstride == 1
+             && resample_method == GST_VIDEO_RESAMPLER_METHOD_LINEAR) {
+           convert->fconvert[i] = convert_plane_hv_halve;
+           GST_DEBUG ("plane %d: horizontal/vertical halve", i);
+-        } else if (2 * iw == ow && 2 * ih == oh && pstride == 1
++        } else if (!interlaced && 2 * iw == ow && 2 * ih == oh && pstride == 1
+             && resample_method == GST_VIDEO_RESAMPLER_METHOD_NEAREST) {
+           convert->fconvert[i] = convert_plane_hv_double;
+           GST_DEBUG ("plane %d: horizontal/vertical double", i);
+-- 
+2.17.1
+

@@ -1,0 +1,40 @@
+From 70e44a459809488df59f65b861dab712e446262c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Sebastian=20Dr=C3=B6ge?= <sebastian@centricular.com>
+Date: Tue, 22 Oct 2019 09:30:34 +0300
+Subject: [PATCH 1004/1024] pnmdec: Return early on ::finish() if we have no
+ actual data to parse
+
+Otherwise we'd be working with a NULL buffer and cause various critical
+warnings along the way.
+
+Fixes https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/issues/1104
+---
+ gst/pnm/gstpnmdec.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/gst/pnm/gstpnmdec.c b/gst/pnm/gstpnmdec.c
+index 5b624bed4..cf6904e01 100644
+--- a/gst/pnm/gstpnmdec.c
++++ b/gst/pnm/gstpnmdec.c
+@@ -244,6 +244,9 @@ gst_pnmdec_parse_ascii (GstPnmdec * s, const guint8 * b, guint bs)
+   GstMapInfo map;
+   guint8 *outdata;
+ 
++  if (!s->buf)
++    return GST_FLOW_OK;
++
+   target = s->size - s->current_size;
+ 
+   gst_buffer_map (s->buf, &map, GST_MAP_WRITE);
+@@ -571,7 +574,7 @@ gst_pnmdec_finish (GstVideoDecoder * decoder)
+   if (s->mngr.info.encoding == GST_PNM_ENCODING_ASCII) {
+     /* One last go at outputting any final value */
+     gst_pnmdec_parse_ascii (s, 0, 0);
+-    if (s->size <= s->current_size) {
++    if (s->size && s->size <= s->current_size) {
+       return gst_video_decoder_have_frame (decoder);
+     }
+   }
+-- 
+2.17.1
+

@@ -1,0 +1,168 @@
+From e9f752f5ceed4893edd69cbbaca73e322772acc5 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Sebastian=20Dr=C3=B6ge?= <sebastian@centricular.com>
+Date: Mon, 28 Oct 2019 14:43:50 +0200
+Subject: [PATCH 1013/1024] videorate: Fix max-duplication-time handling
+
+Previously this would've only set discont=TRUE and then for all future
+buffers simply returned immediately.
+
+Instead we also need to
+  a) drain previous input until its buffer time
+  b) update next_ts and base_ts accordingly for the gap
+  c) actually store the new buffer after the gap so it can be used in
+     the future and so the old buffer before the gap is gone
+
+Also update the unit test accordingly so that it actually tests for this
+behaviour. Previously it only tested that after the gap we got no output
+at all.
+---
+ gst/videorate/gstvideorate.c     | 38 ++++++++++++++++++++++++
+ tests/check/elements/videorate.c | 50 ++++++++++++++++++++++++++++----
+ 2 files changed, 82 insertions(+), 6 deletions(-)
+
+diff --git a/gst/videorate/gstvideorate.c b/gst/videorate/gstvideorate.c
+index fb692ff1f..729d9bdf8 100644
+--- a/gst/videorate/gstvideorate.c
++++ b/gst/videorate/gstvideorate.c
+@@ -1471,9 +1471,47 @@ gst_video_rate_transform_ip (GstBaseTransform * trans, GstBuffer * buffer)
+        * the order is reversed. */
+       if (ABS (GST_CLOCK_DIFF (intime,
+                   prevtime)) > videorate->max_duplication_time) {
++        GST_DEBUG_OBJECT (videorate,
++            "The new buffer (%" GST_TIME_FORMAT
++            ") is further away from previous buffer (%"
++            GST_TIME_FORMAT ") than max-duplication-time (%" GST_TIME_FORMAT
++            ")", GST_TIME_ARGS (intime), GST_TIME_ARGS (prevtime),
++            GST_TIME_ARGS (videorate->max_duplication_time));
++        /* First send out enough buffers to actually reach the time of the
++         * previous buffer */
++        if (videorate->segment.rate < 0.0) {
++          while (videorate->next_ts > prevtime) {
++            gst_video_rate_flush_prev (videorate, count > 0,
++                GST_CLOCK_TIME_NONE);
++            count += 1;
++          }
++        } else {
++          while (videorate->next_ts <= prevtime) {
++            gst_video_rate_flush_prev (videorate, count > 0,
++                GST_CLOCK_TIME_NONE);
++            count += 1;
++          }
++        }
++
++        if (count > 1) {
++          videorate->dup += count - 1;
++          if (!videorate->silent)
++            gst_video_rate_notify_duplicate (videorate);
++        }
++
+         /* The gap between the two buffers is too large. Don't fill it, just
+          * let a discont through */
+         videorate->discont = TRUE;
++
++        if (videorate->segment.rate < 0.0) {
++          videorate->base_ts -= prevtime - intime;
++        } else {
++          videorate->base_ts += intime - prevtime;
++        }
++        videorate->next_ts = intime;
++        /* Swap in new buffer and get rid of old buffer so that starting with
++         * the next input buffer we output from the new position */
++        gst_video_rate_swap_prev (videorate, buffer, intime);
+         goto done;
+       }
+     }
+diff --git a/tests/check/elements/videorate.c b/tests/check/elements/videorate.c
+index 87ae64a7a..b18da56bc 100644
+--- a/tests/check/elements/videorate.c
++++ b/tests/check/elements/videorate.c
+@@ -402,11 +402,11 @@ GST_START_TEST (test_wrong_order_from_zero)
+ 
+ GST_END_TEST;
+ 
+-/* send frames with 0, 1, 2, 5 seconds, max-duplication-time=2sec */
++/* send frames with 0, 1, 2, 5, 6 seconds, max-duplication-time=2sec */
+ GST_START_TEST (test_max_duplication_time)
+ {
+   GstElement *videorate;
+-  GstBuffer *first, *second, *third, *fourth, *outbuffer;
++  GstBuffer *first, *second, *third, *fourth, *fifth, *outbuffer;
+   GstCaps *caps;
+ 
+   videorate = setup_videorate ();
+@@ -466,6 +466,7 @@ GST_START_TEST (test_max_duplication_time)
+   fail_unless_equals_int (g_list_length (buffers), 38);
+   ASSERT_BUFFER_REFCOUNT (first, "first", 1);
+   ASSERT_BUFFER_REFCOUNT (second, "second", 1);
++  ASSERT_BUFFER_REFCOUNT (third, "third", 1);
+   /* three frames submitted; two of them output as is, and 36 duplicated */
+   assert_videorate_stats (videorate, "third", 3, 38, 0, 36);
+ 
+@@ -481,23 +482,60 @@ GST_START_TEST (test_max_duplication_time)
+   /* ... and a copy is now stuck inside videorate */
+   ASSERT_BUFFER_REFCOUNT (fourth, "fourth", 1);
+ 
+-  fail_unless_equals_int (g_list_length (buffers), 38);
++  /* should now have drained everything up to the 2s buffer above */
++  fail_unless_equals_int (g_list_length (buffers), 51);
+   ASSERT_BUFFER_REFCOUNT (first, "first", 1);
+   ASSERT_BUFFER_REFCOUNT (second, "second", 1);
+-  assert_videorate_stats (videorate, "fourth", 4, 38, 0, 36);
++  ASSERT_BUFFER_REFCOUNT (third, "third", 1);
++  ASSERT_BUFFER_REFCOUNT (fourth, "fourth", 1);
++  assert_videorate_stats (videorate, "fourth", 4, 51, 0, 48);
+ 
+   /* verify last buffer */
+   outbuffer = g_list_last (buffers)->data;
+   fail_unless (GST_IS_BUFFER (outbuffer));
+-  fail_unless_equals_uint64 (GST_BUFFER_TIMESTAMP (outbuffer),
+-      GST_SECOND * 37 / 25);
++  fail_unless_equals_uint64 (GST_BUFFER_TIMESTAMP (outbuffer), 2 * GST_SECOND);
+ 
++  /* fifth buffer */
++  fifth = gst_buffer_new_and_alloc (4);
++  GST_BUFFER_TIMESTAMP (fifth) = 6 * GST_SECOND;
++  gst_buffer_memset (fifth, 0, 0, 4);
++  ASSERT_BUFFER_REFCOUNT (fifth, "fifth", 1);
++  gst_buffer_ref (fifth);
++
++  /* pushing gives away my reference ... */
++  fail_unless (gst_pad_push (mysrcpad, fifth) == GST_FLOW_OK);
++  /* ... and a copy is now stuck inside videorate */
++  ASSERT_BUFFER_REFCOUNT (third, "fifth", 1);
++
++  /* submitting a frame with 6 seconds triggers output of 12 more frames */
++  fail_unless_equals_int (g_list_length (buffers), 63);
++  ASSERT_BUFFER_REFCOUNT (first, "first", 1);
++  ASSERT_BUFFER_REFCOUNT (second, "second", 1);
++  ASSERT_BUFFER_REFCOUNT (third, "third", 1);
++  ASSERT_BUFFER_REFCOUNT (fourth, "fourth", 1);
++  ASSERT_BUFFER_REFCOUNT (fifth, "fifth", 1);
++  /* five frames submitted; two of them output as is, 63 and 59 duplicated */
++  assert_videorate_stats (videorate, "fifth", 5, 63, 0, 59);
++
++  /* push EOS to drain */
++  fail_unless (gst_pad_push_event (mysrcpad, gst_event_new_eos ()));
++
++  /* we should now have gotten one output for the last frame */
++  fail_unless_equals_int (g_list_length (buffers), 64);
++  ASSERT_BUFFER_REFCOUNT (first, "first", 1);
++  ASSERT_BUFFER_REFCOUNT (second, "second", 1);
++  ASSERT_BUFFER_REFCOUNT (third, "third", 1);
++  ASSERT_BUFFER_REFCOUNT (fourth, "fourth", 1);
++  ASSERT_BUFFER_REFCOUNT (fifth, "fifth", 1);
++  /* five frames submitted; two of them output as is, 64 and 60 duplicated */
++  assert_videorate_stats (videorate, "fifth", 5, 64, 0, 59);
+ 
+   /* cleanup */
+   gst_buffer_unref (first);
+   gst_buffer_unref (second);
+   gst_buffer_unref (third);
+   gst_buffer_unref (fourth);
++  gst_buffer_unref (fifth);
+   cleanup_videorate (videorate);
+ }
+ 
+-- 
+2.17.1
+

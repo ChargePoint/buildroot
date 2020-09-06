@@ -1,0 +1,47 @@
+From d9e6f19026880f1f068aabb50c52b9a4d7b524e5 Mon Sep 17 00:00:00 2001
+From: Nirbheek Chauhan <nirbheek@centricular.com>
+Date: Tue, 26 Nov 2019 11:39:32 +0530
+Subject: [PATCH 1019/1024] wasapisrc: Correctly handle BUFFERFLAGS_SILENT
+
+We need to ignore the data we get from WASAPI in this case and write
+out silence (zeroes).
+
+Initially reported at https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/issues/808
+---
+ sys/wasapi/gstwasapisrc.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/sys/wasapi/gstwasapisrc.c b/sys/wasapi/gstwasapisrc.c
+index 63357c1ef..2286b0da9 100644
+--- a/sys/wasapi/gstwasapisrc.c
++++ b/sys/wasapi/gstwasapisrc.c
+@@ -611,10 +611,6 @@ gst_wasapi_src_read (GstAudioSrc * asrc, gpointer data, guint length,
+           goto err);
+     }
+ 
+-    /* XXX: How do we handle AUDCLNT_BUFFERFLAGS_SILENT? We're supposed to write
+-     * out silence when that flag is set? See:
+-     * https://msdn.microsoft.com/en-us/library/windows/desktop/dd370800(v=vs.85).aspx */
+-
+     if (G_UNLIKELY (flags != 0)) {
+       /* https://docs.microsoft.com/en-us/windows/win32/api/audioclient/ne-audioclient-_audclnt_bufferflags */
+       if (flags & AUDCLNT_BUFFERFLAGS_DATA_DISCONTINUITY)
+@@ -625,9 +621,14 @@ gst_wasapi_src_read (GstAudioSrc * asrc, gpointer data, guint length,
+ 
+     /* Copy all the frames we got into the adapter, and then extract at most
+      * @wanted size of frames from it. This helps when ::GetBuffer returns more
+-     * data than we can handle right now */
++     * data than we can handle right now. */
+     {
+       GstBuffer *tmp = gst_buffer_new_allocate (NULL, got_frames * bpf, NULL);
++      /* If flags has AUDCLNT_BUFFERFLAGS_SILENT, we will ignore the actual
++       * data and write out silence, see:
++       * https://docs.microsoft.com/en-us/windows/win32/api/audioclient/ne-audioclient-_audclnt_bufferflags */
++      if (flags & AUDCLNT_BUFFERFLAGS_SILENT)
++        memset (from, 0, got_frames * bpf);
+       gst_buffer_fill (tmp, 0, from, got_frames * bpf);
+       gst_adapter_push (self->adapter, tmp);
+     }
+-- 
+2.17.1
+

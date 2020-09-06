@@ -1,0 +1,33 @@
+From dac5966da6a0f53d0443dfa1ac239289028c415d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Sebastian=20Dr=C3=B6ge?= <sebastian@centricular.com>
+Date: Fri, 25 Oct 2019 01:39:50 +0300
+Subject: [PATCH 1005/1012] tee: Check for the removed pad flag also in the
+ slow pushing path
+
+If a pad is currently being released we don't want to forward the
+FLUSHING flow return but instead consider it as NOT_LINKED. FLUSHING
+would also cause upstream to be FLUSHING.
+
+This part was missed in a3c4a3201a705eb1934ceeea34d1ca42d4571c07 and
+resulted in a different (and wrong) workaround in
+a96002bb28c21b30fb9338a4620ad20504c70aa5.
+---
+ plugins/elements/gsttee.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/plugins/elements/gsttee.c b/plugins/elements/gsttee.c
+index 5b3312590..8b28a97ae 100644
+--- a/plugins/elements/gsttee.c
++++ b/plugins/elements/gsttee.c
+@@ -945,6 +945,8 @@ restart:
+ 
+       GST_OBJECT_LOCK (tee);
+       /* keep track of which pad we pushed and the result value */
++      if (GST_TEE_PAD_CAST (pad)->removed)
++        ret = GST_FLOW_NOT_LINKED;
+       GST_TEE_PAD_CAST (pad)->pushed = TRUE;
+       GST_TEE_PAD_CAST (pad)->result = ret;
+       gst_object_unref (pad);
+-- 
+2.17.1
+

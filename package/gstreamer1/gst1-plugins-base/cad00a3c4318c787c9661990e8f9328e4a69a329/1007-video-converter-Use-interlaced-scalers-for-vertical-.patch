@@ -1,0 +1,59 @@
+From f08b564410f66eb8dbd4cda160e1bf3e6a742458 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Sebastian=20Dr=C3=B6ge?= <sebastian@centricular.com>
+Date: Mon, 21 Oct 2019 16:43:02 +0300
+Subject: [PATCH 1007/1024] video-converter: Use interlaced scalers for
+ vertical scaling if needed
+
+Without this, scaling e.g. interlaced UYVY causes corrupted output with
+lines as follows: f1 f1 f2 f2, i.e. two lines of each field and only
+then the other field.
+---
+ gst-libs/gst/video/video-converter.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/gst-libs/gst/video/video-converter.c b/gst-libs/gst/video/video-converter.c
+index 22f81a465..f36d4d421 100644
+--- a/gst-libs/gst/video/video-converter.c
++++ b/gst-libs/gst/video/video-converter.c
+@@ -5930,6 +5930,7 @@ setup_scale (GstVideoConverter * convert)
+   GstVideoInfo *in_info, *out_info;
+   const GstVideoFormatInfo *in_finfo, *out_finfo;
+   GstVideoFormat in_format, out_format;
++  gboolean interlaced;
+   guint n_threads = convert->conversion_runner->n_threads;
+ 
+   in_info = &convert->in_info;
+@@ -5940,6 +5941,8 @@ setup_scale (GstVideoConverter * convert)
+ 
+   n_planes = GST_VIDEO_INFO_N_PLANES (out_info);
+ 
++  interlaced = GST_VIDEO_INFO_IS_INTERLACED (&convert->in_info);
++
+   method = GET_OPT_RESAMPLER_METHOD (convert);
+   if (method == GST_VIDEO_RESAMPLER_METHOD_NEAREST)
+     cr_method = method;
+@@ -6034,7 +6037,9 @@ setup_scale (GstVideoConverter * convert)
+ 
+       for (j = 0; j < n_threads; j++) {
+         convert->fv_scaler[0].scaler[j] =
+-            gst_video_scaler_new (method, GST_VIDEO_SCALER_FLAG_NONE, taps,
++            gst_video_scaler_new (method,
++            interlaced ?
++            GST_VIDEO_SCALER_FLAG_INTERLACED : GST_VIDEO_SCALER_FLAG_NONE, taps,
+             in_height, out_height, convert->config);
+       }
+     } else {
+@@ -6188,7 +6193,9 @@ setup_scale (GstVideoConverter * convert)
+ 
+         for (j = 0; j < n_threads; j++) {
+           convert->fv_scaler[i].scaler[j] =
+-              gst_video_scaler_new (resample_method, GST_VIDEO_SCALER_FLAG_NONE,
++              gst_video_scaler_new (resample_method,
++              interlaced ?
++              GST_VIDEO_SCALER_FLAG_INTERLACED : GST_VIDEO_SCALER_FLAG_NONE,
+               taps, ih, oh, config);
+         }
+       } else {
+-- 
+2.17.1
+
