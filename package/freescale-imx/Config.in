@@ -134,4 +134,6 @@ config BR2_PACKAGE_FREESCALE_IMX_GSTREAMER
 
 endif
 
+source "package/freescale-imx/imx-linux-headers/Config.in"
+
 endif

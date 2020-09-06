@@ -1,0 +1,9 @@
+config BR2_PACKAGE_IMX_LINUX_HEADERS
+	bool "imx-linux-headers"
+	default y if BR2_PACKAGE_FREESCALE_IMX_GSTREAMER
+	help
+	  Installs i.MX-specific kernel headers to staging at
+	  /usr/include/imx
+
+	  Modified from bitbake recipe linux-imx-headers_5.4.3.bb
+	  https://github.com/Freescale/meta-freescale.git

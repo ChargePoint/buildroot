@@ -42,6 +42,18 @@ GST1_PLUGINS_BASE_DEPENDENCIES = gstreamer1 $(TARGET_NLS_DEPENDENCIES)
 
 GST1_PLUGINS_BASE_LDFLAGS = $(TARGET_LDFLAGS) $(TARGET_NLS_LIBS)
 
+# Enable specific configs for the imx packages
+ifeq ($(BR2_PACKAGE_FREESCALE_IMX_GSTREAMER),y)
+GST1_PLUGINS_BASE_DEPENDENCIES += imx-linux-headers
+GST1_PLUGINS_BASE_CONF_OPTS += \
+	-Dextra_imx_incdir=$(STAGING_DIR)/usr/include/imx
+
+ifeq ($(BR2_PACKAGE_IMX_GPU_G2D),y)
+GST1_PLUGINS_BASE_DEPENDENCIES += imx-gpu-g2d
+GST1_PLUGINS_BASE_WINSYS_LIST += viv-fb
+endif
+endif
+
 # These plugins are listed in the order from ./configure --help
 
 ifeq ($(BR2_PACKAGE_GOBJECT_INTROSPECTION),y)

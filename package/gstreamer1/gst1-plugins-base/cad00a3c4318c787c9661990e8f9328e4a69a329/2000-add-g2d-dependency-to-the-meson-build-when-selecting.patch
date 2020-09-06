@@ -1,0 +1,58 @@
+From 06827f744567b1d1edcec25b61990a11b06092b1 Mon Sep 17 00:00:00 2001
+From: Charles Hardin <charles.hardin@chargepoint.com>
+Date: Mon, 7 Sep 2020 04:07:45 +0000
+Subject: [PATCH] add g2d dependency to the meson build when selecting viv-fb
+
+There is a link dependency on g2d-alloc and g2d-free that needs
+to be handled by the libraries
+
+Signed-off-by: Charles Hardin <charles.hardin@chargepoint.com>
+---
+ gst-libs/gst/gl/meson.build | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/gst-libs/gst/gl/meson.build b/gst-libs/gst/gl/meson.build
+index 0e0ba1b7d..e030dd537 100644
+--- a/gst-libs/gst/gl/meson.build
++++ b/gst-libs/gst/gl/meson.build
+@@ -94,6 +94,7 @@ gl_prototype_headers = [
+   'glprototypes/vao.h',
+ ]
+ 
++gl_viv_fb_headers = []
+ gl_x11_headers = []
+ gl_wayland_headers = []
+ gl_win32_headers = []
+@@ -812,7 +813,12 @@ if need_platform_egl != 'no' and need_win_viv_fb != 'no'
+         'viv-fb/gstgldisplay_viv_fb.c',
+         'viv-fb/gstglwindow_viv_fb_egl.c',
+       ]
++      gl_viv_fb_headers += [
++        'viv-fb/gstgldisplay_viv_fb.h'
++      ]
+       gl_cpp_args += ['-DEGL_API_FB']
++      g2d_dep = cc.find_library('g2d-viv', required : false)
++      gl_winsys_deps += [g2d_dep]
+     endif
+   endif
+ endif
+@@ -894,6 +900,7 @@ if build_gstgl
+   install_headers(gl_prototype_headers, subdir : 'gstreamer-1.0/gst/gl/glprototypes')
+   install_headers(gl_x11_headers, subdir : 'gstreamer-1.0/gst/gl/x11')
+   install_headers(gl_wayland_headers, subdir : 'gstreamer-1.0/gst/gl/wayland')
++  install_headers(gl_viv_fb_headers, subdir : 'gstreamer-1.0/gst/gl/viv-fb')
+ 
+   configure_file(input : 'gstglconfig.h.meson',
+     output : 'gstglconfig.h',
+@@ -924,7 +931,7 @@ if build_gstgl
+                     gl_lib_deps, gl_platform_deps, gl_winsys_deps, gl_misc_deps])
+   if build_gir
+     gl_gir = gnome.generate_gir(gstgl,
+-      sources : gl_sources + [gl_enumtypes_h] + [gl_enumtypes_c] + gir_gl_headers + gl_x11_headers + gl_wayland_headers + gl_win32_headers + gl_cocoa_headers + gl_egl_headers,
++      sources : gl_sources + [gl_enumtypes_h] + [gl_enumtypes_c] + gir_gl_headers + gl_viv_fb_headers + gl_x11_headers + gl_wayland_headers + gl_win32_headers + gl_cocoa_headers + gl_egl_headers,
+       namespace : 'GstGL',
+       nsversion : api_version,
+       identifier_prefix : 'Gst',
+-- 
+2.17.1
+
