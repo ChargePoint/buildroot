@@ -1,0 +1,75 @@
+From 648753b4bc5636f8cdf3fc963289a019e8d11cfe Mon Sep 17 00:00:00 2001
+From: Seungha Yang <seungha.yang@navercorp.com>
+Date: Tue, 17 Sep 2019 20:29:03 +0900
+Subject: [PATCH 1002/1024] wasapi: Don't cast GstDeviceProvider to GstElement
+
+The GstDeviceProvider isn't subclass of GstElement.
+
+(gst-device-monitor-1.0:49356): GLib-GObject-WARNING **: 20:21:18.651:
+invalid cast from 'GstWasapiDeviceProvider' to 'GstElement'
+---
+ sys/wasapi/gstwasapidevice.c | 2 +-
+ sys/wasapi/gstwasapiutil.c   | 6 +++---
+ sys/wasapi/gstwasapiutil.h   | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/sys/wasapi/gstwasapidevice.c b/sys/wasapi/gstwasapidevice.c
+index 723368e75..62087ebfe 100644
+--- a/sys/wasapi/gstwasapidevice.c
++++ b/sys/wasapi/gstwasapidevice.c
+@@ -63,7 +63,7 @@ gst_wasapi_device_provider_probe (GstDeviceProvider * provider)
+   GstWasapiDeviceProvider *self = GST_WASAPI_DEVICE_PROVIDER (provider);
+   GList *devices = NULL;
+ 
+-  if (!gst_wasapi_util_get_devices (GST_ELEMENT (self), TRUE, &devices))
++  if (!gst_wasapi_util_get_devices (GST_OBJECT (self), TRUE, &devices))
+     GST_ERROR_OBJECT (self, "Failed to enumerate devices");
+ 
+   return devices;
+diff --git a/sys/wasapi/gstwasapiutil.c b/sys/wasapi/gstwasapiutil.c
+index ef4e0052c..eac28834c 100644
+--- a/sys/wasapi/gstwasapiutil.c
++++ b/sys/wasapi/gstwasapiutil.c
+@@ -313,7 +313,7 @@ gst_wasapi_util_hresult_to_string (HRESULT hr)
+ }
+ 
+ static IMMDeviceEnumerator *
+-gst_wasapi_util_get_device_enumerator (GstElement * self)
++gst_wasapi_util_get_device_enumerator (GstObject * self)
+ {
+   HRESULT hr;
+   IMMDeviceEnumerator *enumerator = NULL;
+@@ -326,7 +326,7 @@ gst_wasapi_util_get_device_enumerator (GstElement * self)
+ }
+ 
+ gboolean
+-gst_wasapi_util_get_devices (GstElement * self, gboolean active,
++gst_wasapi_util_get_devices (GstObject * self, gboolean active,
+     GList ** devices)
+ {
+   gboolean res = FALSE;
+@@ -550,7 +550,7 @@ gst_wasapi_util_get_device_client (GstElement * self,
+   IMMDevice *device = NULL;
+   IAudioClient *client = NULL;
+ 
+-  if (!(enumerator = gst_wasapi_util_get_device_enumerator (self)))
++  if (!(enumerator = gst_wasapi_util_get_device_enumerator (GST_OBJECT (self))))
+     goto beach;
+ 
+   if (!device_strid) {
+diff --git a/sys/wasapi/gstwasapiutil.h b/sys/wasapi/gstwasapiutil.h
+index 715e0db15..4e560e6bd 100644
+--- a/sys/wasapi/gstwasapiutil.h
++++ b/sys/wasapi/gstwasapiutil.h
+@@ -92,7 +92,7 @@ gint gst_wasapi_erole_to_device_role (gint erole);
+ 
+ gchar *gst_wasapi_util_hresult_to_string (HRESULT hr);
+ 
+-gboolean gst_wasapi_util_get_devices (GstElement * element, gboolean active,
++gboolean gst_wasapi_util_get_devices (GstObject * element, gboolean active,
+     GList ** devices);
+ 
+ gboolean gst_wasapi_util_get_device_client (GstElement * element,
+-- 
+2.17.1
+

@@ -1,0 +1,61 @@
+From 0c6f5b3e4c3dc55e684bca1e3fc9a2a9b74407b9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Sebastian=20Dr=C3=B6ge?= <sebastian@centricular.com>
+Date: Mon, 30 Sep 2019 11:49:35 +0300
+Subject: [PATCH 1002/1012] gst: Don't pass miniobjects to GST_DEBUG_OBJECT()
+ and similar macros
+
+The argument must be at least a GObject according to the GstLogFunction
+definition, and while the default C log function handles miniobjects
+just fine this is crashing bindings and user-supplied log functions that
+(rightfully) don't expect anything but GObjects.
+---
+ gst/gstbuffer.c | 6 +++---
+ gst/gstcaps.c   | 3 +--
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/gst/gstbuffer.c b/gst/gstbuffer.c
+index 25c521360..19a70b417 100644
+--- a/gst/gstbuffer.c
++++ b/gst/gstbuffer.c
+@@ -1834,7 +1834,7 @@ gst_buffer_map_range (GstBuffer * buffer, guint idx, gint length,
+   /* ERROR */
+ not_writable:
+   {
+-    GST_WARNING_OBJECT (buffer, "write map requested on non-writable buffer");
++    GST_WARNING ("write map requested on non-writable buffer");
+     g_critical ("write map requested on non-writable buffer");
+     memset (info, 0, sizeof (GstMapInfo));
+     return FALSE;
+@@ -1842,13 +1842,13 @@ not_writable:
+ no_memory:
+   {
+     /* empty buffer, we need to return NULL */
+-    GST_DEBUG_OBJECT (buffer, "can't get buffer memory");
++    GST_DEBUG ("can't get buffer memory");
+     memset (info, 0, sizeof (GstMapInfo));
+     return TRUE;
+   }
+ cannot_map:
+   {
+-    GST_DEBUG_OBJECT (buffer, "cannot map memory");
++    GST_DEBUG ("cannot map memory");
+     memset (info, 0, sizeof (GstMapInfo));
+     return FALSE;
+   }
+diff --git a/gst/gstcaps.c b/gst/gstcaps.c
+index 8f459de2a..9e6408d57 100644
+--- a/gst/gstcaps.c
++++ b/gst/gstcaps.c
+@@ -175,8 +175,7 @@ _gst_caps_copy (const GstCaps * caps)
+   GST_CAPS_FLAGS (newcaps) = GST_CAPS_FLAGS (caps);
+   n = GST_CAPS_LEN (caps);
+ 
+-  GST_CAT_DEBUG_OBJECT (GST_CAT_PERFORMANCE, caps, "doing copy %p -> %p",
+-      caps, newcaps);
++  GST_CAT_DEBUG (GST_CAT_PERFORMANCE, "doing copy %p -> %p", caps, newcaps);
+ 
+   for (i = 0; i < n; i++) {
+     structure = gst_caps_get_structure_unchecked (caps, i);
+-- 
+2.17.1
+

@@ -1,0 +1,26 @@
+From c541aa9343074d025c14758130a3c19f058e366d Mon Sep 17 00:00:00 2001
+From: Seungha Yang <seungha.yang@navercorp.com>
+Date: Fri, 8 Nov 2019 17:33:17 +0900
+Subject: [PATCH 1019/1024] xvimagepool: Fix confusing debug message for
+ padding size
+
+---
+ sys/xvimage/xvimagepool.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sys/xvimage/xvimagepool.c b/sys/xvimage/xvimagepool.c
+index 116c6d1dc..75479279b 100644
+--- a/sys/xvimage/xvimagepool.c
++++ b/sys/xvimage/xvimagepool.c
+@@ -100,7 +100,7 @@ xvimage_buffer_pool_set_config (GstBufferPool * pool, GstStructure * config)
+     gst_buffer_pool_config_get_video_alignment (config, &xvpool->align);
+ 
+     GST_LOG_OBJECT (pool, "padding %u-%ux%u-%u", xvpool->align.padding_top,
+-        xvpool->align.padding_left, xvpool->align.padding_left,
++        xvpool->align.padding_left, xvpool->align.padding_right,
+         xvpool->align.padding_bottom);
+ 
+     /* do padding and alignment */
+-- 
+2.17.1
+

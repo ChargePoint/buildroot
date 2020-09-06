@@ -1,0 +1,40 @@
+From 01e1b181e893255512f473a6b0186b406b7ee940 Mon Sep 17 00:00:00 2001
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Date: Tue, 12 Nov 2019 17:28:22 -0500
+Subject: [PATCH 1006/1018] videocrop: Also update the coordinate when in-place
+
+This update is needed when the output caps is not changed (e.g. we are
+moving a viewport around).
+
+Fixes #669
+---
+ gst/videocrop/gstvideocrop.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/gst/videocrop/gstvideocrop.c b/gst/videocrop/gstvideocrop.c
+index 31e7d6769..8a89007d3 100644
+--- a/gst/videocrop/gstvideocrop.c
++++ b/gst/videocrop/gstvideocrop.c
+@@ -508,11 +508,19 @@ static GstFlowReturn
+ gst_video_crop_transform_ip (GstBaseTransform * trans, GstBuffer * buf)
+ {
+   GstVideoCrop *vcrop = GST_VIDEO_CROP (trans);
++  GstVideoFilter *vfilter = GST_VIDEO_FILTER (trans);
+   GstVideoMeta *video_meta;
+   GstVideoCropMeta *crop_meta;
+ 
+   GST_LOG_OBJECT (trans, "Transforming in-place");
+ 
++  if (G_UNLIKELY (vcrop->need_update)) {
++    if (!gst_video_crop_set_info (vfilter, NULL, &vcrop->in_info, NULL,
++            &vcrop->out_info)) {
++      return GST_FLOW_ERROR;
++    }
++  }
++
+   /* The video meta is required since we are going to make the caps
+    * width/height smaller, which would not result in a usable GstVideoInfo for
+    * mapping the buffer. */
+-- 
+2.17.1
+

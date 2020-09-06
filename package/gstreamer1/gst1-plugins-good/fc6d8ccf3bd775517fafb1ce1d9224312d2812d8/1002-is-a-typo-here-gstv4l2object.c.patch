@@ -1,0 +1,25 @@
+From 0141c2f010574165b3b12be51e395778d39a6640 Mon Sep 17 00:00:00 2001
+From: HuQian <huqian123hq@hotmail.com>
+Date: Wed, 25 Sep 2019 12:36:32 +0000
+Subject: [PATCH 1002/1018] is a typo here? gstv4l2object.c
+
+---
+ sys/v4l2/gstv4l2object.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sys/v4l2/gstv4l2object.c b/sys/v4l2/gstv4l2object.c
+index dad426a47..cbd789f18 100644
+--- a/sys/v4l2/gstv4l2object.c
++++ b/sys/v4l2/gstv4l2object.c
+@@ -1414,7 +1414,7 @@ gst_v4l2_object_v4l2fourcc_to_bare_struct (guint32 fourcc)
+       break;
+     case V4L2_PIX_FMT_MPEG1:
+       structure = gst_structure_new ("video/mpeg",
+-          "mpegversion", G_TYPE_INT, 2, NULL);
++          "mpegversion", G_TYPE_INT, 1, NULL);
+       break;
+     case V4L2_PIX_FMT_MPEG2:
+       structure = gst_structure_new ("video/mpeg",
+-- 
+2.17.1
+

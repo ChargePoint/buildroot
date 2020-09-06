@@ -1,0 +1,31 @@
+From 88e5530f59162cf0f31a9cc1c09762ef39a82553 Mon Sep 17 00:00:00 2001
+From: Vivia Nikolaidou <vivia@ahiru.eu>
+Date: Fri, 11 Oct 2019 17:25:04 +0300
+Subject: [PATCH 1009/1024] tsdemux: Always issue a DTS even when it's equal to
+ PTS
+
+Currently tsdemux timestamps only the PTS, and only issues the DTS if
+it's different. In that case, parsers tend to estimate the next DTS
+based on the previous DTS and the duration, which can accumulate
+rounding errors.
+---
+ gst/mpegtsdemux/tsdemux.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
+index 9f696f0c3..c28516ef7 100644
+--- a/gst/mpegtsdemux/tsdemux.c
++++ b/gst/mpegtsdemux/tsdemux.c
+@@ -3040,7 +3040,8 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream,
+     buffer = gst_buffer_list_get (buffer_list, 0);
+ 
+   if (GST_CLOCK_TIME_IS_VALID (stream->pts))
+-    GST_BUFFER_PTS (buffer) = stream->pts;
++    GST_BUFFER_PTS (buffer) = GST_BUFFER_DTS (buffer) = stream->pts;
++  /* DTS = PTS by default, we override it if there's a real DTS */
+   if (GST_CLOCK_TIME_IS_VALID (stream->dts))
+     GST_BUFFER_DTS (buffer) = stream->dts;
+ 
+-- 
+2.17.1
+

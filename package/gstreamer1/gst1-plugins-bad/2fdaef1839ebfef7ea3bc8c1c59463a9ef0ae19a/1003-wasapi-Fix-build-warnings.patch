@@ -1,0 +1,36 @@
+From 7324f427bb79c67b56d3ba1eac36dfc0fa547ebb Mon Sep 17 00:00:00 2001
+From: Seungha Yang <seungha.yang@navercorp.com>
+Date: Tue, 17 Sep 2019 20:32:18 +0900
+Subject: [PATCH 1003/1024] wasapi: Fix build warnings
+
+gstwasapiutil.c(173) : warning C4715: 'gst_wasapi_device_role_to_erole': not all control paths return a value
+gstwasapiutil.c(188) : warning C4715: 'gst_wasapi_erole_to_device_role': not all control paths return a value
+---
+ sys/wasapi/gstwasapiutil.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/sys/wasapi/gstwasapiutil.c b/sys/wasapi/gstwasapiutil.c
+index eac28834c..81df8d838 100644
+--- a/sys/wasapi/gstwasapiutil.c
++++ b/sys/wasapi/gstwasapiutil.c
+@@ -170,6 +170,8 @@ gst_wasapi_device_role_to_erole (gint role)
+     default:
+       g_assert_not_reached ();
+   }
++
++  return -1;
+ }
+ 
+ gint
+@@ -185,6 +187,8 @@ gst_wasapi_erole_to_device_role (gint erole)
+     default:
+       g_assert_not_reached ();
+   }
++
++  return -1;
+ }
+ 
+ static const gchar *
+-- 
+2.17.1
+

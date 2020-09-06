@@ -1,0 +1,25 @@
+From 9fd2f9abe8008af6c0d6d7a1c0ecda637ea2bc46 Mon Sep 17 00:00:00 2001
+From: Kyrylo Polezhaiev <kirushyk@gmail.com>
+Date: Thu, 5 Sep 2019 03:16:28 +0200
+Subject: [PATCH 1011/1024] tsmux: Fix copying of buffer region
+
+---
+ gst/mpegtsmux/tsmux/tsmux.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/gst/mpegtsmux/tsmux/tsmux.c b/gst/mpegtsmux/tsmux/tsmux.c
+index 6fa9e0d12..a1c864def 100644
+--- a/gst/mpegtsmux/tsmux/tsmux.c
++++ b/gst/mpegtsmux/tsmux/tsmux.c
+@@ -960,6 +960,8 @@ tsmux_section_write_packet (GstMpegtsSectionType * type,
+             payload_len) >= 4) {
+       /* enough space */
+       extra_alloc_bytes = 4;
++    } else {
++      extra_alloc_bytes = 0;
+     }
+     packet_buffer = gst_buffer_copy_region (section_buffer, GST_BUFFER_COPY_ALL,
+         payload_written, payload_len + extra_alloc_bytes);
+-- 
+2.17.1
+

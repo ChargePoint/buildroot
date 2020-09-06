@@ -1,0 +1,27 @@
+From bb8a5e60a8d40ae0bb00adbcdf1d48289b1bdc91 Mon Sep 17 00:00:00 2001
+From: Scott Kanowitz <skanowitz@echo360.com>
+Date: Thu, 12 Sep 2019 15:21:24 -0400
+Subject: [PATCH 1007/1018] jpegdec: Fix incorrect logic in EOI tag detection
+
+This change fixes the reversed logic in the EOI tag detection
+code.
+---
+ ext/jpeg/gstjpegdec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/jpeg/gstjpegdec.c b/ext/jpeg/gstjpegdec.c
+index bcbad7ab8..544216846 100644
+--- a/ext/jpeg/gstjpegdec.c
++++ b/ext/jpeg/gstjpegdec.c
+@@ -1208,7 +1208,7 @@ gst_jpeg_dec_handle_frame (GstVideoDecoder * bdec, GstVideoCodecFrame * frame)
+ 
+   data = dec->current_frame_map.data;
+   nbytes = dec->current_frame_map.size;
+-  has_eoi = ((data[nbytes - 2] != 0xff) || (data[nbytes - 1] != 0xd9));
++  has_eoi = ((data[nbytes - 2] == 0xff) && (data[nbytes - 1] == 0xd9));
+ 
+   /* some cameras fail to send an end-of-image marker (EOI),
+    * add it if that is the case. */
+-- 
+2.17.1
+

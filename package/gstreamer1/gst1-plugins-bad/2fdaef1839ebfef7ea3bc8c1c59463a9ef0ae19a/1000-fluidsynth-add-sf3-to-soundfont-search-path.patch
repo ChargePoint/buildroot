@@ -1,0 +1,32 @@
+From eb6f8f1c5b71cc3212bc55976c00bd1f43f82e6b Mon Sep 17 00:00:00 2001
+From: Fabian Greffrath <fabian@greffrath.com>
+Date: Tue, 24 Sep 2019 20:29:21 +0200
+Subject: [PATCH 1000/1024] fluidsynth: add sf3 to soundfont search path
+
+In Debian, soundfonts in SF3 format (i.e. the same as SF2 format but
+with Ogg/Vorbis-compressed samples) are installed into
+/usr/share/sounds/sf3. Soundfonts in SF3 format are supported since
+FluidSynth 1.1.7 (released in Feb 2018).
+---
+ ext/fluidsynth/gstfluiddec.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ext/fluidsynth/gstfluiddec.c b/ext/fluidsynth/gstfluiddec.c
+index c9514dba0..c7466f759 100644
+--- a/ext/fluidsynth/gstfluiddec.c
++++ b/ext/fluidsynth/gstfluiddec.c
+@@ -530,8 +530,9 @@ gst_fluid_dec_open (GstFluidDec * fluiddec)
+         fluiddec->soundfont);
+   } else {
+     gint i, j;
+-    /* ubuntu/debian in sounds/sf2, fedora in soundfonts */
+-    static const gchar *paths[] = { "sounds/sf2/", "soundfonts/", NULL };
++    /* ubuntu/debian in sounds/sf[23], fedora in soundfonts */
++    static const gchar *paths[] =
++        { "sounds/sf3/", "sounds/sf2/", "soundfonts/", NULL };
+ 
+     sharedirs = g_get_system_data_dirs ();
+ 
+-- 
+2.17.1
+

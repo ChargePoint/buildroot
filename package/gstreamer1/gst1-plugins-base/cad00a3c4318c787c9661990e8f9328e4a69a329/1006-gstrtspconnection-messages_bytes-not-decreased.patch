@@ -1,0 +1,53 @@
+From 7a7a1256287d19ac391bf7151d02cfd3be6abbe3 Mon Sep 17 00:00:00 2001
+From: Joakim Johansson <joakimj@axis.com>
+Date: Thu, 3 Oct 2019 12:03:09 +0200
+Subject: [PATCH 1006/1024] gstrtspconnection: messages_bytes not decreased
+
+The watch->messages_bytes is not decreased when the write operation
+from the backlog is only partly successfull.
+
+This commit decreases the watch->messages_bytes for the successfully
+sent messages.
+
+Fixes #679
+---
+ gst-libs/gst/rtsp/gstrtspconnection.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/gst-libs/gst/rtsp/gstrtspconnection.c b/gst-libs/gst/rtsp/gstrtspconnection.c
+index efa32e8b8..606192ef1 100644
+--- a/gst-libs/gst/rtsp/gstrtspconnection.c
++++ b/gst-libs/gst/rtsp/gstrtspconnection.c
+@@ -3979,6 +3979,7 @@ gst_rtsp_source_dispatch_write (GPollableOutputStream * stream,
+           /* all data of this message is sent, check body and otherwise
+            * skip the whole message for next time */
+           bytes_written -= (msg->data_size - msg->data_offset);
++          watch->messages_bytes -= (msg->data_size - msg->data_offset);
+           msg->data_offset = msg->data_size;
+ 
+           if (msg->body_data) {
+@@ -3992,6 +3993,7 @@ gst_rtsp_source_dispatch_write (GPollableOutputStream * stream,
+           if (bytes_written + msg->body_offset >= body_size) {
+             /* body written, drop this message */
+             bytes_written -= body_size - msg->body_offset;
++            watch->messages_bytes -= body_size - msg->body_offset;
+             msg->body_offset = body_size;
+             drop_messages++;
+ 
+@@ -4003,11 +4005,13 @@ gst_rtsp_source_dispatch_write (GPollableOutputStream * stream,
+             gst_rtsp_serialized_message_clear (msg);
+           } else {
+             msg->body_offset += bytes_written;
++            watch->messages_bytes -= bytes_written;
+             bytes_written = 0;
+           }
+         } else {
+           /* Need to continue sending from the data of this message */
+           msg->data_offset += bytes_written;
++          watch->messages_bytes -= bytes_written;
+           bytes_written = 0;
+         }
+       }
+-- 
+2.17.1
+
