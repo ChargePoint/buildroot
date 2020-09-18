@@ -2465,4 +2465,8 @@ menu "Text editors and viewers"
 	source "package/vim/Config.in"
 endmenu
 
+menu "TensorFlow Lite"
+    source "package/tensorflow/Config.in"
+endmenu
+
 endmenu

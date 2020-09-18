@@ -1,0 +1,6 @@
+config BR2_PACKAGE_TFL
+    bool "Install TensorFlow Lite"
+    help
+      TFL aka TensorFlow Lite is an open source deep learning framework for on-device inference. 
+
+      https://www.tensorflow.org/lite
