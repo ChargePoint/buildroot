@@ -286,7 +286,7 @@ HOSTCC := $(shell which $(HOSTCC) || type -p $(HOSTCC) || echo gcc)
 endif
 HOSTCC_NOCCACHE := $(HOSTCC)
 ifndef HOSTCXX
-HOSTCXX := g++
+HOSTCXX := gcc
 HOSTCXX := $(shell which $(HOSTCXX) || type -p $(HOSTCXX) || echo g++)
 endif
 HOSTCXX_NOCCACHE := $(HOSTCXX)
