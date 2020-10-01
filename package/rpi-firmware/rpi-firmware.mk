@@ -4,7 +4,16 @@
 #
 ################################################################################
 
+# Firmware version for RPI1/2/3
+ifeq ($(BR2_PACKAGE_RPI_FIRMWARE_VARIANT_PI),y)
 RPI_FIRMWARE_VERSION = 01ecfd2ba2b7cf3a2f4aa75ada895ee4a3e729f5
+endif
+
+# Firmware version for RPI4
+ifeq ($(BR2_PACKAGE_RPI_FIRMWARE_VARIANT_PI4),y)
+RPI_FIRMWARE_VERSION = 64b5649a41b69d09bfe0ed05448d28a66be3edfd
+endif
+
 RPI_FIRMWARE_SITE = $(call github,raspberrypi,firmware,$(RPI_FIRMWARE_VERSION))
 RPI_FIRMWARE_LICENSE = BSD-3-Clause
 RPI_FIRMWARE_LICENSE_FILES = boot/LICENCE.broadcom
