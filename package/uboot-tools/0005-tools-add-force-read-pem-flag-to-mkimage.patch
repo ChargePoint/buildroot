@@ -1,0 +1,470 @@
+From ba3c2646cb38990b3606e9be705b8f62dc54dcdb Mon Sep 17 00:00:00 2001
+From: Michael Robak <michael.robak@chargepoint.com>
+Date: Sun, 9 May 2021 16:55:05 -0700
+Subject: [PATCH 1/1] tools: add force read pem flag to mkimage
+
+In some cases an openssl engine implemented by an HSM vendor will
+use keys and certs stored directly on the filesystem.  For example
+AWS CloudHSM needs a fake pem file which contains a reference to
+the acutal private key stored in the HSM.
+
+This change adds a command line argument (-m) that forces the
+logic that eads pem files to be used even if an openssl engine
+is specified when signing a FIT image.
+
+$ mkimage -m -k /path/to/keys -N cloudhsm -F /path/to//file.itb
+
+Signed-off-by: Michael Robak <michael.robak@chargepoint.com>
+Signed-off-by: Charles Hardin <charles.hardin@chargepoint.com>
+---
+ common/image-fit.c   |  2 +-
+ common/image-sig.c   | 20 +++++++++++---------
+ include/image.h      |  7 +++++--
+ include/u-boot/rsa.h | 24 ++++++++++++++++++++++++
+ lib/rsa/rsa-sign.c   | 16 +++++++++-------
+ tools/fit_image.c    |  1 +
+ tools/image-host.c   | 26 ++++++++++++++------------
+ tools/imagetool.h    |  1 +
+ tools/mkimage.c      |  8 ++++++--
+ 9 files changed, 72 insertions(+), 33 deletions(-)
+
+diff --git a/common/image-fit.c b/common/image-fit.c
+index 0fef0a918d..32bf2d6e7d 100644
+--- a/common/image-fit.c
++++ b/common/image-fit.c
+@@ -1297,7 +1297,7 @@ int fit_image_verify_with_data(const void *fit, int image_noffset,
+ 				!strncmp(name, FIT_SIG_NODENAME,
+ 					strlen(FIT_SIG_NODENAME))) {
+ 			ret = fit_image_check_sig(fit, noffset, data,
+-							size, -1, &err_msg);
++							size, -1, false, &err_msg);
+ 
+ 			/*
+ 			 * Show an indication on failure, but do not return
+diff --git a/common/image-sig.c b/common/image-sig.c
+index 6563effcf3..0ce7a41803 100644
+--- a/common/image-sig.c
++++ b/common/image-sig.c
+@@ -209,7 +209,7 @@ struct image_region *fit_region_make_list(const void *fit,
+ 
+ static int fit_image_setup_verify(struct image_sign_info *info,
+ 		const void *fit, int noffset, int required_keynode,
+-		char **err_msgp)
++		bool force_pem, char **err_msgp)
+ {
+ 	char *algo_name;
+ 	const char *padding_name;
+@@ -238,6 +238,7 @@ static int fit_image_setup_verify(struct image_sign_info *info,
+ 	info->padding = image_get_padding_algo(padding_name);
+ 	info->fdt_blob = gd_fdt_blob();
+ 	info->required_keynode = required_keynode;
++	info->force_pem = force_pem;
+ 	printf("%s:%s", algo_name, info->keyname);
+ 
+ 	if (!info->checksum || !info->crypto || !info->padding) {
+@@ -249,7 +250,7 @@ static int fit_image_setup_verify(struct image_sign_info *info,
+ }
+ 
+ int fit_image_check_sig(const void *fit, int noffset, const void *data,
+-		size_t size, int required_keynode, char **err_msgp)
++		size_t size, int required_keynode, bool force_pem, char **err_msgp)
+ {
+ 	struct image_sign_info info;
+ 	struct image_region region;
+@@ -258,7 +259,7 @@ int fit_image_check_sig(const void *fit, int noffset, const void *data,
+ 
+ 	*err_msgp = NULL;
+ 	if (fit_image_setup_verify(&info, fit, noffset, required_keynode,
+-				   err_msgp))
++				   force_pem, err_msgp))
+ 		return -1;
+ 
+ 	if (fit_image_hash_get_value(fit, noffset, &fit_value,
+@@ -294,7 +295,7 @@ static int fit_image_verify_sig(const void *fit, int image_noffset,
+ 		if (!strncmp(name, FIT_SIG_NODENAME,
+ 			     strlen(FIT_SIG_NODENAME))) {
+ 			ret = fit_image_check_sig(fit, noffset, data,
+-							size, -1, &err_msg);
++							size, -1, false, &err_msg);
+ 			if (ret) {
+ 				puts("- ");
+ 			} else {
+@@ -377,7 +378,7 @@ int fit_image_verify_required_sigs(const void *fit, int image_noffset,
+  */
+ static int fit_config_check_sig(const void *fit, int noffset,
+ 				int required_keynode, int conf_noffset,
+-				char **err_msgp)
++				bool force_pem, char **err_msgp)
+ {
+ 	char * const exc_prop[] = {"data"};
+ 	const char *prop, *end, *name;
+@@ -398,7 +399,7 @@ static int fit_config_check_sig(const void *fit, int noffset,
+ 	      fit_get_name(gd_fdt_blob(), required_keynode, NULL));
+ 	*err_msgp = NULL;
+ 	if (fit_image_setup_verify(&info, fit, noffset, required_keynode,
+-				   err_msgp))
++				   force_pem, err_msgp))
+ 		return -1;
+ 
+ 	if (fit_image_hash_get_value(fit, noffset, &fit_value,
+@@ -500,7 +501,7 @@ static int fit_config_check_sig(const void *fit, int noffset,
+ }
+ 
+ static int fit_config_verify_sig(const void *fit, int conf_noffset,
+-		const void *sig_blob, int sig_offset)
++		const void *sig_blob, int sig_offset, bool force_pem)
+ {
+ 	int noffset;
+ 	char *err_msg = "";
+@@ -514,7 +515,8 @@ static int fit_config_verify_sig(const void *fit, int conf_noffset,
+ 		if (!strncmp(name, FIT_SIG_NODENAME,
+ 			     strlen(FIT_SIG_NODENAME))) {
+ 			ret = fit_config_check_sig(fit, noffset, sig_offset,
+-						   conf_noffset, &err_msg);
++						   conf_noffset, force_pem,
++						   &err_msg);
+ 			if (ret) {
+ 				puts("- ");
+ 			} else {
+@@ -563,7 +565,7 @@ int fit_config_verify_required_sigs(const void *fit, int conf_noffset,
+ 		if (!required || strcmp(required, "conf"))
+ 			continue;
+ 		ret = fit_config_verify_sig(fit, conf_noffset, sig_blob,
+-					    noffset);
++					    noffset, false);
+ 		if (ret) {
+ 			printf("Failed to verify required signature '%s'\n",
+ 			       fit_get_name(sig_blob, noffset, NULL));
+diff --git a/include/image.h b/include/image.h
+index 3ffc0fdd68..7365bdbb99 100644
+--- a/include/image.h
++++ b/include/image.h
+@@ -1065,6 +1065,7 @@ int fit_cipher_data(const char *keydir, void *keydest, void *fit,
+  * @comment:	Comment to add to signature nodes
+  * @require_keys: Mark all keys as 'required'
+  * @engine_id:	Engine to use for signing
++ * @force_pem:	Force read PEM file if openssl engine is used
+  * @cmdname:	Command name used when reporting errors
+  *
+  * Adds hash values for all component images in the FIT blob.
+@@ -1079,7 +1080,7 @@ int fit_cipher_data(const char *keydir, void *keydest, void *fit,
+  */
+ int fit_add_verification_data(const char *keydir, void *keydest, void *fit,
+ 			      const char *comment, int require_keys,
+-			      const char *engine_id, const char *cmdname);
++			      const char *engine_id, bool force_pem, const char *cmdname);
+ 
+ int fit_image_verify_with_data(const void *fit, int image_noffset,
+ 			       const void *data, size_t size);
+@@ -1176,6 +1177,7 @@ void image_set_host_blob(void *host_blob);
+ struct image_sign_info {
+ 	const char *keydir;		/* Directory conaining keys */
+ 	const char *keyname;		/* Name of key to use */
++	bool force_pem;		/* Force read PEM file if openssl engine is used */
+ 	void *fit;			/* Pointer to FIT blob */
+ 	int node_offset;		/* Offset of signature node */
+ 	const char *name;		/* Algorithm name */
+@@ -1327,12 +1329,13 @@ int fit_image_verify_required_sigs(const void *fit, int image_noffset,
+  *			if any. If this is given, then the image wil not
+  *			pass verification unless that key is used. If this is
+  *			-1 then any signature will do.
++ * @force_pem:	Force read PEM file if openssl engine is used
+  * @err_msgp:		In the event of an error, this will be pointed to a
+  *			help error string to display to the user.
+  * @return 0 if all verified ok, <0 on error
+  */
+ int fit_image_check_sig(const void *fit, int noffset, const void *data,
+-		size_t size, int required_keynode, char **err_msgp);
++		size_t size, int required_keynode, bool force_pem, char **err_msgp);
+ 
+ int fit_image_decrypt_data(const void *fit,
+ 			   int image_noffset, int cipher_noffset,
+diff --git a/include/u-boot/rsa.h b/include/u-boot/rsa.h
+index 2d3024d8b7..bed1c097c2 100644
+--- a/include/u-boot/rsa.h
++++ b/include/u-boot/rsa.h
+@@ -82,6 +82,20 @@ static inline int rsa_add_verify_data(struct image_sign_info *info,
+ #endif
+ 
+ #if IMAGE_ENABLE_VERIFY
++/**
++ * rsa_verify_hash() - Verify a signature against a hash
++ *
++ * Verify a RSA PKCS1.5 signature against an expected hash.
++ *
++ * @info:	Specifies key and FIT information
++ * @hash:	Hash according to algorithm specified in @info
++ * @sig:	Signature
++ * @sig_len:	Number of bytes in signature
++ * @return 0 if verified, -ve on error
++ */
++int rsa_verify_hash(struct image_sign_info *info,
++		    const uint8_t *hash, uint8_t *sig, uint sig_len);
++
+ /**
+  * rsa_verify() - Verify a signature against some data
+  *
+@@ -98,6 +112,9 @@ int rsa_verify(struct image_sign_info *info,
+ 	       const struct image_region region[], int region_count,
+ 	       uint8_t *sig, uint sig_len);
+ 
++int rsa_verify_with_pkey(struct image_sign_info *info,
++			 const void *hash, uint8_t *sig, uint sig_len);
++
+ int padding_pkcs_15_verify(struct image_sign_info *info,
+ 			   uint8_t *msg, int msg_len,
+ 			   const uint8_t *hash, int hash_len);
+@@ -108,6 +125,13 @@ int padding_pss_verify(struct image_sign_info *info,
+ 		       const uint8_t *hash, int hash_len);
+ #endif /* CONFIG_FIT_ENABLE_RSASSA_PSS_SUPPORT */
+ #else
++static inline int rsa_verify_hash(struct image_sign_info *info,
++				  const uint8_t *hash,
++				  uint8_t *sig, uint sig_len)
++{
++	return -ENXIO;
++}
++
+ static inline int rsa_verify(struct image_sign_info *info,
+ 		const struct image_region region[], int region_count,
+ 		uint8_t *sig, uint sig_len)
+diff --git a/lib/rsa/rsa-sign.c b/lib/rsa/rsa-sign.c
+index 580c744709..267e7ba8c8 100644
+--- a/lib/rsa/rsa-sign.c
++++ b/lib/rsa/rsa-sign.c
+@@ -183,14 +183,15 @@ err_rsa:
+  *
+  * @keydir:	Directory containing the key (PEM file) or key prefix (engine)
+  * @name	Name of key file (will have a .crt extension)
+- * @engine	Engine to use
++ * @force_pem	Force reading keys from file even if Engine is used
++ * @engine  Engine to use
+  * @rsap	Returns RSA object, or NULL on failure
+  * @return 0 if ok, -ve on error (in which case *rsap will be set to NULL)
+  */
+ static int rsa_get_pub_key(const char *keydir, const char *name,
+-			   ENGINE *engine, RSA **rsap)
++			   bool force_pem, ENGINE *engine, RSA **rsap)
+ {
+-	if (engine)
++	if (engine && !force_pem)
+ 		return rsa_engine_get_pub_key(keydir, name, engine, rsap);
+ 	return rsa_pem_get_pub_key(keydir, name, rsap);
+ }
+@@ -303,14 +304,15 @@ err_rsa:
+  *
+  * @keydir:	Directory containing the key (PEM file) or key prefix (engine)
+  * @name	Name of key
++ * @force_pem	Force reading keys from file even if Engine is used
+  * @engine	Engine to use for signing
+  * @rsap	Returns RSA object, or NULL on failure
+  * @return 0 if ok, -ve on error (in which case *rsap will be set to NULL)
+  */
+ static int rsa_get_priv_key(const char *keydir, const char *name,
+-			    ENGINE *engine, RSA **rsap)
++			    bool force_pem, ENGINE *engine,RSA **rsap)
+ {
+-	if (engine)
++	if (engine && !force_pem)
+ 		return rsa_engine_get_priv_key(keydir, name, engine, rsap);
+ 	return rsa_pem_get_priv_key(keydir, name, rsap);
+ }
+@@ -523,7 +525,7 @@ int rsa_sign(struct image_sign_info *info,
+ 			goto err_engine;
+ 	}
+ 
+-	ret = rsa_get_priv_key(info->keydir, info->keyname, e, &rsa);
++	ret = rsa_get_priv_key(info->keydir, info->keyname, info->force_pem, e, &rsa);
+ 	if (ret)
+ 		goto err_priv;
+ 	ret = rsa_sign_with_key(rsa, info->padding, info->checksum, region,
+@@ -752,7 +754,7 @@ int rsa_add_verify_data(struct image_sign_info *info, void *keydest)
+ 		if (ret)
+ 			return ret;
+ 	}
+-	ret = rsa_get_pub_key(info->keydir, info->keyname, e, &rsa);
++	ret = rsa_get_pub_key(info->keydir, info->keyname, info->force_pem, e, &rsa);
+ 	if (ret)
+ 		goto err_get_pub_key;
+ 	ret = rsa_get_params(rsa, &exponent, &n0_inv, &modulus, &r_squared);
+diff --git a/tools/fit_image.c b/tools/fit_image.c
+index dd61a816c9..27730e247f 100644
+--- a/tools/fit_image.c
++++ b/tools/fit_image.c
+@@ -71,6 +71,7 @@ static int fit_add_file_data(struct image_tool_params *params, size_t size_inc,
+ 						params->comment,
+ 						params->require_keys,
+ 						params->engine_id,
++						params->force_pem,
+ 						params->cmdname);
+ 	}
+ 
+diff --git a/tools/image-host.c b/tools/image-host.c
+index 4e57ddea96..6aa5bb38dd 100644
+--- a/tools/image-host.c
++++ b/tools/image-host.c
+@@ -153,7 +153,7 @@ static int fit_image_write_sig(void *fit, int noffset, uint8_t *value,
+ 
+ static int fit_image_setup_sig(struct image_sign_info *info,
+ 		const char *keydir, void *fit, const char *image_name,
+-		int noffset, const char *require_keys, const char *engine_id)
++		int noffset, const char *require_keys, const char *engine_id, bool force_pem)
+ {
+ 	const char *node_name;
+ 	char *algo_name;
+@@ -179,6 +179,7 @@ static int fit_image_setup_sig(struct image_sign_info *info,
+ 	info->padding = image_get_padding_algo(padding_name);
+ 	info->require_keys = require_keys;
+ 	info->engine_id = engine_id;
++	info->force_pem = force_pem;
+ 	if (!info->checksum || !info->crypto) {
+ 		printf("Unsupported signature algorithm (%s) for '%s' signature node in '%s' image node\n",
+ 		       algo_name, node_name, image_name);
+@@ -210,7 +211,7 @@ static int fit_image_process_sig(const char *keydir, void *keydest,
+ 		void *fit, const char *image_name,
+ 		int noffset, const void *data, size_t size,
+ 		const char *comment, int require_keys, const char *engine_id,
+-		const char *cmdname)
++		bool force_pem, const char *cmdname)
+ {
+ 	struct image_sign_info info;
+ 	struct image_region region;
+@@ -220,7 +221,7 @@ static int fit_image_process_sig(const char *keydir, void *keydest,
+ 	int ret;
+ 
+ 	if (fit_image_setup_sig(&info, keydir, fit, image_name, noffset,
+-				require_keys ? "image" : NULL, engine_id))
++				require_keys ? "image" : NULL, engine_id, force_pem))
+ 		return -1;
+ 
+ 	node_name = fit_get_name(fit, noffset, NULL);
+@@ -561,7 +562,8 @@ int fit_image_cipher_data(const char *keydir, void *keydest,
+  */
+ int fit_image_add_verification_data(const char *keydir, void *keydest,
+ 		void *fit, int image_noffset, const char *comment,
+-		int require_keys, const char *engine_id, const char *cmdname)
++		int require_keys, const char *engine_id, bool force_pem,
++		const char *cmdname)
+ {
+ 	const char *image_name;
+ 	const void *data;
+@@ -598,7 +600,7 @@ int fit_image_add_verification_data(const char *keydir, void *keydest,
+ 				strlen(FIT_SIG_NODENAME))) {
+ 			ret = fit_image_process_sig(keydir, keydest,
+ 				fit, image_name, noffset, data, size,
+-				comment, require_keys, engine_id, cmdname);
++				comment, require_keys, engine_id, force_pem, cmdname);
+ 		}
+ 		if (ret)
+ 			return ret;
+@@ -839,7 +841,7 @@ static int fit_config_get_data(void *fit, int conf_noffset, int noffset,
+ static int fit_config_process_sig(const char *keydir, void *keydest,
+ 		void *fit, const char *conf_name, int conf_noffset,
+ 		int noffset, const char *comment, int require_keys,
+-		const char *engine_id, const char *cmdname)
++		const char *engine_id, bool force_pem, const char *cmdname)
+ {
+ 	struct image_sign_info info;
+ 	const char *node_name;
+@@ -857,7 +859,7 @@ static int fit_config_process_sig(const char *keydir, void *keydest,
+ 		return -1;
+ 
+ 	if (fit_image_setup_sig(&info, keydir, fit, conf_name, noffset,
+-				require_keys ? "conf" : NULL, engine_id))
++				require_keys ? "conf" : NULL, engine_id, force_pem))
+ 		return -1;
+ 
+ 	ret = info.crypto->sign(&info, region, region_count, &value,
+@@ -903,7 +905,7 @@ static int fit_config_process_sig(const char *keydir, void *keydest,
+ 
+ static int fit_config_add_verification_data(const char *keydir, void *keydest,
+ 		void *fit, int conf_noffset, const char *comment,
+-		int require_keys, const char *engine_id, const char *cmdname)
++		int require_keys, const char *engine_id, bool force_pem, const char *cmdname)
+ {
+ 	const char *conf_name;
+ 	int noffset;
+@@ -922,7 +924,7 @@ static int fit_config_add_verification_data(const char *keydir, void *keydest,
+ 			     strlen(FIT_SIG_NODENAME))) {
+ 			ret = fit_config_process_sig(keydir, keydest,
+ 				fit, conf_name, conf_noffset, noffset, comment,
+-				require_keys, engine_id, cmdname);
++				require_keys, engine_id, force_pem, cmdname);
+ 		}
+ 		if (ret)
+ 			return ret;
+@@ -968,7 +970,7 @@ int fit_cipher_data(const char *keydir, void *keydest, void *fit,
+ 
+ int fit_add_verification_data(const char *keydir, void *keydest, void *fit,
+ 			      const char *comment, int require_keys,
+-			      const char *engine_id, const char *cmdname)
++			      const char *engine_id, bool force_pem, const char *cmdname)
+ {
+ 	int images_noffset, confs_noffset;
+ 	int noffset;
+@@ -992,7 +994,7 @@ int fit_add_verification_data(const char *keydir, void *keydest, void *fit,
+ 		 */
+ 		ret = fit_image_add_verification_data(keydir, keydest,
+ 				fit, noffset, comment, require_keys, engine_id,
+-				cmdname);
++				force_pem, cmdname);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -1016,7 +1018,7 @@ int fit_add_verification_data(const char *keydir, void *keydest, void *fit,
+ 		ret = fit_config_add_verification_data(keydir, keydest,
+ 						       fit, noffset, comment,
+ 						       require_keys,
+-						       engine_id, cmdname);
++						       engine_id, force_pem, cmdname);
+ 		if (ret)
+ 			return ret;
+ 	}
+diff --git a/tools/imagetool.h b/tools/imagetool.h
+index e1c778b0df..7025a65c8c 100644
+--- a/tools/imagetool.h
++++ b/tools/imagetool.h
+@@ -77,6 +77,7 @@ struct image_tool_params {
+ 	bool quiet;		/* Don't output text in normal operation */
+ 	unsigned int external_offset;	/* Add padding to external data */
+ 	const char *engine_id;	/* Engine to use for signing */
++	bool force_pem; /* Force read pem files Engine is used */
+ };
+ 
+ /*
+diff --git a/tools/mkimage.c b/tools/mkimage.c
+index 5f51d2cc89..0859f36ac2 100644
+--- a/tools/mkimage.c
++++ b/tools/mkimage.c
+@@ -105,7 +105,8 @@ static void usage(const char *msg)
+ 		"          -F => re-sign existing FIT image\n"
+ 		"          -p => place external data at a static position\n"
+ 		"          -r => mark keys used as 'required' in dtb\n"
+-		"          -N => openssl engine to use for signing\n");
++		"          -N => openssl engine to use for signing\n"
++		"          -m => force read keys from file if using openssl engine\n");
+ #else
+ 	fprintf(stderr,
+ 		"Signing / verified boot not supported (CONFIG_FIT_SIGNATURE undefined)\n");
+@@ -143,7 +144,7 @@ static void process_args(int argc, char **argv)
+ 	int opt;
+ 
+ 	while ((opt = getopt(argc, argv,
+-			     "a:A:b:c:C:d:D:e:Ef:Fk:i:K:ln:N:p:O:rR:qsT:vVx")) != -1) {
++			     "a:A:b:c:C:d:D:e:Ef:Fk:i:K:lmn:N:p:O:rR:qsT:vVx")) != -1) {
+ 		switch (opt) {
+ 		case 'a':
+ 			params.addr = strtoull(optarg, &ptr, 16);
+@@ -221,6 +222,9 @@ static void process_args(int argc, char **argv)
+ 		case 'l':
+ 			params.lflag = 1;
+ 			break;
++		case 'm':
++			params.force_pem = true;
++			break;
+ 		case 'n':
+ 			params.imagename = optarg;
+ 			break;
+-- 
+2.21.1 (Apple Git-122.3)
+
