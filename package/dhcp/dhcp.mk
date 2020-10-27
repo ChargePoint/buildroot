@@ -103,7 +103,7 @@ define DHCP_INSTALL_CTL_LIBS
 endef
 define DHCP_INSTALL_SERVER
 	mkdir -p $(TARGET_DIR)/var/lib
-	(cd $(TARGET_DIR)/var/lib; ln -snf /tmp dhcp)
+	(cd $(TARGET_DIR)/var/lib; ln -snf ../../tmp dhcp)
 	$(MAKE) -C $(@D)/server DESTDIR=$(TARGET_DIR) install-sbinPROGRAMS
 	$(INSTALL) -m 0644 -D package/dhcp/dhcpd.conf \
 		$(TARGET_DIR)/etc/dhcp/dhcpd.conf
@@ -113,7 +113,7 @@ endif
 ifeq ($(BR2_PACKAGE_DHCP_RELAY),y)
 define DHCP_INSTALL_RELAY
 	mkdir -p $(TARGET_DIR)/var/lib
-	(cd $(TARGET_DIR)/var/lib; ln -snf /tmp dhcp)
+	(cd $(TARGET_DIR)/var/lib; ln -snf ../../tmp dhcp)
 	$(MAKE) -C $(@D)/relay DESTDIR=$(TARGET_DIR) install-sbinPROGRAMS
 endef
 endif
@@ -121,7 +121,7 @@ endif
 ifeq ($(BR2_PACKAGE_DHCP_CLIENT),y)
 define DHCP_INSTALL_CLIENT
 	mkdir -p $(TARGET_DIR)/var/lib
-	(cd $(TARGET_DIR)/var/lib; ln -snf /tmp dhcp)
+	(cd $(TARGET_DIR)/var/lib; ln -snf ../../tmp dhcp)
 	$(MAKE) -C $(@D)/client DESTDIR=$(TARGET_DIR) sbindir=/sbin \
 		install-sbinPROGRAMS
 	$(INSTALL) -m 0644 -D package/dhcp/dhclient.conf \
