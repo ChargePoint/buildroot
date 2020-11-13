@@ -80,6 +80,7 @@ endif
 
 ifeq ($(BR2_TARGET_UBOOT_FORMAT_DTB_IMX),y)
 UBOOT_BINS += u-boot-dtb.imx
+UBOOT_BINS += u-boot-dtb.imx.log
 UBOOT_MAKE_TARGET += u-boot-dtb.imx
 endif
 
