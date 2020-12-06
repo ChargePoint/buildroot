@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-WESTON_IMX_VERSION = rel_imx_4.9.51_8mq_ga
+WESTON_IMX_VERSION = rel_imx_5.4.47_2.2.0
 WESTON_IMX_SITE = https://source.codeaurora.org/external/imx/weston-imx
 WESTON_IMX_SITE_METHOD = git
 WESTON_IMX_AUTORECONF = YES
