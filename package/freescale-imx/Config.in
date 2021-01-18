@@ -49,6 +49,9 @@ config BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8M
 config BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8MM
 	bool "imx8mm"
 
+config BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8MN
+	bool "imx8mn"
+
 config BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8X
 	bool "imx8x"
 endchoice
@@ -66,7 +69,9 @@ config BR2_PACKAGE_FREESCALE_IMX_PLATFORM
 	default "IMX6UL" if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX6UL
 	default "IMX7" if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX7
 	default "IMX8" if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8
-	default "IMX8" if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8M
+	default "IMX8MQ" if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8M
+	default "IMX8MM" if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8MM
+	default "IMX8MN" if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8MN
 
 config BR2_PACKAGE_FREESCALE_IMX_HAS_VPU
 	bool
@@ -77,7 +82,8 @@ config BR2_PACKAGE_FREESCALE_IMX_HAS_VPU
 
 config BR2_PACKAGE_FREESCALE_IMX_HAS_VPU_HANTRO
 	bool
-	default y if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8M
+	default y if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8M || \
+		BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8MM
 
 config BR2_PACKAGE_FREESCALE_IMX_HAS_VIV_GPU
 	bool
@@ -87,6 +93,7 @@ config BR2_PACKAGE_FREESCALE_IMX_HAS_VIV_GPU
 		BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8 || \
 		BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8M || \
 		BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8MM || \
+		BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8MN || \
 		BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8X
 
 source "package/freescale-imx/imx-alsa-plugins/Config.in"
@@ -101,6 +108,7 @@ source "package/freescale-imx/imx-vpu-hantro/Config.in"
 source "package/freescale-imx/imx-vpuwrap/Config.in"
 source "package/freescale-imx/firmware-imx/Config.in"
 source "package/freescale-imx/imx-sc-firmware/Config.in"
+source "package/freescale-imx/imx-seco/Config.in"
 if (BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX51 || BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX53)
 source "package/freescale-imx/gpu-amd-bin-mx51/Config.in"
 source "package/freescale-imx/libz160/Config.in"
@@ -109,23 +117,6 @@ if BR2_PACKAGE_FREESCALE_IMX_HAS_VIV_GPU
 source "package/freescale-imx/imx-gpu-g2d/Config.in"
 source "package/freescale-imx/imx-gpu-viv/Config.in"
 source "package/freescale-imx/kernel-module-imx-gpu-viv/Config.in"
-
-config BR2_PACKAGE_FREESCALE_IMX_GSTREAMER
-	bool "imx-gstreamer"
-	default y
-	help
-	  Configuration to force using the NXP forks for the gstreamer
-	  packages from CodeAurora instead of freedesktop.
-
-	  Check the "gstreamer" recipes for the changes
-	  https://source.codeaurora.org/external/imx/gstreamer
-	  https://source.codeaurora.org/external/imx/gst-plugins-base
-	  https://source.codeaurora.org/external/imx/gst-plugins-bad
-	  https://source.codeaurora.org/external/imx/gst-plugins-good
-	  https://source.codeaurora.org/external/imx/imx-gst1.0-plugin
-
 endif
-
-source "package/freescale-imx/imx-linux-headers/Config.in"
 
 endif

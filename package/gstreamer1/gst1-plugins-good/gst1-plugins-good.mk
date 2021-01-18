@@ -4,16 +4,9 @@
 #
 ################################################################################
 
-ifeq ($(BR2_PACKAGE_FREESCALE_IMX_GSTREAMER),y)
-GST1_PLUGINS_GOOD_VERSION = fc6d8ccf3bd775517fafb1ce1d9224312d2812d8
-GST1_PLUGINS_GOOD_SOURCE = imx-gst-plugins-good-$(GST1_PLUGINS_GOOD_VERSION).tar.gz
-GST1_PLUGINS_GOOD_SITE = https://source.codeaurora.org/external/imx/gst-plugins-good
-GST1_PLUGINS_GOOD_SITE_METHOD = git
-else
-GST1_PLUGINS_GOOD_VERSION = 1.16.2
+GST1_PLUGINS_GOOD_VERSION = 1.18.2
 GST1_PLUGINS_GOOD_SOURCE = gst-plugins-good-$(GST1_PLUGINS_GOOD_VERSION).tar.xz
 GST1_PLUGINS_GOOD_SITE = https://gstreamer.freedesktop.org/src/gst-plugins-good
-endif
 GST1_PLUGINS_GOOD_LICENSE_FILES = COPYING
 GST1_PLUGINS_GOOD_LICENSE = LGPL-2.1+
 
@@ -22,12 +15,18 @@ GST1_PLUGINS_GOOD_LDFLAGS = $(TARGET_LDFLAGS) $(TARGET_NLS_LIBS)
 GST1_PLUGINS_GOOD_CONF_OPTS = \
 	-Dexamples=disabled \
 	-Dtests=disabled \
+	-Dgobject-cast-checks=disabled \
+	-Dglib-asserts=disabled \
+	-Dglib-checks=disabled \
+	-Dasm=disabled \
 	-Ddirectsound=disabled \
 	-Dwaveform=disabled \
+	-Drpicamsrc=disabled \
 	-Dosxaudio=disabled \
 	-Dosxvideo=disabled \
 	-Daalib=disabled \
-	-Dlibcaca=disabled
+	-Dlibcaca=disabled \
+	-Ddoc=disabled
 
 # Options which require currently unpackaged libraries
 GST1_PLUGINS_GOOD_CONF_OPTS += \

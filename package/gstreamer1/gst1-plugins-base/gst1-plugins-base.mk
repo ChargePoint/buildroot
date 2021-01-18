@@ -4,16 +4,9 @@
 #
 ################################################################################
 
-ifeq ($(BR2_PACKAGE_FREESCALE_IMX_GSTREAMER),y)
-GST1_PLUGINS_BASE_VERSION = cad00a3c4318c787c9661990e8f9328e4a69a329
-GST1_PLUGINS_BASE_SOURCE = imx-gst-plugins-base-$(GST1_PLUGINS_BASE_VERSION).tar.gz
-GST1_PLUGINS_BASE_SITE = https://source.codeaurora.org/external/imx/gst-plugins-base
-GST1_PLUGINS_BASE_SITE_METHOD = git
-else
-GST1_PLUGINS_BASE_VERSION = 1.16.2
+GST1_PLUGINS_BASE_VERSION = 1.18.2
 GST1_PLUGINS_BASE_SOURCE = gst-plugins-base-$(GST1_PLUGINS_BASE_VERSION).tar.xz
 GST1_PLUGINS_BASE_SITE = https://gstreamer.freedesktop.org/src/gst-plugins-base
-endif
 GST1_PLUGINS_BASE_INSTALL_STAGING = YES
 GST1_PLUGINS_BASE_LICENSE_FILES = COPYING
 GST1_PLUGINS_BASE_LICENSE = LGPL-2.0+, LGPL-2.1+
@@ -24,8 +17,7 @@ GST1_PLUGINS_BASE_CONF_OPTS = \
 	-Dgobject-cast-checks=disabled \
 	-Dglib-asserts=disabled \
 	-Dglib-checks=disabled \
-	-Dgtk_doc=disabled \
-	-Dintrospection=disabled
+	-Ddoc=disabled
 
 # Options which require currently unpackaged libraries
 GST1_PLUGINS_BASE_CONF_OPTS += \
@@ -33,23 +25,25 @@ GST1_PLUGINS_BASE_CONF_OPTS += \
 	-Dlibvisual=disabled \
 	-Diso-codes=disabled
 
+ifeq ($(BR2_PACKAGE_GST1_PLUGINS_BASE_INSTALL_TOOLS),y)
+GST1_PLUGINS_BASE_CONF_OPTS += -Dtools=enabled
+else
+GST1_PLUGINS_BASE_CONF_OPTS += -Dtools=disabled
+endif
+
 GST1_PLUGINS_BASE_DEPENDENCIES = gstreamer1 $(TARGET_NLS_DEPENDENCIES)
 
 GST1_PLUGINS_BASE_LDFLAGS = $(TARGET_LDFLAGS) $(TARGET_NLS_LIBS)
 
-# Enable specific configs for the imx packages
-ifeq ($(BR2_PACKAGE_FREESCALE_IMX_GSTREAMER),y)
-GST1_PLUGINS_BASE_DEPENDENCIES += imx-linux-headers
-GST1_PLUGINS_BASE_CONF_OPTS += \
-	-Dextra_imx_incdir=$(STAGING_DIR)/usr/include/imx
-
-ifeq ($(BR2_PACKAGE_IMX_GPU_G2D),y)
-GST1_PLUGINS_BASE_DEPENDENCIES += imx-gpu-g2d
-GST1_PLUGINS_BASE_WINSYS_LIST += viv-fb
-endif
-endif
-
 # These plugins are listed in the order from ./configure --help
+
+ifeq ($(BR2_PACKAGE_GOBJECT_INTROSPECTION),y)
+GST1_PLUGINS_BASE_CONF_OPTS += -Dintrospection=enabled
+GST1_PLUGINS_BASE_DEPENDENCIES += gobject-introspection
+else
+GST1_PLUGINS_BASE_CONF_OPTS += -Dintrospection=disabled
+endif
+
 ifeq ($(BR2_PACKAGE_ORC),y)
 GST1_PLUGINS_BASE_DEPENDENCIES += orc
 GST1_PLUGINS_BASE_CONF_OPTS += -Dorc=enabled
@@ -57,19 +51,22 @@ else
 GST1_PLUGINS_BASE_CONF_OPTS += -Dorc=disabled
 endif
 
-ifeq ($(BR2_PACKAGE_GST1_PLUGINS_BASE_LIB_OPENGL_HAS_API),y)
+ifeq ($(BR2_PACKAGE_GST1_PLUGINS_BASE_LIB_OPENGL_HAS_API)$(BR2_PACKAGE_GST1_PLUGINS_BASE_LIB_OPENGL_HAS_PLATFORM)$(BR2_PACKAGE_GST1_PLUGINS_BASE_LIB_OPENGL_HAS_WINDOW),yyy)
 GST1_PLUGINS_BASE_CONF_OPTS += -Dgl=enabled
+else
+GST1_PLUGINS_BASE_CONF_OPTS += -Dgl=disabled
+endif
+
 ifeq ($(BR2_PACKAGE_GST1_PLUGINS_BASE_LIB_OPENGL_OPENGL),y)
 GST1_PLUGINS_BASE_GL_API_LIST = opengl
 GST1_PLUGINS_BASE_DEPENDENCIES += libgl libglu
 endif
+
 ifeq ($(BR2_PACKAGE_GST1_PLUGINS_BASE_LIB_OPENGL_GLES2),y)
 GST1_PLUGINS_BASE_GL_API_LIST += gles2
 GST1_PLUGINS_BASE_DEPENDENCIES += libgles
 endif
-else
-GST1_PLUGINS_BASE_CONF_OPTS += -Dgl=disabled
-endif
+
 GST1_PLUGINS_BASE_CONF_OPTS += -Dgl_api='$(subst $(space),$(comma),$(GST1_PLUGINS_BASE_GL_API_LIST))'
 
 ifeq ($(BR2_PACKAGE_GST1_PLUGINS_BASE_LIB_OPENGL_GLX),y)
@@ -157,6 +154,12 @@ ifeq ($(BR2_PACKAGE_GST1_PLUGINS_BASE_PLUGIN_GIO),y)
 GST1_PLUGINS_BASE_CONF_OPTS += -Dgio=enabled
 else
 GST1_PLUGINS_BASE_CONF_OPTS += -Dgio=disabled
+endif
+
+ifeq ($(BR2_PACKAGE_GST1_PLUGINS_BASE_PLUGIN_GIO_TYPEFINDER),y)
+GST1_PLUGINS_BASE_CONF_OPTS += -Dgio-typefinder=enabled
+else
+GST1_PLUGINS_BASE_CONF_OPTS += -Dgio-typefinder=disabled
 endif
 
 ifeq ($(BR2_PACKAGE_GST1_PLUGINS_BASE_PLUGIN_OVERLAYCOMPOSITION),y)
