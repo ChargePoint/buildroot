@@ -22,7 +22,7 @@ IMX_SECO_INSTALL_IMAGES = YES
 # is done in post-image script.
 ifeq ($(BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8X),y)
 define IMX_SECO_INSTALL_IMAGES_CMDS
-	cp $(@D)/firmware/seco/mx8qxb0-ahab-container.img \
+	cp $(@D)/firmware/seco/mx8qxc0-ahab-container.img \
 		$(BINARIES_DIR)/ahab-container.img
 endef
 else ifeq ($(BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8),y)
