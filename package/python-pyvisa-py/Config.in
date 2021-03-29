@@ -1,6 +1,7 @@
 config BR2_PACKAGE_PYTHON_PYVISA_PY
 	bool "python-pyvisa-py"
 	select BR2_PACKAGE_PYTHON_SERIAL
+	select BR2_PYTHON_SETUPTOOLS_SCM
 	help
 	  Pure Python Visa module.
 
