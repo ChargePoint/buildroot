@@ -1,0 +1,55 @@
+--- a/raw2rgbpnm.c	2021-04-03 23:42:27.329337891 -0700
++++ b/raw2rgbpnm.c	2021-04-14 21:59:32.272444251 -0700
+@@ -109,6 +109,7 @@ static const struct format_info {
+ 	{ V4L2_PIX_FMT_SGRBG10,  16,  "SGRBG10 (10bit raw bayer)", 0, 0 },
+ 	{ V4L2_PIX_FMT_SGRBG10DPCM8,    8, "SGRBG10DPCM8 (10bit raw bayer DPCM compressed to 8 bits)", 0, 0 },
+ 	{ V4L2_PIX_FMT_SGRBG12,  16,  "SGRBG12 (12bit raw bayer)", 0, 0 },
++	{ V4L2_PIX_FMT_SBGGR12,  16,  "SBGGR12 (12bit raw bayer)", 0, 0 },
+ 	{ V4L2_PIX_FMT_SBGGR16,  16,  "SBGGR16 (16 BGBG.. GRGR..)", 0, 0 },
+ 	{ V4L2_PIX_FMT_SGRBG16,  16,  "SGRBG16 (16 GRGR.. BGBG..)", 0, 0 },
+ };
+@@ -506,6 +507,44 @@ static void raw_to_rgb(const struct form
+ 		}
+ 		free(buf);
+ 		break;
++	case V4L2_PIX_FMT_SBGGR12:
++		shift += 2; // utilize bay2rgb10 by shifting off 2 bits
++		shift += 2; // IMX ISI issue, formats < 16-bits shifted-left to start at DATA[13]
++		for (dst_y=0; dst_y<src_size[1]; dst_y++) {
++			for (dst_x=0; dst_x<src_size[0]; dst_x++) {
++				unsigned short *p = (unsigned short *)&(src[src_stride*dst_y+dst_x*2]);
++				int v = *p;
++				if (highbits)
++					v >>= 6;
++				else
++					v >>= shift;
++				if (v<0 || v>=(1<<10))
++					printf("WARNING: bayer image pixel values out of range (%i)\n", v);
++				v *= brightness;
++				v >>= 8;
++				if (v < 0) v = 0;
++				if (v >= (1<<10)) v = (1<<10)-1;
++				*p = v;
++			}
++		}
++
++		// Work around missing SBGGR support by skipping the first row
++		src += src_stride;
++		src_size[1]--;
++
++		buf = malloc(src_size[0] * src_size[1] * 3);
++		if (buf==NULL) error("out of memory");
++		qc_imag_bay2rgb10(src, src_stride, buf, src_size[0]*3, src_size[0], src_size[1], 3);
++		for (dst_y=0; dst_y<src_size[1]; dst_y++) {
++			for (dst_x=0; dst_x<src_size[0]; dst_x++) {
++				unsigned char *p = buf + src_size[0]*3*dst_y + dst_x*3;
++				rgb[dst_y*rgb_stride+3*dst_x+0] = swaprb ? p[2] : p[0];
++				rgb[dst_y*rgb_stride+3*dst_x+1] = p[1];
++				rgb[dst_y*rgb_stride+3*dst_x+2] = swaprb ? p[0] : p[2];
++			}
++		}
++		free(buf);
++                break;
+ 	case V4L2_PIX_FMT_SBGGR8:
+ 	case V4L2_PIX_FMT_SGBRG8:
+ 		printf("WARNING: bayer phase not supported -> expect bad colors\n");
