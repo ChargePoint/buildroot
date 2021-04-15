@@ -1,0 +1,92 @@
+--- a/raw2rgbpnm.c	2021-04-03 23:42:27.329337891 -0700
++++ b/raw2rgbpnm.c	2021-04-23 17:37:52.460119251 -0700
+@@ -109,6 +109,7 @@ static const struct format_info {
+ 	{ V4L2_PIX_FMT_SGRBG10,  16,  "SGRBG10 (10bit raw bayer)", 0, 0 },
+ 	{ V4L2_PIX_FMT_SGRBG10DPCM8,    8, "SGRBG10DPCM8 (10bit raw bayer DPCM compressed to 8 bits)", 0, 0 },
+ 	{ V4L2_PIX_FMT_SGRBG12,  16,  "SGRBG12 (12bit raw bayer)", 0, 0 },
++	{ V4L2_PIX_FMT_SBGGR12,  16,  "SBGGR12 (12bit raw bayer)", 0, 0 },
+ 	{ V4L2_PIX_FMT_SBGGR16,  16,  "SBGGR16 (16 BGBG.. GRGR..)", 0, 0 },
+ 	{ V4L2_PIX_FMT_SGRBG16,  16,  "SGRBG16 (16 GRGR.. BGBG..)", 0, 0 },
+ };
+@@ -479,10 +480,8 @@ static void raw_to_rgb(const struct form
+ 			for (dst_x=0; dst_x<src_size[0]; dst_x++) {
+ 				unsigned short *p = (unsigned short *)&(src[src_stride*dst_y+dst_x*2]);
+ 				int v = *p;
+-				if (highbits)
+-					v >>= 6;
+-				else
+-					v >>= shift;
++				v >>= highbits;
++				v >>= shift;
+ 				if (v<0 || v>=(1<<10))
+ 					printf("WARNING: bayer image pixel values out of range (%i)\n", v);
+ 				v *= brightness;
+@@ -506,6 +505,41 @@ static void raw_to_rgb(const struct form
+ 		}
+ 		free(buf);
+ 		break;
++	case V4L2_PIX_FMT_SBGGR12:
++		shift += 2; // utilize bay2rgb10 by shifting off 2 bits
++		for (dst_y=0; dst_y<src_size[1]; dst_y++) {
++			for (dst_x=0; dst_x<src_size[0]; dst_x++) {
++				unsigned short *p = (unsigned short *)&(src[src_stride*dst_y+dst_x*2]);
++				int v = *p;
++				v >>= highbits;
++				v >>= shift;
++				if (v<0 || v>=(1<<10))
++					printf("WARNING: bayer image pixel values out of range (%i)\n", v);
++				v *= brightness;
++				v >>= 8;
++				if (v < 0) v = 0;
++				if (v >= (1<<10)) v = (1<<10)-1;
++				*p = v;
++			}
++		}
++
++		// Work around missing SBGGR support by skipping the first row
++		src += src_stride;
++		src_size[1]--;
++
++		buf = malloc(src_size[0] * src_size[1] * 3);
++		if (buf==NULL) error("out of memory");
++		qc_imag_bay2rgb10(src, src_stride, buf, src_size[0]*3, src_size[0], src_size[1], 3);
++		for (dst_y=0; dst_y<src_size[1]; dst_y++) {
++			for (dst_x=0; dst_x<src_size[0]; dst_x++) {
++				unsigned char *p = buf + src_size[0]*3*dst_y + dst_x*3;
++				rgb[dst_y*rgb_stride+3*dst_x+0] = swaprb ? p[2] : p[0];
++				rgb[dst_y*rgb_stride+3*dst_x+1] = p[1];
++				rgb[dst_y*rgb_stride+3*dst_x+2] = swaprb ? p[0] : p[2];
++			}
++		}
++		free(buf);
++                break;
+ 	case V4L2_PIX_FMT_SBGGR8:
+ 	case V4L2_PIX_FMT_SGBRG8:
+ 		printf("WARNING: bayer phase not supported -> expect bad colors\n");
+@@ -651,7 +685,7 @@ int main(int argc, char *argv[])
+ 	int n = 0, multiple = 0;
+ 
+ 	for (;;) {
+-		int c = getopt(argc, argv, "a:b:f:ghs:w");
++		int c = getopt(argc, argv, "a:b:f:g:hs:w");
+ 		if (c==-1) break;
+ 		switch (c) {
+ 		case 'a':
+@@ -687,7 +721,7 @@ int main(int argc, char *argv[])
+ 			}
+ 			break;
+ 		case 'g':
+-			highbits = 1;
++			highbits = MIN(atoi(optarg), 6);
+ 			break;
+ 		case 'h':
+ 			printf("%s - Convert headerless raw image to RGB file (PNM)\n"
+@@ -695,7 +729,7 @@ int main(int argc, char *argv[])
+ 			       "-a <algo>     Select algorithm, use \"-a ?\" for a list\n"
+ 			       "-b <bright>   Set brightness (multiplier) to output image (float, default 1.0)\n"
+ 			       "-f <format>   Specify input file format format (-f ? for list, default UYVY)\n"
+-			       "-g            Use high bits for Bayer RAW 10 data\n"
++			       "-g <bits>     Shift additional bits for high-aligned Bayer RAW 10 data\n"
+ 			       "-h            Show this help\n",
+ 			       "-n            Assume multiple input frames, extract several PNM files\n"
+ 			       "-s <XxY>      Specify image size\n"
