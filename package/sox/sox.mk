@@ -10,6 +10,7 @@ SOX_SOURCE = sox-$(SOX_VERSION).tar.bz2
 SOX_DEPENDENCIES = host-pkgconf
 SOX_LICENSE = GPL-2.0+ (sox binary), LGPL-2.1+ (libraries)
 SOX_LICENSE_FILES = LICENSE.GPL LICENSE.LGPL
+SOX_INSTALL_STAGING = YES
 
 SOX_CONF_OPTS = \
 	--with-distro="Buildroot" \
