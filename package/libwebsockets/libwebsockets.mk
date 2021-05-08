@@ -14,7 +14,9 @@ LIBWEBSOCKETS_CONF_OPTS = \
 	-DLWS_WITHOUT_TESTAPPS=ON \
 	-DLWS_IPV6=ON \
 	-DLWS_UNIX_SOCK=ON \
-	-DLWS_WITHOUT_EXTENSIONS=OFF
+	-DLWS_WITHOUT_EXTENSIONS=OFF \
+	-DLWS_WITH_EXTERNAL_POLL=ON \
+	-DDISABLE_WERROR=ON
 
 # If LWS_MAX_SMP=1, then there is no code related to pthreads compiled
 # in the library. If unset, LWS_MAX_SMP defaults to 32 and a small
