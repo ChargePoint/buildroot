@@ -10,7 +10,7 @@ LIBCOAP_INSTALL_STAGING = YES
 LIBCOAP_LICENSE = BSD-2-Clause
 LIBCOAP_LICENSE_FILES = COPYING LICENSE
 LIBCOAP_DEPENDENCIES = host-pkgconf
-LIBCOAP_CONF_OPTS = --disable-examples --without-tinydtls
+LIBCOAP_CONF_OPTS = --enable-examples --without-tinydtls
 LIBCOAP_AUTORECONF = YES
 
 ifeq ($(BR2_PACKAGE_GNUTLS),y)
