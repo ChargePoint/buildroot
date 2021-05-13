@@ -11,7 +11,7 @@ LIBCOAP_LICENSE = BSD-2-Clause
 LIBCOAP_LICENSE_FILES = COPYING LICENSE
 LIBCOAP_DEPENDENCIES = host-pkgconf
 LIBCOAP_CONF_OPTS = \
-	--disable-examples --disable-examples-source --without-tinydtls
+	--enable-examples --enable-examples-source --without-tinydtls
 LIBCOAP_AUTORECONF = YES
 
 ifeq ($(BR2_PACKAGE_GNUTLS),y)
