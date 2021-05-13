@@ -12,7 +12,7 @@ LIBCOAP_LICENSE_FILES = COPYING LICENSE
 LIBCOAP_CPE_ID_VENDOR = libcoap
 LIBCOAP_DEPENDENCIES = host-pkgconf
 LIBCOAP_CONF_OPTS = \
-	--disable-examples --disable-examples-source --without-tinydtls
+	--enable-examples --enable-examples-source --without-tinydtls
 LIBCOAP_AUTORECONF = YES
 
 # 0001-coap_oscore-c-Fix-parsing-OSCORE-configuration-information.patch
