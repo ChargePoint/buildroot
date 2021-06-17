@@ -35,9 +35,9 @@ endif
 
 ifeq ($(BR2_PACKAGE_FILE),y)
 SOX_DEPENDENCIES += file
-SOX_CONF_OPTS += --with-magic
+SOX_CONF_OPTS += --enable-magic
 else
-SOX_CONF_OPTS += --without-magic
+SOX_CONF_OPTS += --disable-magic
 endif
 
 ifeq ($(BR2_PACKAGE_FLAC),y)

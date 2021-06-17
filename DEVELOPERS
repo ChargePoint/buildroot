@@ -309,6 +309,7 @@ F:	package/apache/
 F:	package/apr/
 F:	package/apr-util/
 F:	package/bcg729/
+F:	package/bitcoin/
 F:	package/bluez-tools/
 F:	package/boinc/
 F:	package/clamav/
@@ -331,8 +332,12 @@ F:	package/gkrellm/
 F:	package/gli/
 F:	package/glmark2/
 F:	package/gpsd/
+F:	package/gptfdisk/
 F:	package/hdparm/
 F:	package/inih/
+F:	package/intel-gmmlib/
+F:	package/intel-mediadriver/
+F:	package/intel-mediasdk/
 F:	package/jsoncpp/
 F:	package/kodi*
 F:	package/lame/
@@ -468,7 +473,7 @@ N:	Bogdan Radulescu <bogdan@nimblex.net>
 F:	package/iftop/
 F:	package/ncdu/
 
-N:	Brandon Maier <brandon.maier@rockwellcollins.com>
+N:	Brandon Maier <brandon.maier@collins.com>
 F:	package/vmtouch/
 
 N:	Brock Williams <brock@cottonwoodcomputer.com>
@@ -486,16 +491,6 @@ F:	package/libsvg-cairo/
 
 N:	Cédric Chépied <cedric.chepied@gmail.com>
 F:	package/znc/
-
-N:	Chakra Divi <chakra@openedev.com>
-F:	board/friendlyarm/nanopi-m1
-F:	board/friendlyarm/nanopi-m1-plus
-F:	board/olimex/a13_olinuxino
-F:	board/orangepi/orangepi-plus
-F:	configs/friendlyarm_nanopi_m1_defconfig
-F:	configs/friendlyarm_nanopi_m1_plus_defconfig
-F:	configs/olimex_a13_olinuxino_defconfig
-F:	configs/orangepi_plus_defconfig
 
 N:	Chris Packham <judge.packham@gmail.com>
 F:	package/coremark/
@@ -569,7 +564,7 @@ F:	package/perl-sys-mmap/
 F:	package/perl-time-parsedate/
 F:	package/perl-x10/
 
-N:	Clayton Shotwell <clayton.shotwell@rockwellcollins.com>
+N:	Clayton Shotwell <clayton.shotwell@collins.com>
 F:	package/audit/
 F:	package/checkpolicy/
 F:	package/cpio/
@@ -670,6 +665,20 @@ F:	package/libstrophe/
 
 N:	Derrick Lyndon Pallas <derrick@meter.com>
 F:	package/ipcalc/
+
+N:	Dick Olsson <hi@senzilla.io>
+F:	package/bearssl/
+F:	package/bitcoin/
+F:	package/execline/
+F:	package/mdevd/
+F:	package/s6-dns/
+F:	package/s6-linux-init/
+F:	package/s6-linux-utils/
+F:	package/s6-networking/
+F:	package/s6-portable-utils/
+F:	package/s6-rc/
+F:	package/s6/
+F:	package/skalibs/
 
 N:	Dimitrios Siganos <dimitris@siganos.org>
 F:	package/wireless-regdb/
@@ -1201,7 +1210,7 @@ F:	package/python-sockjs/
 F:	package/python-terminaltables/
 F:	package/python-yarl/
 
-N:	James Knight <james.knight@rockwellcollins.com>
+N:	James Knight <james.knight@collins.com>
 F:	package/atkmm/
 F:	package/cairomm/
 F:	package/google-material-design-icons/
@@ -1690,7 +1699,7 @@ F:	board/technologic/ts4900/
 F:	configs/ts4900_defconfig
 F:	package/ts4900-fpga/
 
-N:	Matt Weber <matthew.weber@rockwellcollins.com>
+N:	Matt Weber <matthew.weber@collins.com>
 F:	board/freescale/p*
 F:	board/freescale/t*
 F:	board/qemu/ppc64-e5500/
@@ -2303,7 +2312,7 @@ F:	toolchain/
 N:	Roman Gorbenkov <roman.gorbenkov@ens2m.org>
 F:	package/davfs2/
 
-N:	Ryan Barnett <ryan.barnett@rockwellcollins.com>
+N:	Ryan Barnett <ryan.barnett@collins.com>
 F:	package/atftp/
 F:	package/c-periphery/
 F:	package/miraclecast/
@@ -2340,7 +2349,7 @@ F:	support/misc/toolchainfile.cmake.in
 N:	Sam Voss <sam.voss@gmail.com>
 F:	package/ripgrep/
 
-N:	Santosh Multhalli <santosh.multhalli@rockwellcollins.com>
+N:	Santosh Multhalli <santosh.multhalli@collins.com>
 F:	package/valijson/
 
 N:	Sébastien Szymanski <sebastien.szymanski@armadeus.com>
