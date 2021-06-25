@@ -12,6 +12,10 @@ ALSA_PLUGINS_INSTALL_STAGING = NO
 ALSA_PLUGINS_AUTORECONF = YES
 ALSA_PLUGINS_DEPENDENCIES = alsa-lib libsamplerate
 
+ifeq ($(BR2_PACKAGE_ALSA_UTILS),y)
+ALSA_PLUGINS_DEPENDENCIES += alsa-utils
+endif
+
 ALSA_PLUGINS_CONF_OPTS += \
 	--enable-samplerate \
 	--disable-jack \
