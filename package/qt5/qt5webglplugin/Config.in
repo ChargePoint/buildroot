@@ -1,0 +1,11 @@
+config BR2_PACKAGE_QT5WEBGLPLUGIN
+	bool "qt5webglplugin"
+	select BR2_PACKAGE_QT5DECLARATIVE
+	select BR2_PACKAGE_QT5WEBSOCKETS
+	help
+	  Qt is a cross-platform application and UI framework for
+	  developers using C++.
+
+	  This package corresponds to the qt5webgl plugin module.
+
+	  https://doc.qt.io/qt-5/webgl.html

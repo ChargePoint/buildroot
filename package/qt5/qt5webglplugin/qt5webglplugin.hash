@@ -1,0 +1,5 @@
+# Hash from: http://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtwebglplugin-everywhere-src-5.15.2.tar.xz
+sha256  81e782b517ed29e10bea1aa90c9f59274c98a910f2c8b105fa78368a36b41446  qtwebglplugin-everywhere-src-5.15.2.tar.xz
+
+# Hashes for license files:
+sha256  8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903  LICENSE.GPL3
