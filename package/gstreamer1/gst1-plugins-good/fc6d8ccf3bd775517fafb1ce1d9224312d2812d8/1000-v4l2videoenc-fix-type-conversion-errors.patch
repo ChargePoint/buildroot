@@ -1,0 +1,25 @@
+From f1e0c94df2956f7a64d612652fca9c993a1a4b4e Mon Sep 17 00:00:00 2001
+From: Fuwei Tang <fuweix.tang@intel.com>
+Date: Fri, 11 Oct 2019 10:33:20 +0800
+Subject: [PATCH 1000/1018] v4l2videoenc: fix type conversion errors
+
+---
+ sys/v4l2/gstv4l2videoenc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sys/v4l2/gstv4l2videoenc.c b/sys/v4l2/gstv4l2videoenc.c
+index 8a86e4af0..7c17c74bd 100644
+--- a/sys/v4l2/gstv4l2videoenc.c
++++ b/sys/v4l2/gstv4l2videoenc.c
+@@ -720,7 +720,7 @@ gst_v4l2_video_enc_handle_frame (GstVideoEncoder * encoder,
+   if (G_UNLIKELY (!g_atomic_int_get (&self->active)))
+     goto flushing;
+ 
+-  task_state = gst_pad_get_task_state (GST_VIDEO_DECODER_SRC_PAD (self));
++  task_state = gst_pad_get_task_state (GST_VIDEO_ENCODER_SRC_PAD (self));
+   if (task_state == GST_TASK_STOPPED || task_state == GST_TASK_PAUSED) {
+     GstBufferPool *pool = GST_BUFFER_POOL (self->v4l2output->pool);
+ 
+-- 
+2.17.1
+

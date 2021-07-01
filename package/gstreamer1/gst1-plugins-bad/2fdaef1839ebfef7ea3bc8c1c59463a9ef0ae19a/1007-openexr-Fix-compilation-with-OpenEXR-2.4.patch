@@ -1,0 +1,36 @@
+From a76d5ac806d6c86e95a59967bf534384f27508ba Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <jsteffens@make.tv>
+Date: Sat, 2 Nov 2019 16:51:09 +0100
+Subject: [PATCH 1007/1024] openexr: Fix compilation with OpenEXR 2.4
+
+It uses modern C++; adding -std=c++98 breaks the build.
+---
+ ext/openexr/meson.build | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/ext/openexr/meson.build b/ext/openexr/meson.build
+index 7f4bab750..8fac33042 100644
+--- a/ext/openexr/meson.build
++++ b/ext/openexr/meson.build
+@@ -1,11 +1,16 @@
+ openexr_dep = dependency('OpenEXR', required: get_option('openexr'))
+ if openexr_dep.found()
+-  openexr_extra_cpp_args = cxx.get_supported_arguments(['-std=c++98'])
++  openexr_cppargs = []
++
++  if openexr_dep.version().version_compare('< 2.4.0')
++    openexr_cppargs += cxx.get_supported_arguments(['-std=c++98'])
++  endif
++
+   gstopenexr = library('gstopenexr',
+     'gstopenexr.c',
+     'gstopenexrdec.cpp',
+     c_args: gst_plugins_bad_args,
+-    cpp_args: gst_plugins_bad_args + openexr_extra_cpp_args,
++    cpp_args: gst_plugins_bad_args + openexr_cppargs,
+     link_args: noseh_link_args,
+     include_directories: [configinc, libsinc],
+     dependencies: [gstvideo_dep, openexr_dep],
+-- 
+2.17.1
+

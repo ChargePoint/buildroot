@@ -1,0 +1,87 @@
+From 54c1aa8db647bda90b4794a51e3510d02b338bc0 Mon Sep 17 00:00:00 2001
+From: Michael Olbrich <m.olbrich@pengutronix.de>
+Date: Wed, 7 Nov 2018 09:00:02 +0100
+Subject: [PATCH 1004/1018] jpegdec: don't overwrite the last valid line
+
+If the the height is not a multiple of the macro block size then the memory
+of the last line is reused for all extra lines. This is no problem if the
+last line is duplicated properly. However, if the extra lines are not
+initialized properly during encoding, then the last visible line is
+overwritten with undefined data.
+Use a extra buffer to avoid this problem.
+---
+ ext/jpeg/gstjpegdec.c | 16 +++++++++++++---
+ ext/jpeg/gstjpegdec.h |  3 +++
+ 2 files changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/ext/jpeg/gstjpegdec.c b/ext/jpeg/gstjpegdec.c
+index 6c552290e..bcbad7ab8 100644
+--- a/ext/jpeg/gstjpegdec.c
++++ b/ext/jpeg/gstjpegdec.c
+@@ -894,6 +894,12 @@ gst_jpeg_dec_decode_direct (GstJpegDec * dec, GstVideoFrame * frame,
+     }
+   }
+ 
++  if (height % (v_samp[0] * DCTSIZE) && (dec->scratch_size < stride[0])) {
++    g_free (dec->scratch);
++    dec->scratch = g_malloc (stride[0]);
++    dec->scratch_size = stride[0];
++  }
++
+   /* let jpeglib decode directly into our final buffer */
+   GST_DEBUG_OBJECT (dec, "decoding directly into output buffer");
+ 
+@@ -902,7 +908,7 @@ gst_jpeg_dec_decode_direct (GstJpegDec * dec, GstVideoFrame * frame,
+       /* Y */
+       line[0][j] = base[0] + (i + j) * stride[0];
+       if (G_UNLIKELY (line[0][j] > last[0]))
+-        line[0][j] = last[0];
++        line[0][j] = dec->scratch;
+       /* U */
+       if (v_samp[1] == v_samp[0]) {
+         line[1][j] = base[1] + ((i + j) / 2) * stride[1];
+@@ -910,7 +916,7 @@ gst_jpeg_dec_decode_direct (GstJpegDec * dec, GstVideoFrame * frame,
+         line[1][j] = base[1] + ((i / 2) + j) * stride[1];
+       }
+       if (G_UNLIKELY (line[1][j] > last[1]))
+-        line[1][j] = last[1];
++        line[1][j] = dec->scratch;
+       /* V */
+       if (v_samp[2] == v_samp[0]) {
+         line[2][j] = base[2] + ((i + j) / 2) * stride[2];
+@@ -918,7 +924,7 @@ gst_jpeg_dec_decode_direct (GstJpegDec * dec, GstVideoFrame * frame,
+         line[2][j] = base[2] + ((i / 2) + j) * stride[2];
+       }
+       if (G_UNLIKELY (line[2][j] > last[2]))
+-        line[2][j] = last[2];
++        line[2][j] = dec->scratch;
+     }
+ 
+     lines = jpeg_read_raw_data (&dec->cinfo, line, v_samp[0] * DCTSIZE);
+@@ -1555,5 +1561,9 @@ gst_jpeg_dec_stop (GstVideoDecoder * bdec)
+ 
+   gst_jpeg_dec_free_buffers (dec);
+ 
++  g_free (dec->scratch);
++  dec->scratch = NULL;
++  dec->scratch_size = 0;
++
+   return TRUE;
+ }
+diff --git a/ext/jpeg/gstjpegdec.h b/ext/jpeg/gstjpegdec.h
+index e8fa2fcbf..39c7f28dd 100644
+--- a/ext/jpeg/gstjpegdec.h
++++ b/ext/jpeg/gstjpegdec.h
+@@ -90,6 +90,9 @@ struct _GstJpegDec {
+   /* arrays for indirect decoding */
+   gboolean idr_width_allocated;
+   guchar *idr_y[16],*idr_u[16],*idr_v[16];
++  /* scratch buffer for direct decoding overflow */
++  guchar *scratch;
++  guint scratch_size;
+   /* current (parsed) image size */
+   guint    rem_img_len;
+ };
+-- 
+2.17.1
+

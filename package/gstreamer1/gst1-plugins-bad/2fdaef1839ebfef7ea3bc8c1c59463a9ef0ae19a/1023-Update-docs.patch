@@ -1,0 +1,1846 @@
+From bb357ca871ec9738bf58e079302c84d7d949f4da Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Tim-Philipp=20M=C3=BCller?= <tim@centricular.com>
+Date: Tue, 3 Dec 2019 11:12:58 +0000
+Subject: [PATCH 1023/1024] Update docs
+
+---
+ docs/plugins/gst-plugins-bad-plugins.hierarchy        | 2 ++
+ docs/plugins/inspect/plugin-accurip.xml               | 2 +-
+ docs/plugins/inspect/plugin-adpcmdec.xml              | 2 +-
+ docs/plugins/inspect/plugin-adpcmenc.xml              | 2 +-
+ docs/plugins/inspect/plugin-aiff.xml                  | 2 +-
+ docs/plugins/inspect/plugin-asfmux.xml                | 2 +-
+ docs/plugins/inspect/plugin-assrender.xml             | 2 +-
+ docs/plugins/inspect/plugin-audiobuffersplit.xml      | 2 +-
+ docs/plugins/inspect/plugin-audiofxbad.xml            | 2 +-
+ docs/plugins/inspect/plugin-audiolatency.xml          | 2 +-
+ docs/plugins/inspect/plugin-audiomixmatrix.xml        | 2 +-
+ docs/plugins/inspect/plugin-audiovisualizers.xml      | 2 +-
+ docs/plugins/inspect/plugin-autoconvert.xml           | 2 +-
+ docs/plugins/inspect/plugin-bayer.xml                 | 2 +-
+ docs/plugins/inspect/plugin-bluez.xml                 | 2 +-
+ docs/plugins/inspect/plugin-bs2b.xml                  | 2 +-
+ docs/plugins/inspect/plugin-bz2.xml                   | 2 +-
+ docs/plugins/inspect/plugin-camerabin.xml             | 2 +-
+ docs/plugins/inspect/plugin-chromaprint.xml           | 2 +-
+ docs/plugins/inspect/plugin-closedcaption.xml         | 2 +-
+ docs/plugins/inspect/plugin-coloreffects.xml          | 2 +-
+ docs/plugins/inspect/plugin-colormanagement.xml       | 2 +-
+ docs/plugins/inspect/plugin-curl.xml                  | 2 +-
+ docs/plugins/inspect/plugin-dashdemux.xml             | 2 +-
+ docs/plugins/inspect/plugin-dc1394.xml                | 2 +-
+ docs/plugins/inspect/plugin-de265.xml                 | 2 +-
+ docs/plugins/inspect/plugin-debugutilsbad.xml         | 2 +-
+ docs/plugins/inspect/plugin-decklink.xml              | 2 +-
+ docs/plugins/inspect/plugin-dfbvideosink.xml          | 2 +-
+ docs/plugins/inspect/plugin-dtls.xml                  | 2 +-
+ docs/plugins/inspect/plugin-dtsdec.xml                | 2 +-
+ docs/plugins/inspect/plugin-dvb.xml                   | 2 +-
+ docs/plugins/inspect/plugin-dvbsuboverlay.xml         | 2 +-
+ docs/plugins/inspect/plugin-dvdspu.xml                | 2 +-
+ docs/plugins/inspect/plugin-faac.xml                  | 2 +-
+ docs/plugins/inspect/plugin-faad.xml                  | 2 +-
+ docs/plugins/inspect/plugin-faceoverlay.xml           | 2 +-
+ docs/plugins/inspect/plugin-fbdevsink.xml             | 2 +-
+ docs/plugins/inspect/plugin-fdkaac.xml                | 2 +-
+ docs/plugins/inspect/plugin-festival.xml              | 2 +-
+ docs/plugins/inspect/plugin-fieldanalysis.xml         | 2 +-
+ docs/plugins/inspect/plugin-flite.xml                 | 2 +-
+ docs/plugins/inspect/plugin-fluidsynthmidi.xml        | 2 +-
+ docs/plugins/inspect/plugin-freeverb.xml              | 2 +-
+ docs/plugins/inspect/plugin-frei0r.xml                | 2 +-
+ docs/plugins/inspect/plugin-gaudieffects.xml          | 2 +-
+ docs/plugins/inspect/plugin-gdp.xml                   | 2 +-
+ docs/plugins/inspect/plugin-geometrictransform.xml    | 2 +-
+ docs/plugins/inspect/plugin-gme.xml                   | 2 +-
+ docs/plugins/inspect/plugin-gsm.xml                   | 2 +-
+ docs/plugins/inspect/plugin-hls.xml                   | 2 +-
+ docs/plugins/inspect/plugin-id3tag.xml                | 2 +-
+ docs/plugins/inspect/plugin-inter.xml                 | 2 +-
+ docs/plugins/inspect/plugin-interlace.xml             | 2 +-
+ docs/plugins/inspect/plugin-ipcpipeline.xml           | 2 +-
+ docs/plugins/inspect/plugin-ivfparse.xml              | 2 +-
+ docs/plugins/inspect/plugin-ivtc.xml                  | 2 +-
+ docs/plugins/inspect/plugin-jp2kdecimator.xml         | 2 +-
+ docs/plugins/inspect/plugin-jpegformat.xml            | 2 +-
+ docs/plugins/inspect/plugin-kate.xml                  | 2 +-
+ docs/plugins/inspect/plugin-kms.xml                   | 2 +-
+ docs/plugins/inspect/plugin-ladspa.xml                | 2 +-
+ docs/plugins/inspect/plugin-legacyrawparse.xml        | 2 +-
+ docs/plugins/inspect/plugin-midi.xml                  | 2 +-
+ docs/plugins/inspect/plugin-mms.xml                   | 2 +-
+ docs/plugins/inspect/plugin-modplug.xml               | 2 +-
+ docs/plugins/inspect/plugin-mpeg2enc.xml              | 2 +-
+ docs/plugins/inspect/plugin-mpegpsdemux.xml           | 2 +-
+ docs/plugins/inspect/plugin-mpegpsmux.xml             | 2 +-
+ docs/plugins/inspect/plugin-mpegtsdemux.xml           | 2 +-
+ docs/plugins/inspect/plugin-mpegtsmux.xml             | 2 +-
+ docs/plugins/inspect/plugin-mplex.xml                 | 2 +-
+ docs/plugins/inspect/plugin-musepack.xml              | 2 +-
+ docs/plugins/inspect/plugin-mxf.xml                   | 2 +-
+ docs/plugins/inspect/plugin-neonhttpsrc.xml           | 2 +-
+ docs/plugins/inspect/plugin-netsim.xml                | 2 +-
+ docs/plugins/inspect/plugin-ofa.xml                   | 2 +-
+ docs/plugins/inspect/plugin-openal.xml                | 2 +-
+ docs/plugins/inspect/plugin-opencv.xml                | 2 +-
+ docs/plugins/inspect/plugin-openexr.xml               | 2 +-
+ docs/plugins/inspect/plugin-openh264.xml              | 2 +-
+ docs/plugins/inspect/plugin-openjpeg.xml              | 2 +-
+ docs/plugins/inspect/plugin-openmpt.xml               | 2 +-
+ docs/plugins/inspect/plugin-openni2.xml               | 2 +-
+ docs/plugins/inspect/plugin-opusparse.xml             | 2 +-
+ docs/plugins/inspect/plugin-pcapparse.xml             | 2 +-
+ docs/plugins/inspect/plugin-pnm.xml                   | 2 +-
+ docs/plugins/inspect/plugin-proxy.xml                 | 2 +-
+ docs/plugins/inspect/plugin-removesilence.xml         | 2 +-
+ docs/plugins/inspect/plugin-resindvd.xml              | 2 +-
+ docs/plugins/inspect/plugin-rfbsrc.xml                | 2 +-
+ docs/plugins/inspect/plugin-rsvg.xml                  | 2 +-
+ docs/plugins/inspect/plugin-rtmp.xml                  | 2 +-
+ docs/plugins/inspect/plugin-rtponvif.xml              | 2 +-
+ docs/plugins/inspect/plugin-sbc.xml                   | 2 +-
+ docs/plugins/inspect/plugin-sctp.xml                  | 2 +-
+ docs/plugins/inspect/plugin-sdpelem.xml               | 2 +-
+ docs/plugins/inspect/plugin-segmentclip.xml           | 2 +-
+ docs/plugins/inspect/plugin-shm.xml                   | 2 +-
+ docs/plugins/inspect/plugin-siren.xml                 | 2 +-
+ docs/plugins/inspect/plugin-smooth.xml                | 2 +-
+ docs/plugins/inspect/plugin-smoothstreaming.xml       | 2 +-
+ docs/plugins/inspect/plugin-sndfile.xml               | 2 +-
+ docs/plugins/inspect/plugin-soundtouch.xml            | 2 +-
+ docs/plugins/inspect/plugin-spandsp.xml               | 2 +-
+ docs/plugins/inspect/plugin-speed.xml                 | 2 +-
+ docs/plugins/inspect/plugin-srt.xml                   | 2 +-
+ docs/plugins/inspect/plugin-srtp.xml                  | 2 +-
+ docs/plugins/inspect/plugin-subenc.xml                | 2 +-
+ docs/plugins/inspect/plugin-teletext.xml              | 2 +-
+ docs/plugins/inspect/plugin-timecode.xml              | 2 +-
+ docs/plugins/inspect/plugin-ttmlsubs.xml              | 2 +-
+ docs/plugins/inspect/plugin-uvch264.xml               | 2 +-
+ docs/plugins/inspect/plugin-vdpau.xml                 | 2 +-
+ docs/plugins/inspect/plugin-videofiltersbad.xml       | 2 +-
+ docs/plugins/inspect/plugin-videoframe_audiolevel.xml | 2 +-
+ docs/plugins/inspect/plugin-videoparsersbad.xml       | 2 +-
+ docs/plugins/inspect/plugin-videosignal.xml           | 2 +-
+ docs/plugins/inspect/plugin-vmnc.xml                  | 2 +-
+ docs/plugins/inspect/plugin-voaacenc.xml              | 2 +-
+ docs/plugins/inspect/plugin-voamrwbenc.xml            | 2 +-
+ docs/plugins/inspect/plugin-vulkan.xml                | 2 +-
+ docs/plugins/inspect/plugin-wasapi.xml                | 2 +-
+ docs/plugins/inspect/plugin-waylandsink.xml           | 2 +-
+ docs/plugins/inspect/plugin-webp.xml                  | 2 +-
+ docs/plugins/inspect/plugin-webrtc.xml                | 2 +-
+ docs/plugins/inspect/plugin-wildmidi.xml              | 2 +-
+ docs/plugins/inspect/plugin-x265.xml                  | 2 +-
+ docs/plugins/inspect/plugin-y4mdec.xml                | 2 +-
+ docs/plugins/inspect/plugin-yadif.xml                 | 2 +-
+ docs/plugins/inspect/plugin-zbar.xml                  | 2 +-
+ 131 files changed, 132 insertions(+), 130 deletions(-)
+
+diff --git a/docs/plugins/gst-plugins-bad-plugins.hierarchy b/docs/plugins/gst-plugins-bad-plugins.hierarchy
+index 56caed709..245334d56 100644
+--- a/docs/plugins/gst-plugins-bad-plugins.hierarchy
++++ b/docs/plugins/gst-plugins-bad-plugins.hierarchy
+@@ -273,7 +273,9 @@ GObject
+         GstMXFDemux
+         GstMidiParse
+         GstModPlug
++        GstMpeg2enc
+         GstMpegPSDemux
++        GstMplex
+         GstMusepackDec
+         GstNetSim
+         GstNonstreamAudioDecoder
+diff --git a/docs/plugins/inspect/plugin-accurip.xml b/docs/plugins/inspect/plugin-accurip.xml
+index 41dc354f8..8f4f9e270 100644
+--- a/docs/plugins/inspect/plugin-accurip.xml
++++ b/docs/plugins/inspect/plugin-accurip.xml
+@@ -3,7 +3,7 @@
+   <description>Computes an AccurateRip CRC</description>
+   <filename>../../gst/accurip/.libs/libgstaccurip.so</filename>
+   <basename>libgstaccurip.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-adpcmdec.xml b/docs/plugins/inspect/plugin-adpcmdec.xml
+index a7b653216..a36e12f66 100644
+--- a/docs/plugins/inspect/plugin-adpcmdec.xml
++++ b/docs/plugins/inspect/plugin-adpcmdec.xml
+@@ -3,7 +3,7 @@
+   <description>ADPCM decoder</description>
+   <filename>../../gst/adpcmdec/.libs/libgstadpcmdec.so</filename>
+   <basename>libgstadpcmdec.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-adpcmenc.xml b/docs/plugins/inspect/plugin-adpcmenc.xml
+index ebc45b456..54bcb1fc7 100644
+--- a/docs/plugins/inspect/plugin-adpcmenc.xml
++++ b/docs/plugins/inspect/plugin-adpcmenc.xml
+@@ -3,7 +3,7 @@
+   <description>ADPCM encoder</description>
+   <filename>../../gst/adpcmenc/.libs/libgstadpcmenc.so</filename>
+   <basename>libgstadpcmenc.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-aiff.xml b/docs/plugins/inspect/plugin-aiff.xml
+index 48c5f9c4b..56120758f 100644
+--- a/docs/plugins/inspect/plugin-aiff.xml
++++ b/docs/plugins/inspect/plugin-aiff.xml
+@@ -3,7 +3,7 @@
+   <description>Create and parse Audio Interchange File Format (AIFF) files</description>
+   <filename>../../gst/aiff/.libs/libgstaiff.so</filename>
+   <basename>libgstaiff.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-asfmux.xml b/docs/plugins/inspect/plugin-asfmux.xml
+index 619cf14b6..75fc2453f 100644
+--- a/docs/plugins/inspect/plugin-asfmux.xml
++++ b/docs/plugins/inspect/plugin-asfmux.xml
+@@ -3,7 +3,7 @@
+   <description>ASF Muxer Plugin</description>
+   <filename>../../gst/asfmux/.libs/libgstasfmux.so</filename>
+   <basename>libgstasfmux.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-assrender.xml b/docs/plugins/inspect/plugin-assrender.xml
+index a9bbd99ad..6d3163c97 100644
+--- a/docs/plugins/inspect/plugin-assrender.xml
++++ b/docs/plugins/inspect/plugin-assrender.xml
+@@ -3,7 +3,7 @@
+   <description>ASS/SSA subtitle renderer</description>
+   <filename>../../ext/assrender/.libs/libgstassrender.so</filename>
+   <basename>libgstassrender.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-audiobuffersplit.xml b/docs/plugins/inspect/plugin-audiobuffersplit.xml
+index 7aaffeda5..1a50458d4 100644
+--- a/docs/plugins/inspect/plugin-audiobuffersplit.xml
++++ b/docs/plugins/inspect/plugin-audiobuffersplit.xml
+@@ -3,7 +3,7 @@
+   <description>Audio buffer splitter</description>
+   <filename>../../gst/audiobuffersplit/.libs/libgstaudiobuffersplit.so</filename>
+   <basename>libgstaudiobuffersplit.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-audiofxbad.xml b/docs/plugins/inspect/plugin-audiofxbad.xml
+index 37a39692c..31d779649 100644
+--- a/docs/plugins/inspect/plugin-audiofxbad.xml
++++ b/docs/plugins/inspect/plugin-audiofxbad.xml
+@@ -3,7 +3,7 @@
+   <description>Audio filters from gst-plugins-bad</description>
+   <filename>../../gst/audiofxbad/.libs/libgstaudiofxbad.so</filename>
+   <basename>libgstaudiofxbad.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-audiolatency.xml b/docs/plugins/inspect/plugin-audiolatency.xml
+index 3cdbbb237..b89911401 100644
+--- a/docs/plugins/inspect/plugin-audiolatency.xml
++++ b/docs/plugins/inspect/plugin-audiolatency.xml
+@@ -3,7 +3,7 @@
+   <description>A plugin to measure audio latency</description>
+   <filename>../../gst/audiolatency/.libs/libgstaudiolatency.so</filename>
+   <basename>libgstaudiolatency.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-audiomixmatrix.xml b/docs/plugins/inspect/plugin-audiomixmatrix.xml
+index 18ea6daf7..2519f91a3 100644
+--- a/docs/plugins/inspect/plugin-audiomixmatrix.xml
++++ b/docs/plugins/inspect/plugin-audiomixmatrix.xml
+@@ -3,7 +3,7 @@
+   <description>Audio matrix mix</description>
+   <filename>../../gst/audiomixmatrix/.libs/libgstaudiomixmatrix.so</filename>
+   <basename>libgstaudiomixmatrix.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-audiovisualizers.xml b/docs/plugins/inspect/plugin-audiovisualizers.xml
+index 9b53b342d..e47d805b4 100644
+--- a/docs/plugins/inspect/plugin-audiovisualizers.xml
++++ b/docs/plugins/inspect/plugin-audiovisualizers.xml
+@@ -3,7 +3,7 @@
+   <description>Creates video visualizations of audio input</description>
+   <filename>../../gst/audiovisualizers/.libs/libgstaudiovisualizers.so</filename>
+   <basename>libgstaudiovisualizers.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-autoconvert.xml b/docs/plugins/inspect/plugin-autoconvert.xml
+index 0314eba68..c1518af8f 100644
+--- a/docs/plugins/inspect/plugin-autoconvert.xml
++++ b/docs/plugins/inspect/plugin-autoconvert.xml
+@@ -3,7 +3,7 @@
+   <description>Selects convertor element based on caps</description>
+   <filename>../../gst/autoconvert/.libs/libgstautoconvert.so</filename>
+   <basename>libgstautoconvert.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-bayer.xml b/docs/plugins/inspect/plugin-bayer.xml
+index 07a7e4dba..e5ff52e65 100644
+--- a/docs/plugins/inspect/plugin-bayer.xml
++++ b/docs/plugins/inspect/plugin-bayer.xml
+@@ -3,7 +3,7 @@
+   <description>Elements to convert Bayer images</description>
+   <filename>../../gst/bayer/.libs/libgstbayer.so</filename>
+   <basename>libgstbayer.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-bluez.xml b/docs/plugins/inspect/plugin-bluez.xml
+index 45d9efabc..7a8b998ac 100644
+--- a/docs/plugins/inspect/plugin-bluez.xml
++++ b/docs/plugins/inspect/plugin-bluez.xml
+@@ -3,7 +3,7 @@
+   <description>Bluez-based bluetooth support</description>
+   <filename>../../sys/bluez/.libs/libgstbluez.so</filename>
+   <basename>libgstbluez.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-bs2b.xml b/docs/plugins/inspect/plugin-bs2b.xml
+index 320763c9e..421113b6c 100644
+--- a/docs/plugins/inspect/plugin-bs2b.xml
++++ b/docs/plugins/inspect/plugin-bs2b.xml
+@@ -3,7 +3,7 @@
+   <description>Improve headphone listening of stereo audio recordsusing the bs2b library.</description>
+   <filename>../../ext/bs2b/.libs/libgstbs2b.so</filename>
+   <basename>libgstbs2b.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-bz2.xml b/docs/plugins/inspect/plugin-bz2.xml
+index 53b2c0b44..5958c6972 100644
+--- a/docs/plugins/inspect/plugin-bz2.xml
++++ b/docs/plugins/inspect/plugin-bz2.xml
+@@ -3,7 +3,7 @@
+   <description>Compress or decompress streams</description>
+   <filename>../../ext/bz2/.libs/libgstbz2.so</filename>
+   <basename>libgstbz2.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-camerabin.xml b/docs/plugins/inspect/plugin-camerabin.xml
+index 1d728fc49..4571efc09 100644
+--- a/docs/plugins/inspect/plugin-camerabin.xml
++++ b/docs/plugins/inspect/plugin-camerabin.xml
+@@ -3,7 +3,7 @@
+   <description>Take image snapshots and record movies from camera</description>
+   <filename>../../gst/camerabin2/.libs/libgstcamerabin.so</filename>
+   <basename>libgstcamerabin.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-chromaprint.xml b/docs/plugins/inspect/plugin-chromaprint.xml
+index 23441a6dd..51db5d871 100644
+--- a/docs/plugins/inspect/plugin-chromaprint.xml
++++ b/docs/plugins/inspect/plugin-chromaprint.xml
+@@ -3,7 +3,7 @@
+   <description>Calculate Chromaprint fingerprint from audio files</description>
+   <filename>../../ext/chromaprint/.libs/libgstchromaprint.so</filename>
+   <basename>libgstchromaprint.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-closedcaption.xml b/docs/plugins/inspect/plugin-closedcaption.xml
+index d1d170a87..f6b5978cd 100644
+--- a/docs/plugins/inspect/plugin-closedcaption.xml
++++ b/docs/plugins/inspect/plugin-closedcaption.xml
+@@ -3,7 +3,7 @@
+   <description>Closed Caption elements</description>
+   <filename>../../ext/closedcaption/.libs/libgstclosedcaption.so</filename>
+   <basename>libgstclosedcaption.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-coloreffects.xml b/docs/plugins/inspect/plugin-coloreffects.xml
+index 47a437c2f..b97853fc7 100644
+--- a/docs/plugins/inspect/plugin-coloreffects.xml
++++ b/docs/plugins/inspect/plugin-coloreffects.xml
+@@ -3,7 +3,7 @@
+   <description>Color Look-up Table filters</description>
+   <filename>../../gst/coloreffects/.libs/libgstcoloreffects.so</filename>
+   <basename>libgstcoloreffects.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-colormanagement.xml b/docs/plugins/inspect/plugin-colormanagement.xml
+index 1760ba6c8..c98d7d2eb 100644
+--- a/docs/plugins/inspect/plugin-colormanagement.xml
++++ b/docs/plugins/inspect/plugin-colormanagement.xml
+@@ -3,7 +3,7 @@
+   <description>Color management correction plugins</description>
+   <filename>../../ext/colormanagement/.libs/libgstcolormanagement.so</filename>
+   <basename>libgstcolormanagement.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-curl.xml b/docs/plugins/inspect/plugin-curl.xml
+index 1e2e5d447..645b29487 100644
+--- a/docs/plugins/inspect/plugin-curl.xml
++++ b/docs/plugins/inspect/plugin-curl.xml
+@@ -3,7 +3,7 @@
+   <description>libcurl-based elements</description>
+   <filename>../../ext/curl/.libs/libgstcurl.so</filename>
+   <basename>libgstcurl.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-dashdemux.xml b/docs/plugins/inspect/plugin-dashdemux.xml
+index 25914600a..a87a698de 100644
+--- a/docs/plugins/inspect/plugin-dashdemux.xml
++++ b/docs/plugins/inspect/plugin-dashdemux.xml
+@@ -3,7 +3,7 @@
+   <description>DASH demuxer plugin</description>
+   <filename>../../ext/dash/.libs/libgstdashdemux.so</filename>
+   <basename>libgstdashdemux.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-dc1394.xml b/docs/plugins/inspect/plugin-dc1394.xml
+index adca4c5f7..3dc20852c 100644
+--- a/docs/plugins/inspect/plugin-dc1394.xml
++++ b/docs/plugins/inspect/plugin-dc1394.xml
+@@ -3,7 +3,7 @@
+   <description>1394 IIDC video source</description>
+   <filename>../../ext/dc1394/.libs/libgstdc1394.so</filename>
+   <basename>libgstdc1394.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-de265.xml b/docs/plugins/inspect/plugin-de265.xml
+index 8a708f059..6f7dd2419 100644
+--- a/docs/plugins/inspect/plugin-de265.xml
++++ b/docs/plugins/inspect/plugin-de265.xml
+@@ -3,7 +3,7 @@
+   <description>HEVC/H.265 decoder using libde265</description>
+   <filename>../../ext/libde265/.libs/libgstde265.so</filename>
+   <basename>libgstde265.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-debugutilsbad.xml b/docs/plugins/inspect/plugin-debugutilsbad.xml
+index 3fe28fc9b..d9559d5f9 100644
+--- a/docs/plugins/inspect/plugin-debugutilsbad.xml
++++ b/docs/plugins/inspect/plugin-debugutilsbad.xml
+@@ -3,7 +3,7 @@
+   <description>Collection of elements that may or may not be useful for debugging</description>
+   <filename>../../gst/debugutils/.libs/libgstdebugutilsbad.so</filename>
+   <basename>libgstdebugutilsbad.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-decklink.xml b/docs/plugins/inspect/plugin-decklink.xml
+index 9a6597262..be0317cd2 100644
+--- a/docs/plugins/inspect/plugin-decklink.xml
++++ b/docs/plugins/inspect/plugin-decklink.xml
+@@ -3,7 +3,7 @@
+   <description>Blackmagic Decklink plugin</description>
+   <filename>../../sys/decklink/.libs/libgstdecklink.so</filename>
+   <basename>libgstdecklink.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-dfbvideosink.xml b/docs/plugins/inspect/plugin-dfbvideosink.xml
+index dcd8291da..b69582c62 100644
+--- a/docs/plugins/inspect/plugin-dfbvideosink.xml
++++ b/docs/plugins/inspect/plugin-dfbvideosink.xml
+@@ -3,7 +3,7 @@
+   <description>DirectFB video output plugin</description>
+   <filename>../../ext/directfb/.libs/libgstdfbvideosink.so</filename>
+   <basename>libgstdfbvideosink.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-dtls.xml b/docs/plugins/inspect/plugin-dtls.xml
+index 1d083e771..f0842829d 100644
+--- a/docs/plugins/inspect/plugin-dtls.xml
++++ b/docs/plugins/inspect/plugin-dtls.xml
+@@ -3,7 +3,7 @@
+   <description>DTLS decoder and encoder plugins</description>
+   <filename>../../ext/dtls/.libs/libgstdtls.so</filename>
+   <basename>libgstdtls.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>BSD</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-dtsdec.xml b/docs/plugins/inspect/plugin-dtsdec.xml
+index 05401d0c1..75dfde7ca 100644
+--- a/docs/plugins/inspect/plugin-dtsdec.xml
++++ b/docs/plugins/inspect/plugin-dtsdec.xml
+@@ -3,7 +3,7 @@
+   <description>Decodes DTS audio streams</description>
+   <filename>../../ext/dts/.libs/libgstdtsdec.so</filename>
+   <basename>libgstdtsdec.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-dvb.xml b/docs/plugins/inspect/plugin-dvb.xml
+index f4df819c1..9c5790833 100644
+--- a/docs/plugins/inspect/plugin-dvb.xml
++++ b/docs/plugins/inspect/plugin-dvb.xml
+@@ -3,7 +3,7 @@
+   <description>DVB elements</description>
+   <filename>../../sys/dvb/.libs/libgstdvb.so</filename>
+   <basename>libgstdvb.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-dvbsuboverlay.xml b/docs/plugins/inspect/plugin-dvbsuboverlay.xml
+index 1d8397f1e..8a3d862fb 100644
+--- a/docs/plugins/inspect/plugin-dvbsuboverlay.xml
++++ b/docs/plugins/inspect/plugin-dvbsuboverlay.xml
+@@ -3,7 +3,7 @@
+   <description>DVB subtitle renderer</description>
+   <filename>../../gst/dvbsuboverlay/.libs/libgstdvbsuboverlay.so</filename>
+   <basename>libgstdvbsuboverlay.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-dvdspu.xml b/docs/plugins/inspect/plugin-dvdspu.xml
+index 11a3c0d9c..c9bf2df40 100644
+--- a/docs/plugins/inspect/plugin-dvdspu.xml
++++ b/docs/plugins/inspect/plugin-dvdspu.xml
+@@ -3,7 +3,7 @@
+   <description>DVD Sub-picture Overlay element</description>
+   <filename>../../gst/dvdspu/.libs/libgstdvdspu.so</filename>
+   <basename>libgstdvdspu.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-faac.xml b/docs/plugins/inspect/plugin-faac.xml
+index 298747e5a..6301e3019 100644
+--- a/docs/plugins/inspect/plugin-faac.xml
++++ b/docs/plugins/inspect/plugin-faac.xml
+@@ -3,7 +3,7 @@
+   <description>Free AAC Encoder (FAAC)</description>
+   <filename>../../ext/faac/.libs/libgstfaac.so</filename>
+   <basename>libgstfaac.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-faad.xml b/docs/plugins/inspect/plugin-faad.xml
+index ca0f937b9..2582d64ec 100644
+--- a/docs/plugins/inspect/plugin-faad.xml
++++ b/docs/plugins/inspect/plugin-faad.xml
+@@ -3,7 +3,7 @@
+   <description>Free AAC Decoder (FAAD)</description>
+   <filename>../../ext/faad/.libs/libgstfaad.so</filename>
+   <basename>libgstfaad.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-faceoverlay.xml b/docs/plugins/inspect/plugin-faceoverlay.xml
+index 70b726268..aa1ad2b89 100644
+--- a/docs/plugins/inspect/plugin-faceoverlay.xml
++++ b/docs/plugins/inspect/plugin-faceoverlay.xml
+@@ -3,7 +3,7 @@
+   <description>SVG Face Overlay</description>
+   <filename>../../gst/faceoverlay/.libs/libgstfaceoverlay.so</filename>
+   <basename>libgstfaceoverlay.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-fbdevsink.xml b/docs/plugins/inspect/plugin-fbdevsink.xml
+index 940495d86..0b8b3aeb7 100644
+--- a/docs/plugins/inspect/plugin-fbdevsink.xml
++++ b/docs/plugins/inspect/plugin-fbdevsink.xml
+@@ -3,7 +3,7 @@
+   <description>Linux framebuffer video sink</description>
+   <filename>../../sys/fbdev/.libs/libgstfbdevsink.so</filename>
+   <basename>libgstfbdevsink.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-fdkaac.xml b/docs/plugins/inspect/plugin-fdkaac.xml
+index 88ed94914..cea232ad9 100644
+--- a/docs/plugins/inspect/plugin-fdkaac.xml
++++ b/docs/plugins/inspect/plugin-fdkaac.xml
+@@ -3,7 +3,7 @@
+   <description>Fraunhofer FDK AAC Codec plugin</description>
+   <filename>../../ext/fdkaac/.libs/libgstfdkaac.so</filename>
+   <basename>libgstfdkaac.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-festival.xml b/docs/plugins/inspect/plugin-festival.xml
+index 61be9ae07..25ee2bcad 100644
+--- a/docs/plugins/inspect/plugin-festival.xml
++++ b/docs/plugins/inspect/plugin-festival.xml
+@@ -3,7 +3,7 @@
+   <description>Synthesizes plain text into audio</description>
+   <filename>../../gst/festival/.libs/libgstfestival.so</filename>
+   <basename>libgstfestival.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-fieldanalysis.xml b/docs/plugins/inspect/plugin-fieldanalysis.xml
+index 648993718..e3000f8ae 100644
+--- a/docs/plugins/inspect/plugin-fieldanalysis.xml
++++ b/docs/plugins/inspect/plugin-fieldanalysis.xml
+@@ -3,7 +3,7 @@
+   <description>Video field analysis</description>
+   <filename>../../gst/fieldanalysis/.libs/libgstfieldanalysis.so</filename>
+   <basename>libgstfieldanalysis.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-flite.xml b/docs/plugins/inspect/plugin-flite.xml
+index 8160d5b47..3a9fc0cf9 100644
+--- a/docs/plugins/inspect/plugin-flite.xml
++++ b/docs/plugins/inspect/plugin-flite.xml
+@@ -3,7 +3,7 @@
+   <description>Flite speech synthesizer plugin</description>
+   <filename>../../ext/flite/.libs/libgstflite.so</filename>
+   <basename>libgstflite.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-fluidsynthmidi.xml b/docs/plugins/inspect/plugin-fluidsynthmidi.xml
+index b989a69f3..f431904cd 100644
+--- a/docs/plugins/inspect/plugin-fluidsynthmidi.xml
++++ b/docs/plugins/inspect/plugin-fluidsynthmidi.xml
+@@ -3,7 +3,7 @@
+   <description>Fluidsynth MIDI Plugin</description>
+   <filename>../../ext/fluidsynth/.libs/libgstfluidsynthmidi.so</filename>
+   <basename>libgstfluidsynthmidi.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-freeverb.xml b/docs/plugins/inspect/plugin-freeverb.xml
+index 314f075ea..e01826a58 100644
+--- a/docs/plugins/inspect/plugin-freeverb.xml
++++ b/docs/plugins/inspect/plugin-freeverb.xml
+@@ -3,7 +3,7 @@
+   <description>Reverberation/room effect</description>
+   <filename>../../gst/freeverb/.libs/libgstfreeverb.so</filename>
+   <basename>libgstfreeverb.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-frei0r.xml b/docs/plugins/inspect/plugin-frei0r.xml
+index dc1d64ee9..e490a924b 100644
+--- a/docs/plugins/inspect/plugin-frei0r.xml
++++ b/docs/plugins/inspect/plugin-frei0r.xml
+@@ -3,7 +3,7 @@
+   <description>frei0r plugin library</description>
+   <filename>../../gst/frei0r/.libs/libgstfrei0r.so</filename>
+   <basename>libgstfrei0r.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-gaudieffects.xml b/docs/plugins/inspect/plugin-gaudieffects.xml
+index c9528fd1d..1c06101f2 100644
+--- a/docs/plugins/inspect/plugin-gaudieffects.xml
++++ b/docs/plugins/inspect/plugin-gaudieffects.xml
+@@ -3,7 +3,7 @@
+   <description>Gaudi video effects.</description>
+   <filename>../../gst/gaudieffects/.libs/libgstgaudieffects.so</filename>
+   <basename>libgstgaudieffects.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-gdp.xml b/docs/plugins/inspect/plugin-gdp.xml
+index dc294cb1d..ad8ec0ac5 100644
+--- a/docs/plugins/inspect/plugin-gdp.xml
++++ b/docs/plugins/inspect/plugin-gdp.xml
+@@ -3,7 +3,7 @@
+   <description>Payload/depayload GDP packets</description>
+   <filename>../../gst/gdp/.libs/libgstgdp.so</filename>
+   <basename>libgstgdp.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-geometrictransform.xml b/docs/plugins/inspect/plugin-geometrictransform.xml
+index a712f1e4e..09dbf42aa 100644
+--- a/docs/plugins/inspect/plugin-geometrictransform.xml
++++ b/docs/plugins/inspect/plugin-geometrictransform.xml
+@@ -3,7 +3,7 @@
+   <description>Various geometric image transform elements</description>
+   <filename>../../gst/geometrictransform/.libs/libgstgeometrictransform.so</filename>
+   <basename>libgstgeometrictransform.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-gme.xml b/docs/plugins/inspect/plugin-gme.xml
+index 6ea159407..e5ea54d45 100644
+--- a/docs/plugins/inspect/plugin-gme.xml
++++ b/docs/plugins/inspect/plugin-gme.xml
+@@ -3,7 +3,7 @@
+   <description>GME Audio Decoder</description>
+   <filename>../../ext/gme/.libs/libgstgme.so</filename>
+   <basename>libgstgme.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-gsm.xml b/docs/plugins/inspect/plugin-gsm.xml
+index fe2d3e8f9..4e4ba62fc 100644
+--- a/docs/plugins/inspect/plugin-gsm.xml
++++ b/docs/plugins/inspect/plugin-gsm.xml
+@@ -3,7 +3,7 @@
+   <description>GSM encoder/decoder</description>
+   <filename>../../ext/gsm/.libs/libgstgsm.so</filename>
+   <basename>libgstgsm.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-hls.xml b/docs/plugins/inspect/plugin-hls.xml
+index 2684591a6..1b0d09a13 100644
+--- a/docs/plugins/inspect/plugin-hls.xml
++++ b/docs/plugins/inspect/plugin-hls.xml
+@@ -3,7 +3,7 @@
+   <description>HTTP Live Streaming (HLS)</description>
+   <filename>../../ext/hls/.libs/libgsthls.so</filename>
+   <basename>libgsthls.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-id3tag.xml b/docs/plugins/inspect/plugin-id3tag.xml
+index d712f7abb..26e19ddf5 100644
+--- a/docs/plugins/inspect/plugin-id3tag.xml
++++ b/docs/plugins/inspect/plugin-id3tag.xml
+@@ -3,7 +3,7 @@
+   <description>ID3 v1 and v2 muxing plugin</description>
+   <filename>../../gst/id3tag/.libs/libgstid3tag.so</filename>
+   <basename>libgstid3tag.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-inter.xml b/docs/plugins/inspect/plugin-inter.xml
+index 49187a14a..3777c7417 100644
+--- a/docs/plugins/inspect/plugin-inter.xml
++++ b/docs/plugins/inspect/plugin-inter.xml
+@@ -3,7 +3,7 @@
+   <description>plugin for inter-pipeline communication</description>
+   <filename>../../gst/inter/.libs/libgstinter.so</filename>
+   <basename>libgstinter.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-interlace.xml b/docs/plugins/inspect/plugin-interlace.xml
+index c926fabc4..f9ae06116 100644
+--- a/docs/plugins/inspect/plugin-interlace.xml
++++ b/docs/plugins/inspect/plugin-interlace.xml
+@@ -3,7 +3,7 @@
+   <description>Create an interlaced video stream</description>
+   <filename>../../gst/interlace/.libs/libgstinterlace.so</filename>
+   <basename>libgstinterlace.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-ipcpipeline.xml b/docs/plugins/inspect/plugin-ipcpipeline.xml
+index 1bee7bb8e..57d0ef33f 100644
+--- a/docs/plugins/inspect/plugin-ipcpipeline.xml
++++ b/docs/plugins/inspect/plugin-ipcpipeline.xml
+@@ -3,7 +3,7 @@
+   <description>plugin for inter-process pipeline communication</description>
+   <filename>../../sys/ipcpipeline/.libs/libgstipcpipeline.so</filename>
+   <basename>libgstipcpipeline.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-ivfparse.xml b/docs/plugins/inspect/plugin-ivfparse.xml
+index d3809e1ec..5559d0bfd 100644
+--- a/docs/plugins/inspect/plugin-ivfparse.xml
++++ b/docs/plugins/inspect/plugin-ivfparse.xml
+@@ -3,7 +3,7 @@
+   <description>IVF parser</description>
+   <filename>../../gst/ivfparse/.libs/libgstivfparse.so</filename>
+   <basename>libgstivfparse.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-ivtc.xml b/docs/plugins/inspect/plugin-ivtc.xml
+index b6f553927..64f59ca9c 100644
+--- a/docs/plugins/inspect/plugin-ivtc.xml
++++ b/docs/plugins/inspect/plugin-ivtc.xml
+@@ -3,7 +3,7 @@
+   <description>Inverse Telecine</description>
+   <filename>../../gst/ivtc/.libs/libgstivtc.so</filename>
+   <basename>libgstivtc.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-jp2kdecimator.xml b/docs/plugins/inspect/plugin-jp2kdecimator.xml
+index 87cb5c798..0b4442a2b 100644
+--- a/docs/plugins/inspect/plugin-jp2kdecimator.xml
++++ b/docs/plugins/inspect/plugin-jp2kdecimator.xml
+@@ -3,7 +3,7 @@
+   <description>JPEG2000 decimator</description>
+   <filename>../../gst/jp2kdecimator/.libs/libgstjp2kdecimator.so</filename>
+   <basename>libgstjp2kdecimator.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-jpegformat.xml b/docs/plugins/inspect/plugin-jpegformat.xml
+index 69cf91295..03b46cb5f 100644
+--- a/docs/plugins/inspect/plugin-jpegformat.xml
++++ b/docs/plugins/inspect/plugin-jpegformat.xml
+@@ -3,7 +3,7 @@
+   <description>JPEG interchange format plugin</description>
+   <filename>../../gst/jpegformat/.libs/libgstjpegformat.so</filename>
+   <basename>libgstjpegformat.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-kate.xml b/docs/plugins/inspect/plugin-kate.xml
+index e923b036d..31421e2af 100644
+--- a/docs/plugins/inspect/plugin-kate.xml
++++ b/docs/plugins/inspect/plugin-kate.xml
+@@ -3,7 +3,7 @@
+   <description>Kate plugin</description>
+   <filename>../../ext/kate/.libs/libgstkate.so</filename>
+   <basename>libgstkate.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-kms.xml b/docs/plugins/inspect/plugin-kms.xml
+index 8f4bccfd6..ff5619a1b 100644
+--- a/docs/plugins/inspect/plugin-kms.xml
++++ b/docs/plugins/inspect/plugin-kms.xml
+@@ -3,7 +3,7 @@
+   <description>Video sink using the Linux kernel mode setting API</description>
+   <filename>../../sys/kms/.libs/libgstkms.so</filename>
+   <basename>libgstkms.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-ladspa.xml b/docs/plugins/inspect/plugin-ladspa.xml
+index 7863da288..1f8e6fd97 100644
+--- a/docs/plugins/inspect/plugin-ladspa.xml
++++ b/docs/plugins/inspect/plugin-ladspa.xml
+@@ -3,7 +3,7 @@
+   <description>LADSPA plugin</description>
+   <filename>../../ext/ladspa/.libs/libgstladspa.so</filename>
+   <basename>libgstladspa.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-legacyrawparse.xml b/docs/plugins/inspect/plugin-legacyrawparse.xml
+index 37a9fa7ae..8a3eb8742 100644
+--- a/docs/plugins/inspect/plugin-legacyrawparse.xml
++++ b/docs/plugins/inspect/plugin-legacyrawparse.xml
+@@ -3,7 +3,7 @@
+   <description>Parses byte streams into raw frames</description>
+   <filename>../../gst/rawparse/.libs/libgstlegacyrawparse.so</filename>
+   <basename>libgstlegacyrawparse.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-midi.xml b/docs/plugins/inspect/plugin-midi.xml
+index 3ee78ee92..1eee1e32f 100644
+--- a/docs/plugins/inspect/plugin-midi.xml
++++ b/docs/plugins/inspect/plugin-midi.xml
+@@ -3,7 +3,7 @@
+   <description>Parse MIDI files</description>
+   <filename>../../gst/midi/.libs/libgstmidi.so</filename>
+   <basename>libgstmidi.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-mms.xml b/docs/plugins/inspect/plugin-mms.xml
+index d7eb3805d..4c90a350c 100644
+--- a/docs/plugins/inspect/plugin-mms.xml
++++ b/docs/plugins/inspect/plugin-mms.xml
+@@ -3,7 +3,7 @@
+   <description>Microsoft Multi Media Server streaming protocol support</description>
+   <filename>../../ext/libmms/.libs/libgstmms.so</filename>
+   <basename>libgstmms.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-modplug.xml b/docs/plugins/inspect/plugin-modplug.xml
+index 0be0a8ad7..e1d83b7ea 100644
+--- a/docs/plugins/inspect/plugin-modplug.xml
++++ b/docs/plugins/inspect/plugin-modplug.xml
+@@ -3,7 +3,7 @@
+   <description>.MOD audio decoding</description>
+   <filename>../../ext/modplug/.libs/libgstmodplug.so</filename>
+   <basename>libgstmodplug.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-mpeg2enc.xml b/docs/plugins/inspect/plugin-mpeg2enc.xml
+index f9d327b8b..bc0f6e12d 100644
+--- a/docs/plugins/inspect/plugin-mpeg2enc.xml
++++ b/docs/plugins/inspect/plugin-mpeg2enc.xml
+@@ -3,7 +3,7 @@
+   <description>High-quality MPEG-1/2 video encoder</description>
+   <filename>../../ext/mpeg2enc/.libs/libgstmpeg2enc.so</filename>
+   <basename>libgstmpeg2enc.so</basename>
+-  <version>1.12.0</version>
++  <version>1.16.2</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-mpegpsdemux.xml b/docs/plugins/inspect/plugin-mpegpsdemux.xml
+index f1b78f134..3d4d6d44f 100644
+--- a/docs/plugins/inspect/plugin-mpegpsdemux.xml
++++ b/docs/plugins/inspect/plugin-mpegpsdemux.xml
+@@ -3,7 +3,7 @@
+   <description>MPEG-PS demuxer</description>
+   <filename>../../gst/mpegdemux/.libs/libgstmpegpsdemux.so</filename>
+   <basename>libgstmpegpsdemux.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>unknown</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-mpegpsmux.xml b/docs/plugins/inspect/plugin-mpegpsmux.xml
+index 9542f1f5b..545fcbb25 100644
+--- a/docs/plugins/inspect/plugin-mpegpsmux.xml
++++ b/docs/plugins/inspect/plugin-mpegpsmux.xml
+@@ -3,7 +3,7 @@
+   <description>MPEG-PS muxer</description>
+   <filename>../../gst/mpegpsmux/.libs/libgstmpegpsmux.so</filename>
+   <basename>libgstmpegpsmux.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-mpegtsdemux.xml b/docs/plugins/inspect/plugin-mpegtsdemux.xml
+index cb4b1755c..905a0957f 100644
+--- a/docs/plugins/inspect/plugin-mpegtsdemux.xml
++++ b/docs/plugins/inspect/plugin-mpegtsdemux.xml
+@@ -3,7 +3,7 @@
+   <description>MPEG TS demuxer</description>
+   <filename>../../gst/mpegtsdemux/.libs/libgstmpegtsdemux.so</filename>
+   <basename>libgstmpegtsdemux.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-mpegtsmux.xml b/docs/plugins/inspect/plugin-mpegtsmux.xml
+index 414ad5ca6..95da53b32 100644
+--- a/docs/plugins/inspect/plugin-mpegtsmux.xml
++++ b/docs/plugins/inspect/plugin-mpegtsmux.xml
+@@ -3,7 +3,7 @@
+   <description>MPEG-TS muxer</description>
+   <filename>../../gst/mpegtsmux/.libs/libgstmpegtsmux.so</filename>
+   <basename>libgstmpegtsmux.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-mplex.xml b/docs/plugins/inspect/plugin-mplex.xml
+index 13e9893a2..54d53d0a0 100644
+--- a/docs/plugins/inspect/plugin-mplex.xml
++++ b/docs/plugins/inspect/plugin-mplex.xml
+@@ -3,7 +3,7 @@
+   <description>High-quality MPEG/DVD/SVCD/VCD video/audio multiplexer</description>
+   <filename>../../ext/mplex/.libs/libgstmplex.so</filename>
+   <basename>libgstmplex.so</basename>
+-  <version>1.12.0</version>
++  <version>1.16.2</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-musepack.xml b/docs/plugins/inspect/plugin-musepack.xml
+index 82c5d6c6c..7e4fe275a 100644
+--- a/docs/plugins/inspect/plugin-musepack.xml
++++ b/docs/plugins/inspect/plugin-musepack.xml
+@@ -3,7 +3,7 @@
+   <description>Musepack decoder</description>
+   <filename>../../ext/musepack/.libs/libgstmusepack.so</filename>
+   <basename>libgstmusepack.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-mxf.xml b/docs/plugins/inspect/plugin-mxf.xml
+index 9420c1690..1e74243c5 100644
+--- a/docs/plugins/inspect/plugin-mxf.xml
++++ b/docs/plugins/inspect/plugin-mxf.xml
+@@ -3,7 +3,7 @@
+   <description>MXF plugin library</description>
+   <filename>../../gst/mxf/.libs/libgstmxf.so</filename>
+   <basename>libgstmxf.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-neonhttpsrc.xml b/docs/plugins/inspect/plugin-neonhttpsrc.xml
+index f1864de89..ed8084d76 100644
+--- a/docs/plugins/inspect/plugin-neonhttpsrc.xml
++++ b/docs/plugins/inspect/plugin-neonhttpsrc.xml
+@@ -3,7 +3,7 @@
+   <description>lib neon http client src</description>
+   <filename>../../ext/neon/.libs/libgstneonhttpsrc.so</filename>
+   <basename>libgstneonhttpsrc.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-netsim.xml b/docs/plugins/inspect/plugin-netsim.xml
+index a2611223c..0a5185444 100644
+--- a/docs/plugins/inspect/plugin-netsim.xml
++++ b/docs/plugins/inspect/plugin-netsim.xml
+@@ -3,7 +3,7 @@
+   <description>Network Simulator</description>
+   <filename>../../gst/netsim/.libs/libgstnetsim.so</filename>
+   <basename>libgstnetsim.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-ofa.xml b/docs/plugins/inspect/plugin-ofa.xml
+index 88431c551..58df2b510 100644
+--- a/docs/plugins/inspect/plugin-ofa.xml
++++ b/docs/plugins/inspect/plugin-ofa.xml
+@@ -3,7 +3,7 @@
+   <description>Calculate MusicIP fingerprint from audio files</description>
+   <filename>../../ext/ofa/.libs/libgstofa.so</filename>
+   <basename>libgstofa.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-openal.xml b/docs/plugins/inspect/plugin-openal.xml
+index 2c46f9556..725733258 100644
+--- a/docs/plugins/inspect/plugin-openal.xml
++++ b/docs/plugins/inspect/plugin-openal.xml
+@@ -3,7 +3,7 @@
+   <description>OpenAL plugin library</description>
+   <filename>../../ext/openal/.libs/libgstopenal.so</filename>
+   <basename>libgstopenal.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-opencv.xml b/docs/plugins/inspect/plugin-opencv.xml
+index b95d086c2..f1bb28925 100644
+--- a/docs/plugins/inspect/plugin-opencv.xml
++++ b/docs/plugins/inspect/plugin-opencv.xml
+@@ -3,7 +3,7 @@
+   <description>GStreamer OpenCV Plugins</description>
+   <filename>../../ext/opencv/.libs/libgstopencv.so</filename>
+   <basename>libgstopencv.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-openexr.xml b/docs/plugins/inspect/plugin-openexr.xml
+index b93d86818..630bcb776 100644
+--- a/docs/plugins/inspect/plugin-openexr.xml
++++ b/docs/plugins/inspect/plugin-openexr.xml
+@@ -3,7 +3,7 @@
+   <description>OpenEXR image plugin</description>
+   <filename>../../ext/openexr/.libs/libgstopenexr.so</filename>
+   <basename>libgstopenexr.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-openh264.xml b/docs/plugins/inspect/plugin-openh264.xml
+index 1b4a27798..eb12909ef 100644
+--- a/docs/plugins/inspect/plugin-openh264.xml
++++ b/docs/plugins/inspect/plugin-openh264.xml
+@@ -3,7 +3,7 @@
+   <description>OpenH264 encoder/decoder plugin</description>
+   <filename>../../ext/openh264/.libs/libgstopenh264.so</filename>
+   <basename>libgstopenh264.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>BSD</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-openjpeg.xml b/docs/plugins/inspect/plugin-openjpeg.xml
+index 451f0b635..a92d01551 100644
+--- a/docs/plugins/inspect/plugin-openjpeg.xml
++++ b/docs/plugins/inspect/plugin-openjpeg.xml
+@@ -3,7 +3,7 @@
+   <description>OpenJPEG-based JPEG2000 image decoder/encoder</description>
+   <filename>../../ext/openjpeg/.libs/libgstopenjpeg.so</filename>
+   <basename>libgstopenjpeg.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-openmpt.xml b/docs/plugins/inspect/plugin-openmpt.xml
+index 46fdaa545..3448dfdd4 100644
+--- a/docs/plugins/inspect/plugin-openmpt.xml
++++ b/docs/plugins/inspect/plugin-openmpt.xml
+@@ -3,7 +3,7 @@
+   <description>OpenMPT module player</description>
+   <filename>../../ext/openmpt/.libs/libgstopenmpt.so</filename>
+   <basename>libgstopenmpt.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-openni2.xml b/docs/plugins/inspect/plugin-openni2.xml
+index c6154b152..3d362d52e 100644
+--- a/docs/plugins/inspect/plugin-openni2.xml
++++ b/docs/plugins/inspect/plugin-openni2.xml
+@@ -3,7 +3,7 @@
+   <description>GStreamer Openni2 Plugins</description>
+   <filename>../../ext/openni2/.libs/libgstopenni2.so</filename>
+   <basename>libgstopenni2.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-opusparse.xml b/docs/plugins/inspect/plugin-opusparse.xml
+index 01be91f09..a5a4f9465 100644
+--- a/docs/plugins/inspect/plugin-opusparse.xml
++++ b/docs/plugins/inspect/plugin-opusparse.xml
+@@ -3,7 +3,7 @@
+   <description>OPUS parse plugin</description>
+   <filename>../../ext/opus/.libs/libgstopusparse.so</filename>
+   <basename>libgstopusparse.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-pcapparse.xml b/docs/plugins/inspect/plugin-pcapparse.xml
+index 60b2765be..1fc00b991 100644
+--- a/docs/plugins/inspect/plugin-pcapparse.xml
++++ b/docs/plugins/inspect/plugin-pcapparse.xml
+@@ -3,7 +3,7 @@
+   <description>Element parsing raw pcap streams</description>
+   <filename>../../gst/pcapparse/.libs/libgstpcapparse.so</filename>
+   <basename>libgstpcapparse.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-pnm.xml b/docs/plugins/inspect/plugin-pnm.xml
+index 2e9ee019a..e6bed441e 100644
+--- a/docs/plugins/inspect/plugin-pnm.xml
++++ b/docs/plugins/inspect/plugin-pnm.xml
+@@ -3,7 +3,7 @@
+   <description>PNM plugin</description>
+   <filename>../../gst/pnm/.libs/libgstpnm.so</filename>
+   <basename>libgstpnm.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-proxy.xml b/docs/plugins/inspect/plugin-proxy.xml
+index 581383dc4..6be4c8ed8 100644
+--- a/docs/plugins/inspect/plugin-proxy.xml
++++ b/docs/plugins/inspect/plugin-proxy.xml
+@@ -3,7 +3,7 @@
+   <description>plugin for proxied inter-pipeline communication</description>
+   <filename>../../gst/proxy/.libs/libgstproxy.so</filename>
+   <basename>libgstproxy.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-removesilence.xml b/docs/plugins/inspect/plugin-removesilence.xml
+index f89867751..517616858 100644
+--- a/docs/plugins/inspect/plugin-removesilence.xml
++++ b/docs/plugins/inspect/plugin-removesilence.xml
+@@ -3,7 +3,7 @@
+   <description>Removes silence from an audio stream</description>
+   <filename>../../gst/removesilence/.libs/libgstremovesilence.so</filename>
+   <basename>libgstremovesilence.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-resindvd.xml b/docs/plugins/inspect/plugin-resindvd.xml
+index bca1fb6f6..5db7ed05d 100644
+--- a/docs/plugins/inspect/plugin-resindvd.xml
++++ b/docs/plugins/inspect/plugin-resindvd.xml
+@@ -3,7 +3,7 @@
+   <description>Resin DVD playback elements</description>
+   <filename>../../ext/resindvd/.libs/libgstresindvd.so</filename>
+   <basename>libgstresindvd.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-rfbsrc.xml b/docs/plugins/inspect/plugin-rfbsrc.xml
+index 147744cf6..bb51783e2 100644
+--- a/docs/plugins/inspect/plugin-rfbsrc.xml
++++ b/docs/plugins/inspect/plugin-rfbsrc.xml
+@@ -3,7 +3,7 @@
+   <description>Connects to a VNC server and decodes RFB stream</description>
+   <filename>../../gst/librfb/.libs/libgstrfbsrc.so</filename>
+   <basename>libgstrfbsrc.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-rsvg.xml b/docs/plugins/inspect/plugin-rsvg.xml
+index 427d81910..9fb8a3849 100644
+--- a/docs/plugins/inspect/plugin-rsvg.xml
++++ b/docs/plugins/inspect/plugin-rsvg.xml
+@@ -3,7 +3,7 @@
+   <description>RSVG plugin library</description>
+   <filename>../../ext/rsvg/.libs/libgstrsvg.so</filename>
+   <basename>libgstrsvg.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-rtmp.xml b/docs/plugins/inspect/plugin-rtmp.xml
+index d344f33cc..ead139b05 100644
+--- a/docs/plugins/inspect/plugin-rtmp.xml
++++ b/docs/plugins/inspect/plugin-rtmp.xml
+@@ -3,7 +3,7 @@
+   <description>RTMP source and sink</description>
+   <filename>../../ext/rtmp/.libs/libgstrtmp.so</filename>
+   <basename>libgstrtmp.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-rtponvif.xml b/docs/plugins/inspect/plugin-rtponvif.xml
+index a8149481a..e9daf6553 100644
+--- a/docs/plugins/inspect/plugin-rtponvif.xml
++++ b/docs/plugins/inspect/plugin-rtponvif.xml
+@@ -3,7 +3,7 @@
+   <description>ONVIF Streaming features</description>
+   <filename>../../gst/onvif/.libs/libgstrtponvif.so</filename>
+   <basename>libgstrtponvif.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>unknown</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-sbc.xml b/docs/plugins/inspect/plugin-sbc.xml
+index 7a0bcb697..1cd5adc47 100644
+--- a/docs/plugins/inspect/plugin-sbc.xml
++++ b/docs/plugins/inspect/plugin-sbc.xml
+@@ -3,7 +3,7 @@
+   <description>SBC bluetooth audio support</description>
+   <filename>../../ext/sbc/.libs/libgstsbc.so</filename>
+   <basename>libgstsbc.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-sctp.xml b/docs/plugins/inspect/plugin-sctp.xml
+index 8b160ea8a..657a2542b 100644
+--- a/docs/plugins/inspect/plugin-sctp.xml
++++ b/docs/plugins/inspect/plugin-sctp.xml
+@@ -3,7 +3,7 @@
+   <description>SCTP encoder/decoder plugin</description>
+   <filename>../../ext/sctp/.libs/libgstsctp.so</filename>
+   <basename>libgstsctp.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>BSD</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-sdpelem.xml b/docs/plugins/inspect/plugin-sdpelem.xml
+index 49c609a0f..4f43fd821 100644
+--- a/docs/plugins/inspect/plugin-sdpelem.xml
++++ b/docs/plugins/inspect/plugin-sdpelem.xml
+@@ -3,7 +3,7 @@
+   <description>configure streaming sessions using SDP</description>
+   <filename>../../gst/sdp/.libs/libgstsdpelem.so</filename>
+   <basename>libgstsdpelem.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-segmentclip.xml b/docs/plugins/inspect/plugin-segmentclip.xml
+index 08b25608f..77ee333f7 100644
+--- a/docs/plugins/inspect/plugin-segmentclip.xml
++++ b/docs/plugins/inspect/plugin-segmentclip.xml
+@@ -3,7 +3,7 @@
+   <description>Segment clip elements</description>
+   <filename>../../gst/segmentclip/.libs/libgstsegmentclip.so</filename>
+   <basename>libgstsegmentclip.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-shm.xml b/docs/plugins/inspect/plugin-shm.xml
+index a9e6bab64..cd5544817 100644
+--- a/docs/plugins/inspect/plugin-shm.xml
++++ b/docs/plugins/inspect/plugin-shm.xml
+@@ -3,7 +3,7 @@
+   <description>shared memory sink source</description>
+   <filename>../../sys/shm/.libs/libgstshm.so</filename>
+   <basename>libgstshm.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-siren.xml b/docs/plugins/inspect/plugin-siren.xml
+index 53a5d7b74..a1d695574 100644
+--- a/docs/plugins/inspect/plugin-siren.xml
++++ b/docs/plugins/inspect/plugin-siren.xml
+@@ -3,7 +3,7 @@
+   <description>Siren encoder/decoder/payloader/depayloader plugins</description>
+   <filename>../../gst/siren/.libs/libgstsiren.so</filename>
+   <basename>libgstsiren.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-smooth.xml b/docs/plugins/inspect/plugin-smooth.xml
+index 3b24de22c..8b8875c86 100644
+--- a/docs/plugins/inspect/plugin-smooth.xml
++++ b/docs/plugins/inspect/plugin-smooth.xml
+@@ -3,7 +3,7 @@
+   <description>Apply a smooth filter to an image</description>
+   <filename>../../gst/smooth/.libs/libgstsmooth.so</filename>
+   <basename>libgstsmooth.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-smoothstreaming.xml b/docs/plugins/inspect/plugin-smoothstreaming.xml
+index 1528806a5..ea3027dc1 100644
+--- a/docs/plugins/inspect/plugin-smoothstreaming.xml
++++ b/docs/plugins/inspect/plugin-smoothstreaming.xml
+@@ -3,7 +3,7 @@
+   <description>Microsoft&apos;s Smooth Streaming format support </description>
+   <filename>../../ext/smoothstreaming/.libs/libgstsmoothstreaming.so</filename>
+   <basename>libgstsmoothstreaming.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-sndfile.xml b/docs/plugins/inspect/plugin-sndfile.xml
+index a0b3ba1a6..a64d82e5b 100644
+--- a/docs/plugins/inspect/plugin-sndfile.xml
++++ b/docs/plugins/inspect/plugin-sndfile.xml
+@@ -3,7 +3,7 @@
+   <description>use libsndfile to read and write various audio formats</description>
+   <filename>../../ext/sndfile/.libs/libgstsndfile.so</filename>
+   <basename>libgstsndfile.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-soundtouch.xml b/docs/plugins/inspect/plugin-soundtouch.xml
+index df7b057a5..8a3d7f4d4 100644
+--- a/docs/plugins/inspect/plugin-soundtouch.xml
++++ b/docs/plugins/inspect/plugin-soundtouch.xml
+@@ -3,7 +3,7 @@
+   <description>Audio Pitch Controller &amp; BPM Detection</description>
+   <filename>../../ext/soundtouch/.libs/libgstsoundtouch.so</filename>
+   <basename>libgstsoundtouch.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-spandsp.xml b/docs/plugins/inspect/plugin-spandsp.xml
+index de0b7766a..ef35e4ea5 100644
+--- a/docs/plugins/inspect/plugin-spandsp.xml
++++ b/docs/plugins/inspect/plugin-spandsp.xml
+@@ -3,7 +3,7 @@
+   <description>libspandsp plugin</description>
+   <filename>../../ext/spandsp/.libs/libgstspandsp.so</filename>
+   <basename>libgstspandsp.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-speed.xml b/docs/plugins/inspect/plugin-speed.xml
+index bbcb34789..42ae432d1 100644
+--- a/docs/plugins/inspect/plugin-speed.xml
++++ b/docs/plugins/inspect/plugin-speed.xml
+@@ -3,7 +3,7 @@
+   <description>Set speed/pitch on audio/raw streams (resampler)</description>
+   <filename>../../gst/speed/.libs/libgstspeed.so</filename>
+   <basename>libgstspeed.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-srt.xml b/docs/plugins/inspect/plugin-srt.xml
+index 4d579b4ed..42cb2160e 100644
+--- a/docs/plugins/inspect/plugin-srt.xml
++++ b/docs/plugins/inspect/plugin-srt.xml
+@@ -3,7 +3,7 @@
+   <description>transfer data via SRT</description>
+   <filename>../../ext/srt/.libs/libgstsrt.so</filename>
+   <basename>libgstsrt.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-srtp.xml b/docs/plugins/inspect/plugin-srtp.xml
+index 98f2d83bb..cbbd990d4 100644
+--- a/docs/plugins/inspect/plugin-srtp.xml
++++ b/docs/plugins/inspect/plugin-srtp.xml
+@@ -3,7 +3,7 @@
+   <description>GStreamer SRTP</description>
+   <filename>../../ext/srtp/.libs/libgstsrtp.so</filename>
+   <basename>libgstsrtp.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins git</package>
+diff --git a/docs/plugins/inspect/plugin-subenc.xml b/docs/plugins/inspect/plugin-subenc.xml
+index bda95f2e3..b15b0a568 100644
+--- a/docs/plugins/inspect/plugin-subenc.xml
++++ b/docs/plugins/inspect/plugin-subenc.xml
+@@ -3,7 +3,7 @@
+   <description>subtitle encoders</description>
+   <filename>../../gst/subenc/.libs/libgstsubenc.so</filename>
+   <basename>libgstsubenc.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-teletext.xml b/docs/plugins/inspect/plugin-teletext.xml
+index 63cfa8094..413e473c6 100644
+--- a/docs/plugins/inspect/plugin-teletext.xml
++++ b/docs/plugins/inspect/plugin-teletext.xml
+@@ -3,7 +3,7 @@
+   <description>Teletext plugin</description>
+   <filename>../../ext/teletextdec/.libs/libgstteletext.so</filename>
+   <basename>libgstteletext.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-timecode.xml b/docs/plugins/inspect/plugin-timecode.xml
+index 893d632bd..23f7ec9ad 100644
+--- a/docs/plugins/inspect/plugin-timecode.xml
++++ b/docs/plugins/inspect/plugin-timecode.xml
+@@ -3,7 +3,7 @@
+   <description>Timecode-related elements</description>
+   <filename>../../gst/timecode/.libs/libgsttimecode.so</filename>
+   <basename>libgsttimecode.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-ttmlsubs.xml b/docs/plugins/inspect/plugin-ttmlsubs.xml
+index 7d7aae2cd..63c79d14d 100644
+--- a/docs/plugins/inspect/plugin-ttmlsubs.xml
++++ b/docs/plugins/inspect/plugin-ttmlsubs.xml
+@@ -3,7 +3,7 @@
+   <description>TTML subtitle handling</description>
+   <filename>../../ext/ttml/.libs/libgstttmlsubs.so</filename>
+   <basename>libgstttmlsubs.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-uvch264.xml b/docs/plugins/inspect/plugin-uvch264.xml
+index 7cad276b2..6fa7ee8ba 100644
+--- a/docs/plugins/inspect/plugin-uvch264.xml
++++ b/docs/plugins/inspect/plugin-uvch264.xml
+@@ -3,7 +3,7 @@
+   <description>UVC compliant H264 encoding cameras plugin</description>
+   <filename>../../sys/uvch264/.libs/libgstuvch264.so</filename>
+   <basename>libgstuvch264.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-vdpau.xml b/docs/plugins/inspect/plugin-vdpau.xml
+index 0425a18a3..5f937ab3b 100644
+--- a/docs/plugins/inspect/plugin-vdpau.xml
++++ b/docs/plugins/inspect/plugin-vdpau.xml
+@@ -3,7 +3,7 @@
+   <description>Various elements utilizing VDPAU</description>
+   <filename>../../sys/vdpau/.libs/libgstvdpau.so</filename>
+   <basename>libgstvdpau.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-videofiltersbad.xml b/docs/plugins/inspect/plugin-videofiltersbad.xml
+index a52b37117..3fea60e33 100644
+--- a/docs/plugins/inspect/plugin-videofiltersbad.xml
++++ b/docs/plugins/inspect/plugin-videofiltersbad.xml
+@@ -3,7 +3,7 @@
+   <description>Video filters in gst-plugins-bad</description>
+   <filename>../../gst/videofilters/.libs/libgstvideofiltersbad.so</filename>
+   <basename>libgstvideofiltersbad.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-videoframe_audiolevel.xml b/docs/plugins/inspect/plugin-videoframe_audiolevel.xml
+index 3907c3f53..9e74bb187 100644
+--- a/docs/plugins/inspect/plugin-videoframe_audiolevel.xml
++++ b/docs/plugins/inspect/plugin-videoframe_audiolevel.xml
+@@ -3,7 +3,7 @@
+   <description>Video frame-synchronized audio level</description>
+   <filename>../../gst/videoframe_audiolevel/.libs/libgstvideoframe_audiolevel.so</filename>
+   <basename>libgstvideoframe_audiolevel.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-videoparsersbad.xml b/docs/plugins/inspect/plugin-videoparsersbad.xml
+index 8f242d914..ca0384c95 100644
+--- a/docs/plugins/inspect/plugin-videoparsersbad.xml
++++ b/docs/plugins/inspect/plugin-videoparsersbad.xml
+@@ -3,7 +3,7 @@
+   <description>videoparsers</description>
+   <filename>../../gst/videoparsers/.libs/libgstvideoparsersbad.so</filename>
+   <basename>libgstvideoparsersbad.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-videosignal.xml b/docs/plugins/inspect/plugin-videosignal.xml
+index ac02fdd2f..1854bf16b 100644
+--- a/docs/plugins/inspect/plugin-videosignal.xml
++++ b/docs/plugins/inspect/plugin-videosignal.xml
+@@ -3,7 +3,7 @@
+   <description>Various video signal analysers</description>
+   <filename>../../gst/videosignal/.libs/libgstvideosignal.so</filename>
+   <basename>libgstvideosignal.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-vmnc.xml b/docs/plugins/inspect/plugin-vmnc.xml
+index fb4d44f0d..d8fc9f8fa 100644
+--- a/docs/plugins/inspect/plugin-vmnc.xml
++++ b/docs/plugins/inspect/plugin-vmnc.xml
+@@ -3,7 +3,7 @@
+   <description>VmWare Video Codec plugins</description>
+   <filename>../../gst/vmnc/.libs/libgstvmnc.so</filename>
+   <basename>libgstvmnc.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-voaacenc.xml b/docs/plugins/inspect/plugin-voaacenc.xml
+index 3653be7b6..fbb038137 100644
+--- a/docs/plugins/inspect/plugin-voaacenc.xml
++++ b/docs/plugins/inspect/plugin-voaacenc.xml
+@@ -3,7 +3,7 @@
+   <description>AAC audio encoder</description>
+   <filename>../../ext/voaacenc/.libs/libgstvoaacenc.so</filename>
+   <basename>libgstvoaacenc.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-voamrwbenc.xml b/docs/plugins/inspect/plugin-voamrwbenc.xml
+index b897f3570..b2a04eed2 100644
+--- a/docs/plugins/inspect/plugin-voamrwbenc.xml
++++ b/docs/plugins/inspect/plugin-voamrwbenc.xml
+@@ -3,7 +3,7 @@
+   <description>Adaptive Multi-Rate Wide-Band Encoder</description>
+   <filename>../../ext/voamrwbenc/.libs/libgstvoamrwbenc.so</filename>
+   <basename>libgstvoamrwbenc.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>unknown</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-vulkan.xml b/docs/plugins/inspect/plugin-vulkan.xml
+index 13f699979..1edff2dc1 100644
+--- a/docs/plugins/inspect/plugin-vulkan.xml
++++ b/docs/plugins/inspect/plugin-vulkan.xml
+@@ -3,7 +3,7 @@
+   <description>Vulkan plugin</description>
+   <filename>../../ext/vulkan/.libs/libgstvulkan.so</filename>
+   <basename>libgstvulkan.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-wasapi.xml b/docs/plugins/inspect/plugin-wasapi.xml
+index 239b73667..5f38cf658 100644
+--- a/docs/plugins/inspect/plugin-wasapi.xml
++++ b/docs/plugins/inspect/plugin-wasapi.xml
+@@ -3,7 +3,7 @@
+   <description>Windows audio session API plugin</description>
+   <filename>../../sys/wasapi/.libs/libgstwasapi.dll</filename>
+   <basename>libgstwasapi.dll</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-waylandsink.xml b/docs/plugins/inspect/plugin-waylandsink.xml
+index ae699a50d..5246467ff 100644
+--- a/docs/plugins/inspect/plugin-waylandsink.xml
++++ b/docs/plugins/inspect/plugin-waylandsink.xml
+@@ -3,7 +3,7 @@
+   <description>Wayland Video Sink</description>
+   <filename>../../ext/wayland/.libs/libgstwaylandsink.so</filename>
+   <basename>libgstwaylandsink.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-webp.xml b/docs/plugins/inspect/plugin-webp.xml
+index 946c1c91f..460b19133 100644
+--- a/docs/plugins/inspect/plugin-webp.xml
++++ b/docs/plugins/inspect/plugin-webp.xml
+@@ -3,7 +3,7 @@
+   <description>WebP plugin</description>
+   <filename>../../ext/webp/.libs/libgstwebp.so</filename>
+   <basename>libgstwebp.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-webrtc.xml b/docs/plugins/inspect/plugin-webrtc.xml
+index 8a32794ab..f6fa290ed 100644
+--- a/docs/plugins/inspect/plugin-webrtc.xml
++++ b/docs/plugins/inspect/plugin-webrtc.xml
+@@ -3,7 +3,7 @@
+   <description>WebRTC plugins</description>
+   <filename>../../ext/webrtc/.libs/libgstwebrtc.so</filename>
+   <basename>libgstwebrtc.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-wildmidi.xml b/docs/plugins/inspect/plugin-wildmidi.xml
+index c785ab5ff..b68fcfc37 100644
+--- a/docs/plugins/inspect/plugin-wildmidi.xml
++++ b/docs/plugins/inspect/plugin-wildmidi.xml
+@@ -3,7 +3,7 @@
+   <description>WildMidi-based MIDI playback plugin</description>
+   <filename>../../ext/wildmidi/.libs/libgstwildmidi.so</filename>
+   <basename>libgstwildmidi.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-x265.xml b/docs/plugins/inspect/plugin-x265.xml
+index 6482e5b83..f06bee49a 100644
+--- a/docs/plugins/inspect/plugin-x265.xml
++++ b/docs/plugins/inspect/plugin-x265.xml
+@@ -3,7 +3,7 @@
+   <description>x265-based H265 plugins</description>
+   <filename>../../ext/x265/.libs/libgstx265.so</filename>
+   <basename>libgstx265.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-y4mdec.xml b/docs/plugins/inspect/plugin-y4mdec.xml
+index 589b757c8..c1d834ce9 100644
+--- a/docs/plugins/inspect/plugin-y4mdec.xml
++++ b/docs/plugins/inspect/plugin-y4mdec.xml
+@@ -3,7 +3,7 @@
+   <description>Demuxes/decodes YUV4MPEG streams</description>
+   <filename>../../gst/y4m/.libs/libgsty4mdec.so</filename>
+   <basename>libgsty4mdec.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-yadif.xml b/docs/plugins/inspect/plugin-yadif.xml
+index 0c355285f..db4871c07 100644
+--- a/docs/plugins/inspect/plugin-yadif.xml
++++ b/docs/plugins/inspect/plugin-yadif.xml
+@@ -3,7 +3,7 @@
+   <description>YADIF deinterlacing filter</description>
+   <filename>../../gst/yadif/.libs/libgstyadif.so</filename>
+   <basename>libgstyadif.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-zbar.xml b/docs/plugins/inspect/plugin-zbar.xml
+index 0d26c2709..9d41f447c 100644
+--- a/docs/plugins/inspect/plugin-zbar.xml
++++ b/docs/plugins/inspect/plugin-zbar.xml
+@@ -3,7 +3,7 @@
+   <description>zbar barcode scanner</description>
+   <filename>../../ext/zbar/.libs/libgstzbar.so</filename>
+   <basename>libgstzbar.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins source release</package>
+-- 
+2.17.1
+

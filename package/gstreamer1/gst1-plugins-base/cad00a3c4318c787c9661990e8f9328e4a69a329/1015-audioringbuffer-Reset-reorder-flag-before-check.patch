@@ -1,0 +1,35 @@
+From 3d9d3c91d351515b9178f13ac66b0ab8ff58cc25 Mon Sep 17 00:00:00 2001
+From: Jochen Henneberg <jh@henneberg-systemdesign.com>
+Date: Mon, 26 Aug 2019 15:03:48 +0200
+Subject: [PATCH 1015/1024] audioringbuffer: Reset reorder flag before check
+
+This function might be revisited with different channel position mapping
+while audio source goes into play so the reorder flag needs to be reset
+before the checks happen.
+---
+ gst-libs/gst/audio/gstaudioringbuffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gst-libs/gst/audio/gstaudioringbuffer.c b/gst-libs/gst/audio/gstaudioringbuffer.c
+index cd5197e1b..f4d5c9787 100644
+--- a/gst-libs/gst/audio/gstaudioringbuffer.c
++++ b/gst-libs/gst/audio/gstaudioringbuffer.c
+@@ -2034,6 +2034,7 @@ gst_audio_ring_buffer_set_channel_positions (GstAudioRingBuffer * buf,
+   channels = buf->spec.info.channels;
+   to = buf->spec.info.position;
+ 
++  buf->need_reorder = FALSE;
+   if (memcmp (position, to, channels * sizeof (to[0])) == 0)
+     return;
+ 
+@@ -2042,7 +2043,6 @@ gst_audio_ring_buffer_set_channel_positions (GstAudioRingBuffer * buf,
+     return;
+   }
+ 
+-  buf->need_reorder = FALSE;
+   if (!gst_audio_get_channel_reorder_map (channels, position, to,
+           buf->channel_reorder_map))
+     g_return_if_reached ();
+-- 
+2.17.1
+

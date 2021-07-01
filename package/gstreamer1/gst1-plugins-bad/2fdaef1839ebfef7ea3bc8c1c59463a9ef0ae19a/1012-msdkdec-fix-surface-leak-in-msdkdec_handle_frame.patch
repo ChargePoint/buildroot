@@ -1,0 +1,41 @@
+From 48db3053e52cbac0c67f10ee179015305dc78dbb Mon Sep 17 00:00:00 2001
+From: Julien Isorce <jisorce@oblong.com>
+Date: Mon, 18 Nov 2019 14:26:31 -0800
+Subject: [PATCH 1012/1024] msdkdec: fix surface leak in msdkdec_handle_frame
+
+Can be reproduced with:
+  videotestsrc ! x264enc key-int-max=$N ! \
+  h264parse ! msdkh264dec ! fakesink sync=1
+
+It happens with any gop size but the smaller is the distance N
+between key frames, the quicker it is leaking.
+
+Fixes #1023
+---
+ sys/msdk/gstmsdkdec.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/sys/msdk/gstmsdkdec.c b/sys/msdk/gstmsdkdec.c
+index 0870cbabb..f50561789 100644
+--- a/sys/msdk/gstmsdkdec.c
++++ b/sys/msdk/gstmsdkdec.c
+@@ -1021,8 +1021,15 @@ gst_msdkdec_handle_frame (GstVideoDecoder * decoder, GstVideoCodecFrame * frame)
+         || (status == MFX_WRN_VIDEO_PARAM_CHANGED)) {
+       thiz->next_task = (thiz->next_task + 1) % thiz->tasks->len;
+ 
+-      if (surface->surface->Data.Locked > 0 || !thiz->use_video_memory)
++      if (surface->surface->Data.Locked > 0)
++        surface = NULL;
++      else if (!thiz->use_video_memory) {
++        /* The for loop will continue because DataLength is greater than 0 so
++         * free the surface right away if not in use. */
++        if (bitstream.DataLength > 0 && task->surface != surface->surface)
++          free_surface (thiz, surface);
+         surface = NULL;
++      }
+ 
+       if (bitstream.DataLength == 0) {
+         flow = GST_FLOW_OK;
+-- 
+2.17.1
+

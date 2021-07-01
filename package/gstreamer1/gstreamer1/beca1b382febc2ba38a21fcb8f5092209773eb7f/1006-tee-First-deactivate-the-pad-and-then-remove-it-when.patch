@@ -1,0 +1,40 @@
+From 44623cacd637efb8f6cf93512238cdad575b9f60 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Sebastian=20Dr=C3=B6ge?= <sebastian@centricular.com>
+Date: Fri, 25 Oct 2019 01:41:27 +0300
+Subject: [PATCH 1006/1012] tee: First deactivate the pad and then remove it
+ when releasing pads
+
+This reverts a96002bb28c21b30fb9338a4620ad20504c70aa5, which is not
+necessary anymore. If we release the pad after removing it then none of
+the deactivation code will actually be called because the pad has no
+parent anymore, and we require a parent on the pad for deactivation to
+happen.
+
+This can then, among other things, cause a streaming thread to be still
+stuck in a pad probe because the pad was never flushed, and waiting
+there forever because now the pad will actually never be flushed anymore.
+---
+ plugins/elements/gsttee.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/plugins/elements/gsttee.c b/plugins/elements/gsttee.c
+index 8b28a97ae..0ff7527d4 100644
+--- a/plugins/elements/gsttee.c
++++ b/plugins/elements/gsttee.c
+@@ -460,12 +460,8 @@ gst_tee_release_pad (GstElement * element, GstPad * pad)
+   }
+   GST_OBJECT_UNLOCK (tee);
+ 
+-  gst_object_ref (pad);
+-  gst_element_remove_pad (GST_ELEMENT_CAST (tee), pad);
+-
+   gst_pad_set_active (pad, FALSE);
+-
+-  gst_object_unref (pad);
++  gst_element_remove_pad (GST_ELEMENT_CAST (tee), pad);
+ 
+   if (changed) {
+     gst_tee_notify_alloc_pad (tee);
+-- 
+2.17.1
+

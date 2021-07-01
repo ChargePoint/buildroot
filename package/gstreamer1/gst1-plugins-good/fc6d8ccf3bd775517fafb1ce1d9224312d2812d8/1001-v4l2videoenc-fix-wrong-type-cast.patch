@@ -1,0 +1,27 @@
+From 1f98117d3072281f57995c3d9bd5a82fddba3ef6 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Tim-Philipp=20M=C3=BCller?= <tim@centricular.com>
+Date: Sun, 13 Oct 2019 12:46:58 +0100
+Subject: [PATCH 1001/1018] v4l2videoenc: fix wrong type cast
+
+Follow-up to commit 1b752c0f !361
+---
+ sys/v4l2/gstv4l2videoenc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/sys/v4l2/gstv4l2videoenc.c b/sys/v4l2/gstv4l2videoenc.c
+index 7c17c74bd..379cc83cc 100644
+--- a/sys/v4l2/gstv4l2videoenc.c
++++ b/sys/v4l2/gstv4l2videoenc.c
+@@ -772,8 +772,7 @@ gst_v4l2_video_enc_handle_frame (GstVideoEncoder * encoder,
+     GST_VIDEO_ENCODER_STREAM_LOCK (encoder);
+ 
+     if (ret == GST_FLOW_FLUSHING) {
+-      if (gst_pad_get_task_state (GST_VIDEO_DECODER_SRC_PAD (self)) !=
+-          GST_TASK_STARTED)
++      if (gst_pad_get_task_state (encoder->srcpad) != GST_TASK_STARTED)
+         ret = self->output_flow;
+       goto drop;
+     } else if (ret != GST_FLOW_OK) {
+-- 
+2.17.1
+

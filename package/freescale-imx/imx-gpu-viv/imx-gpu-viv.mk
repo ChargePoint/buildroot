@@ -54,6 +54,16 @@ endef
 endif
 
 ifeq ($(IMX_GPU_VIV_LIB_TARGET),wayland)
+define IMX_GPU_VIV_FIXUP_WL_HEADERS
+	$(SED) '39i\
+		#if !defined(EGL_API_X11) && !defined(EGL_API_DFB) && !defined(EGL_API_FB) && !defined(WL_EGL_PLATFORM) \n\
+		#define EGL_API_FB \n\
+		#define WL_EGL_PLATFORM \n\
+		#endif' $(STAGING_DIR)/usr/include/EGL/eglplatform.h
+endef
+endif
+
+ifeq ($(IMX_GPU_VIV_LIB_TARGET),wayland)
 define IMX_GPU_VIV_FIXUP_PKGCONFIG
 	ln -sf egl_wayland.pc $(@D)/gpu-core/usr/lib/pkgconfig/egl.pc
 endef
@@ -69,6 +79,8 @@ endif
 
 define IMX_GPU_VIV_INSTALL_STAGING_CMDS
 	cp -r $(@D)/gpu-core/usr/* $(STAGING_DIR)/usr
+	$(IMX_GPU_VIV_FIXUP_FB_HEADERS)
+	$(IMX_GPU_VIV_FIXUP_WL_HEADERS)
 	$(IMX_GPU_VIV_FIXUP_PKGCONFIG)
 	for lib in egl gbm glesv1_cm glesv2 vg; do \
 		$(INSTALL) -m 0644 -D \

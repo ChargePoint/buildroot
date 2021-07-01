@@ -1,0 +1,26 @@
+From c3bedb745d6fc44305290644728a88831c4741df Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Sebastian=20Dr=C3=B6ge?= <sebastian@centricular.com>
+Date: Mon, 21 Oct 2019 16:43:32 +0300
+Subject: [PATCH 1011/1024] video-converter: Use G_N_ELEMENTS instead of
+ writing it out manually
+
+---
+ gst-libs/gst/video/video-converter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gst-libs/gst/video/video-converter.c b/gst-libs/gst/video/video-converter.c
+index 3040c205d..30d87a88a 100644
+--- a/gst-libs/gst/video/video-converter.c
++++ b/gst-libs/gst/video/video-converter.c
+@@ -6707,7 +6707,7 @@ video_converter_lookup_fastpath (GstVideoConverter * convert)
+       || convert->out_width < convert->out_maxwidth
+       || convert->out_height < convert->out_maxheight;
+ 
+-  for (i = 0; i < sizeof (transforms) / sizeof (transforms[0]); i++) {
++  for (i = 0; i < G_N_ELEMENTS (transforms); i++) {
+     if (transforms[i].in_format == in_format &&
+         transforms[i].out_format == out_format &&
+         (transforms[i].keeps_interlaced || !interlaced) &&
+-- 
+2.17.1
+

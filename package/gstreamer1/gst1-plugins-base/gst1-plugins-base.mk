@@ -4,9 +4,16 @@
 #
 ################################################################################
 
+ifeq ($(BR2_PACKAGE_FREESCALE_IMX_GSTREAMER),y)
+GST1_PLUGINS_BASE_VERSION = cad00a3c4318c787c9661990e8f9328e4a69a329
+GST1_PLUGINS_BASE_SOURCE = imx-gst-plugins-base-$(GST1_PLUGINS_BASE_VERSION).tar.gz
+GST1_PLUGINS_BASE_SITE = https://source.codeaurora.org/external/imx/gst-plugins-base
+GST1_PLUGINS_BASE_SITE_METHOD = git
+else
 GST1_PLUGINS_BASE_VERSION = 1.18.4
 GST1_PLUGINS_BASE_SOURCE = gst-plugins-base-$(GST1_PLUGINS_BASE_VERSION).tar.xz
 GST1_PLUGINS_BASE_SITE = https://gstreamer.freedesktop.org/src/gst-plugins-base
+endif
 GST1_PLUGINS_BASE_INSTALL_STAGING = YES
 GST1_PLUGINS_BASE_LICENSE_FILES = COPYING
 GST1_PLUGINS_BASE_LICENSE = LGPL-2.0+, LGPL-2.1+
@@ -34,6 +41,18 @@ endif
 GST1_PLUGINS_BASE_DEPENDENCIES = gstreamer1 $(TARGET_NLS_DEPENDENCIES)
 
 GST1_PLUGINS_BASE_LDFLAGS = $(TARGET_LDFLAGS) $(TARGET_NLS_LIBS)
+
+# Enable specific configs for the imx packages
+ifeq ($(BR2_PACKAGE_FREESCALE_IMX_GSTREAMER),y)
+GST1_PLUGINS_BASE_DEPENDENCIES += imx-linux-headers
+GST1_PLUGINS_BASE_CONF_OPTS += \
+	-Dextra_imx_incdir=$(STAGING_DIR)/usr/include/imx
+
+ifeq ($(BR2_PACKAGE_IMX_GPU_G2D),y)
+GST1_PLUGINS_BASE_DEPENDENCIES += imx-gpu-g2d
+GST1_PLUGINS_BASE_WINSYS_LIST += viv-fb
+endif
+endif
 
 # These plugins are listed in the order from ./configure --help
 

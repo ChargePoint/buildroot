@@ -1,0 +1,48 @@
+From cfa0f1858075a3390def50250eafc89d270178d3 Mon Sep 17 00:00:00 2001
+From: Edward Hervey <edward@centricular.com>
+Date: Wed, 6 Nov 2019 14:22:07 +0100
+Subject: [PATCH 1010/1024] tsdemux: Handle continuity mismatch in more cases
+
+Packets of a given PID are meant to have sequential continuity counters
+(modulo 16). If there are not sequential, this is the sign of a broken
+stream, which we then consider as a discontinuity.
+
+But if that new packet is a frame start (PUSI is true), then we can resume
+from that packet without any damage.
+---
+ gst/mpegtsdemux/tsdemux.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
+index c28516ef7..49f56498e 100644
+--- a/gst/mpegtsdemux/tsdemux.c
++++ b/gst/mpegtsdemux/tsdemux.c
+@@ -2399,10 +2399,21 @@ gst_ts_demux_queue_data (GstTSDemux * demux, TSDemuxStream * stream,
+           (stream->continuity_counter == MAX_CONTINUITY && cc == 0))) {
+     GST_LOG ("CONTINUITY: Got expected %d", cc);
+   } else {
+-    GST_WARNING ("CONTINUITY: Mismatch packet %d, stream %d",
+-        cc, stream->continuity_counter);
+-    if (stream->state != PENDING_PACKET_EMPTY)
+-      stream->state = PENDING_PACKET_DISCONT;
++    if (stream->state != PENDING_PACKET_EMPTY) {
++      if (packet->payload_unit_start_indicator) {
++        /* A mismatch is fatal, except if this is the beginning of a new
++         * frame (from which we can recover) */
++        if (G_UNLIKELY (stream->data)) {
++          g_free (stream->data);
++          stream->data = NULL;
++        }
++        stream->state = PENDING_PACKET_HEADER;
++      } else {
++        GST_WARNING ("CONTINUITY: Mismatch packet %d, stream %d",
++            cc, stream->continuity_counter);
++        stream->state = PENDING_PACKET_DISCONT;
++      }
++    }
+   }
+   stream->continuity_counter = cc;
+ 
+-- 
+2.17.1
+

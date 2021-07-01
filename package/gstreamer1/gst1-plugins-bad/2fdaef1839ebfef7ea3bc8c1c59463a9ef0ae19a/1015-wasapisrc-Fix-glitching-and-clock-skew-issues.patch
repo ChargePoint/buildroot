@@ -1,0 +1,42 @@
+From 96956cf4f2a761fd1de91a953c35147b9d13c62a Mon Sep 17 00:00:00 2001
+From: Nirbheek Chauhan <nirbheek@centricular.com>
+Date: Mon, 25 Nov 2019 21:00:14 +0530
+Subject: [PATCH 1015/1024] wasapisrc: Fix glitching and clock skew issues
+
+We were miscalculating the device period, i.e. the number of frames
+we'll get from WASAPI in each IAudioClient::GetBuffer call, due to
+a calculation mistake (truncate instead of round).
+
+For example, on my machine when the aux input is set to 44.1KHz, the
+reported device period is 101587, which comes out to 447.998 frames
+per ::GetBuffer call. In reality we will, of course, get 448 frames
+per call, but we were truncating, so we expected 447 and were
+discarding one frame every time. This led to glitching, and skew over
+time.
+
+Interestingly, I can only see this with 44.1Khz. 48Khz/96Khz are fine,
+because the device period is a more 'even' number.
+
+Fixes https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/issues/806
+---
+ sys/wasapi/gstwasapiutil.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/sys/wasapi/gstwasapiutil.c b/sys/wasapi/gstwasapiutil.c
+index 81df8d838..1651bdf80 100644
+--- a/sys/wasapi/gstwasapiutil.c
++++ b/sys/wasapi/gstwasapiutil.c
+@@ -919,7 +919,9 @@ gst_wasapi_util_initialize_audioclient (GstElement * self,
+ 
+     *ret_devicep_frames = n_frames;
+   } else {
+-    *ret_devicep_frames = (rate * device_period * 100) / GST_SECOND;
++    /* device_period can be a non-power-of-10 value so round while converting */
++    *ret_devicep_frames =
++        gst_util_uint64_scale_round (device_period, rate * 100, GST_SECOND);
+   }
+ 
+   return TRUE;
+-- 
+2.17.1
+

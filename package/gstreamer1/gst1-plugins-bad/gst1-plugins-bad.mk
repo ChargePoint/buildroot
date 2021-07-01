@@ -4,9 +4,16 @@
 #
 ################################################################################
 
+ifeq ($(BR2_PACKAGE_FREESCALE_IMX_GSTREAMER),y)
+GST1_PLUGINS_BAD_VERSION = 2fdaef1839ebfef7ea3bc8c1c59463a9ef0ae19a
+GST1_PLUGINS_BAD_SOURCE = imx-gst-plugins-bad-$(GST1_PLUGINS_BAD_VERSION).tar.gz
+GST1_PLUGINS_BAD_SITE = https://source.codeaurora.org/external/imx/gst-plugins-bad
+GST1_PLUGINS_BAD_SITE_METHOD = git
+else
 GST1_PLUGINS_BAD_VERSION = 1.18.4
 GST1_PLUGINS_BAD_SOURCE = gst-plugins-bad-$(GST1_PLUGINS_BAD_VERSION).tar.xz
 GST1_PLUGINS_BAD_SITE = https://gstreamer.freedesktop.org/src/gst-plugins-bad
+endif
 GST1_PLUGINS_BAD_INSTALL_STAGING = YES
 # Additional plugin licenses will be appended to GST1_PLUGINS_BAD_LICENSE and
 # GST1_PLUGINS_BAD_LICENSE_FILES if enabled.

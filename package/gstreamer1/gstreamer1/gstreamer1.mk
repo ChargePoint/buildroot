@@ -4,9 +4,16 @@
 #
 ################################################################################
 
+ifeq ($(BR2_PACKAGE_FREESCALE_IMX_GSTREAMER),y)
+GSTREAMER1_VERSION = beca1b382febc2ba38a21fcb8f5092209773eb7f
+GSTREAMER1_SOURCE = imx-gstreamer-$(GSTREAMER1_VERSION).tar.gz
+GSTREAMER1_SITE = https://source.codeaurora.org/external/imx/gstreamer
+GSTREAMER1_SITE_METHOD = git
+else
 GSTREAMER1_VERSION = 1.18.4
 GSTREAMER1_SOURCE = gstreamer-$(GSTREAMER1_VERSION).tar.xz
 GSTREAMER1_SITE = https://gstreamer.freedesktop.org/src/gstreamer
+endif
 GSTREAMER1_INSTALL_STAGING = YES
 GSTREAMER1_LICENSE_FILES = COPYING
 GSTREAMER1_LICENSE = LGPL-2.0+, LGPL-2.1+

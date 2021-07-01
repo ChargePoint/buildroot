@@ -1,0 +1,53 @@
+From d803c3816e5595f83273405592c5d64dd8123768 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Sebastian=20Dr=C3=B6ge?= <sebastian@centricular.com>
+Date: Thu, 14 Nov 2019 12:37:58 +0100
+Subject: [PATCH 1014/1024] audio-buffer: Don't fail to map buffers with zero
+ samples
+
+Instead initialize the map infos, etc to NULL like gst_buffer_map()
+would be doing on a zero-sized buffer.
+
+This fixes a crash in audioresample if the first output buffer would
+contain zero samples.
+---
+ gst-libs/gst/audio/audio-buffer.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
+
+diff --git a/gst-libs/gst/audio/audio-buffer.c b/gst-libs/gst/audio/audio-buffer.c
+index 74b04c772..e0165728d 100644
+--- a/gst-libs/gst/audio/audio-buffer.c
++++ b/gst-libs/gst/audio/audio-buffer.c
+@@ -154,16 +154,22 @@ gst_audio_buffer_map (GstAudioBuffer * buffer, const GstAudioInfo * info,
+       buffer->map_infos = buffer->priv_map_infos_arr;
+     }
+ 
+-    for (i = 0; i < buffer->n_planes; i++) {
+-      if (!gst_buffer_find_memory (gstbuffer, meta->offsets[i],
+-              GST_AUDIO_BUFFER_PLANE_SIZE (buffer), &idx, &length, &skip))
+-        goto no_memory;
++    if (buffer->n_samples == 0) {
++      memset (buffer->map_infos, 0,
++          buffer->n_planes * sizeof (buffer->map_infos[0]));
++      memset (buffer->planes, 0, buffer->n_planes * sizeof (buffer->planes[0]));
++    } else {
++      for (i = 0; i < buffer->n_planes; i++) {
++        if (!gst_buffer_find_memory (gstbuffer, meta->offsets[i],
++                GST_AUDIO_BUFFER_PLANE_SIZE (buffer), &idx, &length, &skip))
++          goto no_memory;
+ 
+-      if (!gst_buffer_map_range (gstbuffer, idx, length, &buffer->map_infos[i],
+-              flags))
+-        goto cannot_map;
++        if (!gst_buffer_map_range (gstbuffer, idx, length,
++                &buffer->map_infos[i], flags))
++          goto cannot_map;
+ 
+-      buffer->planes[i] = buffer->map_infos[i].data + skip;
++        buffer->planes[i] = buffer->map_infos[i].data + skip;
++      }
+     }
+   }
+ 
+-- 
+2.17.1
+

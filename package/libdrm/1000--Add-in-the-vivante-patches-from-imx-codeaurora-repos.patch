@@ -1,0 +1,1766 @@
+From bd939bede852e902b0c02aea47efa75c4efa5a77 Mon Sep 17 00:00:00 2001
+From: Charles Hardin <charles.hardin@chargepoint.com>
+Date: Sun, 30 Aug 2020 21:18:05 +0000
+Subject: [PATCH] Add in the vivante patches from imx codeaurora repos
+
+---
+ Makefile.am                  |   5 +
+ Makefile.sources             |   1 +
+ configure.ac                 |  14 +
+ include/drm/drm_fourcc.h     |  68 +++++
+ include/drm/drm_mode.h       | 109 +++++++
+ include/drm/imx_drm.h        |  66 ++++
+ include/drm/vivante_drm.h    | 171 +++++++++++
+ meson.build                  |  12 +
+ meson_options.txt            |   7 +
+ tests/vivante/Makefile.am    |  42 +++
+ tests/vivante/viv_bo_test.c  | 157 ++++++++++
+ vivante/Android.mk           |  13 +
+ vivante/Makefile.am          |  52 ++++
+ vivante/libdrm_vivante.pc    |  11 +
+ vivante/libdrm_vivante.pc.in |  11 +
+ vivante/meson.build          |  53 ++++
+ vivante/vivante-symbol-check |  31 ++
+ vivante/vivante_bo.c         | 565 +++++++++++++++++++++++++++++++++++
+ vivante/vivante_bo.h         |  95 ++++++
+ 19 files changed, 1483 insertions(+)
+ create mode 100644 include/drm/imx_drm.h
+ create mode 100644 include/drm/vivante_drm.h
+ create mode 100644 tests/vivante/Makefile.am
+ create mode 100644 tests/vivante/viv_bo_test.c
+ create mode 100644 vivante/Android.mk
+ create mode 100644 vivante/Makefile.am
+ create mode 100644 vivante/libdrm_vivante.pc
+ create mode 100644 vivante/libdrm_vivante.pc.in
+ create mode 100644 vivante/meson.build
+ create mode 100755 vivante/vivante-symbol-check
+ create mode 100644 vivante/vivante_bo.c
+ create mode 100644 vivante/vivante_bo.h
+
+diff --git a/Makefile.am b/Makefile.am
+index 730de1f2..6bee0343 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -38,6 +38,7 @@ AM_DISTCHECK_CONFIGURE_FLAGS = \
+ 	--enable-freedreno-kgsl\
+ 	--enable-tegra-experimental-api \
+ 	--enable-etnaviv-experimental-api \
++	--enable-vivante-experimental-api \
+ 	--enable-install-test-programs \
+ 	--enable-cairo-tests \
+ 	--enable-manpages \
+@@ -89,6 +90,9 @@ endif
+ if HAVE_ETNAVIV
+ ETNAVIV_SUBDIR = etnaviv
+ endif
++if HAVE_VIVANTE
++VIVANTE_SUBDIR = vivante
++endif
+ 
+ if BUILD_MANPAGES
+ if HAVE_MANPAGES_STYLESHEET
+@@ -108,6 +112,7 @@ SUBDIRS = \
+ 	$(FREEDRENO_SUBDIR) \
+ 	$(TEGRA_SUBDIR) \
+ 	$(VC4_SUBDIR) \
++	$(VIVANTE_SUBDIR) \
+ 	$(ETNAVIV_SUBDIR) \
+ 	data \
+ 	tests \
+diff --git a/Makefile.sources b/Makefile.sources
+index 55290fe9..bb02b625 100644
+--- a/Makefile.sources
++++ b/Makefile.sources
+@@ -35,6 +35,7 @@ LIBDRM_INCLUDE_H_FILES := \
+ 	include/drm/sis_drm.h \
+ 	include/drm/tegra_drm.h \
+ 	include/drm/vc4_drm.h \
++	include/drm/vivante_drm.h \
+ 	include/drm/via_drm.h \
+ 	include/drm/virtgpu_drm.h
+ 
+diff --git a/configure.ac b/configure.ac
+index 955dbadf..c42cde1e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -148,6 +148,11 @@ AC_ARG_ENABLE(tegra-experimental-api,
+ 	      [Enable support for Tegra's experimental API (default: disabled)]),
+ 	      [TEGRA=$enableval], [TEGRA=no])
+ 
++AC_ARG_ENABLE(vivante-experimental-api,
++	      AS_HELP_STRING([--enable-vivante-experimental-api],
++	      [Enable support for vivante's experimental API (default: disabled)]),
++	      [VIVANTE=$enableval], [VIVANTE=no])
++
+ AC_ARG_ENABLE(vc4,
+ 	      AS_HELP_STRING([--disable-vc4],
+ 	      [Enable support for vc4's API (default: auto, enabled on arm)]),
+@@ -448,6 +453,11 @@ fi
+ 
+ AM_CONDITIONAL(HAVE_TEGRA, [test "x$TEGRA" = xyes])
+ 
++AM_CONDITIONAL(HAVE_VIVANTE, [test "x$VIVANTE" = xyes])
++if test "x$VIVANTE" = xyes; then
++	AC_DEFINE(HAVE_VIVANTE, 1, [Have vivante support])
++fi
++
+ AM_CONDITIONAL(HAVE_VC4, [test "x$VC4" = xyes])
+ if test "x$VC4" = xyes; then
+ 	AC_DEFINE(HAVE_VC4, 1, [Have VC4 support])
+@@ -565,6 +575,8 @@ AC_CONFIG_FILES([
+ 	freedreno/libdrm_freedreno.pc
+ 	tegra/Makefile
+ 	tegra/libdrm_tegra.pc
++	vivante/Makefile
++	vivante/libdrm_vivante.pc
+ 	vc4/Makefile
+ 	vc4/libdrm_vc4.pc
+ 	etnaviv/Makefile
+@@ -580,6 +592,7 @@ AC_CONFIG_FILES([
+ 	tests/vbltest/Makefile
+ 	tests/exynos/Makefile
+ 	tests/tegra/Makefile
++	tests/vivante/Makefile
+ 	tests/nouveau/Makefile
+ 	tests/etnaviv/Makefile
+ 	tests/util/Makefile
+@@ -600,6 +613,7 @@ echo "  OMAP API       $OMAP"
+ echo "  EXYNOS API     $EXYNOS"
+ echo "  Freedreno API  $FREEDRENO (kgsl: $FREEDRENO_KGSL)"
+ echo "  Tegra API      $TEGRA"
++echo "  Vivante API    $VIVANTE"
+ echo "  VC4 API        $VC4"
+ echo "  Etnaviv API    $ETNAVIV"
+ echo ""
+diff --git a/include/drm/drm_fourcc.h b/include/drm/drm_fourcc.h
+index 5c69090d..c82da78c 100644
+--- a/include/drm/drm_fourcc.h
++++ b/include/drm/drm_fourcc.h
+@@ -236,6 +236,15 @@ extern "C" {
+ #define DRM_FORMAT_NV61		fourcc_code('N', 'V', '6', '1') /* 2x1 subsampled Cb:Cr plane */
+ #define DRM_FORMAT_NV24		fourcc_code('N', 'V', '2', '4') /* non-subsampled Cr:Cb plane */
+ #define DRM_FORMAT_NV42		fourcc_code('N', 'V', '4', '2') /* non-subsampled Cb:Cr plane */
++#define DRM_FORMAT_P010		fourcc_code('P', '0', '1', '0') /* 2x2 subsampled Cr:Cb plane, 10-bit per channel */
++/*
++ * A fully packed  2 plane YCbCr
++ * Y1 0-9, Y2 10-19, Y3 20-29, Y4 20-39
++ * ....
++ * U1V1: 0-19, U2V2: 20-39
++ * since kernel 5.4
++ */
++#define DRM_FORMAT_NV12_10LE40	fourcc_code('R', 'K', '2', '0') /* 2x2 subsampled Cr:Cb plane */
+ 
+ /*
+  * 2 plane YCbCr MSB aligned
+@@ -309,6 +318,8 @@ extern "C" {
+ #define DRM_FORMAT_MOD_VENDOR_BROADCOM 0x07
+ #define DRM_FORMAT_MOD_VENDOR_ARM     0x08
+ #define DRM_FORMAT_MOD_VENDOR_ALLWINNER 0x09
++#define DRM_FORMAT_MOD_VENDOR_AMPHION  0xf0
++#define DRM_FORMAT_MOD_VENDOR_VSI      0xf1
+ 
+ /* add more to the end as needed */
+ 
+@@ -487,8 +498,29 @@ extern "C" {
+  */
+ #define DRM_FORMAT_MOD_VIVANTE_SPLIT_SUPER_TILED fourcc_mod_code(VIVANTE, 4)
+ 
++/*
++ * Vivante 64x64 super-tiling with compression layout
++ *
++ * This is a tiled layout using 64x64 pixel super-tiles, where each super-tile
++ * contains 8x4 groups of 2x4 tiles of 4x4 pixels each, all in row-major layout
++ * with compression.
++ */
++#define DRM_FORMAT_MOD_VIVANTE_SUPER_TILED_FC  fourcc_mod_code(VIVANTE, 5)
++
+ /* NVIDIA frame buffer modifiers */
+ 
++/*
++ * Some modifiers take parameters, for example the number of vertical GOBs in
++ * a block. Reserve the lower 32 bits for parameters
++ */
++#define __fourcc_mod_tegra_mode_shift 32
++#define fourcc_mod_tegra_code(val, params) \
++	fourcc_mod_code(NV, ((((__u64)val) << __fourcc_mod_tegra_mode_shift) | params))
++#define fourcc_mod_tegra_mod(m) \
++	(m & ~((1ULL << __fourcc_mod_tegra_mode_shift) - 1))
++#define fourcc_mod_tegra_param(m) \
++	(m & ((1ULL << __fourcc_mod_tegra_mode_shift) - 1))
++
+ /*
+  * Tegra Tiled Layout, used by Tegra 2, 3 and 4.
+  *
+@@ -756,6 +788,42 @@ extern "C" {
+  */
+ #define DRM_FORMAT_MOD_ALLWINNER_TILED fourcc_mod_code(ALLWINNER, 1)
+ 
++/* Amphion tiled layout */
++
++/*
++ * Amphion 8x128 tiling layout
++ *
++ * This is a tiled layout using 8x128 pixel vertical strips, where each strip
++ * contains 1x16 groups of 8x8 pixels in a row-major layout.
++ */
++#define DRM_FORMAT_MOD_AMPHION_TILED fourcc_mod_code(AMPHION, 1)
++
++/* Verisilicon framebuffer modifiers */
++
++/*
++ * Verisilicon 8x4 tiling layout
++ *
++ * This is G1 VPU tiled layout using tiles of 8x4 pixels in a row-major
++ * layout.
++ */
++#define DRM_FORMAT_MOD_VSI_G1_TILED fourcc_mod_code(VSI, 1)
++
++/*
++ * Verisilicon 4x4 tiling layout
++ *
++ * This is G2 VPU tiled layout using tiles of 4x4 pixels in a row-major
++ * layout.
++ */
++#define DRM_FORMAT_MOD_VSI_G2_TILED fourcc_mod_code(VSI, 2)
++
++/*
++ * Verisilicon 4x4 tiling with compression layout
++ *
++ * This is G2 VPU tiled layout using tiles of 4x4 pixels in a row-major
++ * layout with compression.
++ */
++#define DRM_FORMAT_MOD_VSI_G2_TILED_COMPRESSED fourcc_mod_code(VSI, 3)
++
+ #if defined(__cplusplus)
+ }
+ #endif
+diff --git a/include/drm/drm_mode.h b/include/drm/drm_mode.h
+index 5fe6c649..63af2f3f 100644
+--- a/include/drm/drm_mode.h
++++ b/include/drm/drm_mode.h
+@@ -630,6 +630,115 @@ struct drm_color_lut {
+ 	__u16 reserved;
+ };
+ 
++enum supported_eotf_type {
++	TRADITIONAL_GAMMA_SDR = 0,
++	TRADITIONA_GAMMA_HDR,
++	SMPTE_ST2084,
++	FUTURE_EOTF
++};
++
++/* HDR Metadata */
++struct hdr_static_metadata {
++	__u8 eotf;
++	__u8 type;
++	__u16 display_primaries_x[3];
++	__u16 display_primaries_y[3];
++	__u16 white_point_x;
++	__u16 white_point_y;
++	__u16 max_mastering_display_luminance;
++	__u16 min_mastering_display_luminance;
++	__u16 max_fall;
++	__u16 max_cll;
++};
++
++
++/**
++ * struct hdr_metadata_infoframe - HDR Metadata Infoframe Data.
++ *
++ * HDR Metadata Infoframe as per CTA 861.G spec. This is expected
++ * to match exactly with the spec.
++ *
++ * Userspace is expected to pass the metadata information as per
++ * the format described in this structure.
++ */
++struct hdr_metadata_infoframe {
++	/**
++	 * @eotf: Electro-Optical Transfer Function (EOTF)
++	 * used in the stream.
++	 */
++	__u8 eotf;
++	/**
++	 * @metadata_type: Static_Metadata_Descriptor_ID.
++	 */
++	__u8 metadata_type;
++	/**
++	 * @display_primaries: Color Primaries of the Data.
++	 * These are coded as unsigned 16-bit values in units of
++	 * 0.00002, where 0x0000 represents zero and 0xC350
++	 * represents 1.0000.
++	 * @display_primaries.x: X cordinate of color primary.
++	 * @display_primaries.y: Y cordinate of color primary.
++	 */
++	struct {
++		__u16 x, y;
++		} display_primaries[3];
++	/**
++	 * @white_point: White Point of Colorspace Data.
++	 * These are coded as unsigned 16-bit values in units of
++	 * 0.00002, where 0x0000 represents zero and 0xC350
++	 * represents 1.0000.
++	 * @white_point.x: X cordinate of whitepoint of color primary.
++	 * @white_point.y: Y cordinate of whitepoint of color primary.
++	 */
++	struct {
++		__u16 x, y;
++		} white_point;
++	/**
++	 * @max_display_mastering_luminance: Max Mastering Display Luminance.
++	 * This value is coded as an unsigned 16-bit value in units of 1 cd/m2,
++	 * where 0x0001 represents 1 cd/m2 and 0xFFFF represents 65535 cd/m2.
++	 */
++	__u16 max_display_mastering_luminance;
++	/**
++	 * @min_display_mastering_luminance: Min Mastering Display Luminance.
++	 * This value is coded as an unsigned 16-bit value in units of
++	 * 0.0001 cd/m2, where 0x0001 represents 0.0001 cd/m2 and 0xFFFF
++	 * represents 6.5535 cd/m2.
++	 */
++	__u16 min_display_mastering_luminance;
++	/**
++	 * @max_cll: Max Content Light Level.
++	 * This value is coded as an unsigned 16-bit value in units of 1 cd/m2,
++	 * where 0x0001 represents 1 cd/m2 and 0xFFFF represents 65535 cd/m2.
++	 */
++	__u16 max_cll;
++	/**
++	 * @max_fall: Max Frame Average Light Level.
++	 * This value is coded as an unsigned 16-bit value in units of 1 cd/m2,
++	 * where 0x0001 represents 1 cd/m2 and 0xFFFF represents 65535 cd/m2.
++	 */
++	__u16 max_fall;
++};
++
++/**
++ * struct hdr_output_metadata - HDR output metadata
++ *
++ * Metadata Information to be passed from userspace
++ * since kernel 5.4
++ */
++struct hdr_output_metadata {
++	/**
++	 * @metadata_type: Static_Metadata_Descriptor_ID.
++	 */
++	__u32 metadata_type;
++	/**
++	 * @hdmi_metadata_type1: HDR Metadata Infoframe.
++	 */
++	union {
++		struct hdr_metadata_infoframe hdmi_metadata_type1;
++	};
++};
++
+ #define DRM_MODE_PAGE_FLIP_EVENT 0x01
+ #define DRM_MODE_PAGE_FLIP_ASYNC 0x02
+ #define DRM_MODE_PAGE_FLIP_TARGET_ABSOLUTE 0x4
+diff --git a/include/drm/imx_drm.h b/include/drm/imx_drm.h
+new file mode 100644
+index 00000000..91c44741
+--- /dev/null
++++ b/include/drm/imx_drm.h
+@@ -0,0 +1,66 @@
++/****************************************************************************
++ ****************************************************************************
++ ***
++ ***   This header was automatically generated from a Linux kernel header
++ ***   of the same name, to make information necessary for userspace to
++ ***   call into the kernel available to libc.  It contains only constants,
++ ***   structures, and macros generated from the original header, and thus,
++ ***   contains no copyrightable information.
++ ***
++ ***   To edit the content of this header, modify the corresponding
++ ***   source file (e.g. under external/kernel-headers/original/) then
++ ***   run bionic/libc/kernel/tools/update_all.py
++ ***
++ ***   Any manual change here will be lost the next time this script will
++ ***   be run. You've been warned!
++ ***
++ ****************************************************************************
++ ****************************************************************************/
++#ifndef _UAPI_IMX_DRM_H_
++#define _UAPI_IMX_DRM_H_
++#include "drm.h"
++#ifdef __cplusplus
++extern "C" {
++/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
++#endif
++struct drm_imx_dpu_frame_info {
++  __u32 width;
++  __u32 height;
++/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
++  __u32 x_offset;
++  __u32 y_offset;
++  __u32 stride;
++  __u32 format;
++/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
++  __u64 modifier;
++  __u64 baddr;
++  __u64 uv_addr;
++};
++/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
++#define DRM_IMX_DPU_SET_CMDLIST 0x00
++#define DRM_IMX_DPU_WAIT 0x01
++#define DRM_IMX_DPU_GET_PARAM 0x02
++#define DRM_IOCTL_IMX_DPU_SET_CMDLIST DRM_IOWR(DRM_COMMAND_BASE + DRM_IMX_DPU_SET_CMDLIST, struct drm_imx_dpu_set_cmdlist)
++/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
++#define DRM_IOCTL_IMX_DPU_WAIT DRM_IOWR(DRM_COMMAND_BASE + DRM_IMX_DPU_WAIT, struct drm_imx_dpu_wait)
++#define DRM_IOCTL_IMX_DPU_GET_PARAM DRM_IOWR(DRM_COMMAND_BASE + DRM_IMX_DPU_GET_PARAM, enum drm_imx_dpu_param)
++struct drm_imx_dpu_set_cmdlist {
++  __u64 cmd;
++/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
++  __u32 cmd_nr;
++  __u64 user_data;
++};
++struct drm_imx_dpu_wait {
++/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
++  __u64 user_data;
++};
++enum drm_imx_dpu_param {
++  DRM_IMX_MAX_DPUS,
++/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
++};
++#ifdef __cplusplus
++}
++#endif
++#endif
++/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
++
+diff --git a/include/drm/vivante_drm.h b/include/drm/vivante_drm.h
+new file mode 100644
+index 00000000..cd57b88c
+--- /dev/null
++++ b/include/drm/vivante_drm.h
+@@ -0,0 +1,171 @@
++/****************************************************************************
++*
++*    Copyright 2012 - 2017 Vivante Corporation, Santa Clara, California.
++*    All Rights Reserved.
++*
++*    Permission is hereby granted, free of charge, to any person obtaining
++*    a copy of this software and associated documentation files (the
++*    'Software'), to deal in the Software without restriction, including
++*    without limitation the rights to use, copy, modify, merge, publish,
++*    distribute, sub license, and/or sell copies of the Software, and to
++*    permit persons to whom the Software is furnished to do so, subject
++*    to the following conditions:
++*
++*    The above copyright notice and this permission notice (including the
++*    next paragraph) shall be included in all copies or substantial
++*    portions of the Software.
++*
++*    THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
++*    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++*    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
++*    IN NO EVENT SHALL VIVANTE AND/OR ITS SUPPLIERS BE LIABLE FOR ANY
++*    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
++*    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
++*    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++*
++*****************************************************************************/
++
++
++#ifndef __VIVNATE_DRM_H__
++#define __VIVNATE_DRM_H__
++
++#include <drm.h>
++
++#if defined(__cplusplus)
++extern "C" {
++#endif
++
++/* creation flag bits. */
++#define DRM_VIV_GEM_CONTIGUOUS      (1u << 0)
++#define DRM_VIV_GEM_CACHED          (1u << 1)
++#define DRM_VIV_GEM_SECURE          (1u << 2)
++#define DRM_VIV_GEM_CMA_LIMIT       (1u << 3)
++#define DRM_VIV_GEM_VIRTUAL_POOL    (1u << 4)
++
++struct drm_viv_gem_create {
++    __u64 size;
++    __u32 flags;
++    __u32 handle;
++};
++
++struct drm_viv_gem_lock {
++    __u32 handle;
++    __u32 cacheable;
++    __u64 logical;
++};
++
++struct drm_viv_gem_unlock {
++    __u32 handle;
++};
++
++
++#define DRM_VIV_GEM_CLEAN_CACHE         0x01
++#define DRM_VIV_GEM_INVALIDATE_CACHE    0x02
++#define DRM_VIV_GEM_FLUSH_CACHE         0x03
++#define DRM_VIV_GEM_MEMORY_BARRIER      0x04
++
++struct drm_viv_gem_cache {
++    __u32 handle;
++    __u32 op;
++    __u64 logical;
++    __u64 bytes;
++};
++
++
++#define DRM_VIV_GEM_PARAM_POOL      0x00
++#define DRM_VIV_GEM_PARAM_SIZE      0x01
++
++struct drm_viv_gem_query {
++    __u32 handle;
++    __u32 param;
++    __u64 value;
++};
++
++
++struct drm_viv_gem_timestamp {
++    __u32 handle;
++    /* inc count, 0 for query current. */
++    __u32 inc;
++    /* output inc'ed timestamp. */
++    __u64 timestamp;
++};
++
++
++/* basic tiling mode. */
++#define DRM_VIV_GEM_TILING_LINEAR       0x01
++#define DRM_VIV_GEM_TILING_TILED        0x02
++#define DRM_VIV_GEM_TILING_SUPERTILED   0x04
++#define DRM_VIV_GEM_TILING_MINORTILED   0x08
++
++/* tiling mode modifiers. */
++#define DRM_VIV_GEM_TILING_SPLIT    0x10
++#define DRM_VIV_GEM_TILING_X_MAJOR  0x20
++#define DRM_VIV_GEM_TILING_Y_MAJOR  0x40
++#define DRM_VIV_GEM_TILING_SWAP     0x80
++
++/* ts mode. */
++#define DRM_VIV_GEM_TS_NONE         0x00
++#define DRM_VIV_GEM_TS_DISABLED     0x01
++#define DRM_VIV_GEM_TS_NORMAL       0x02
++#define DRM_VIV_GEM_TS_COMPRESSED   0x03
++
++struct drm_viv_gem_set_tiling {
++    __u32 handle;
++    __u32 tiling_mode;
++
++    __u32 ts_mode;
++    __u64 clear_value;
++};
++
++struct drm_viv_gem_get_tiling {
++    __u32 handle;
++    __u32 tiling_mode;
++
++    __u32 ts_mode;
++    __u64 clear_value;
++};
++
++
++struct drm_viv_gem_attach_aux {
++    __u32 handle;
++    __u32 ts_handle;
++};
++
++
++struct drm_viv_gem_ref_node {
++    __u32 handle;
++
++    /* output. */
++    __u32 node;
++    __u32 ts_node;
++};
++
++
++#define DRM_VIV_GEM_CREATE          0x00
++#define DRM_VIV_GEM_LOCK            0x01
++#define DRM_VIV_GEM_UNLOCK          0x02
++#define DRM_VIV_GEM_CACHE           0x03
++#define DRM_VIV_GEM_QUERY           0x04
++#define DRM_VIV_GEM_TIMESTAMP       0x05
++#define DRM_VIV_GEM_SET_TILING      0x06
++#define DRM_VIV_GEM_GET_TILING      0x07
++#define DRM_VIV_GEM_ATTACH_AUX      0x08
++#define DRM_VIV_GEM_REF_NODE        0x09
++#define DRM_VIV_NUM_IOCTLS          0x0A
++
++#define DRM_IOCTL_VIV_GEM_CREATE        DRM_IOWR(DRM_COMMAND_BASE + DRM_VIV_GEM_CREATE,     struct drm_viv_gem_create)
++#define DRM_IOCTL_VIV_GEM_LOCK          DRM_IOWR(DRM_COMMAND_BASE + DRM_VIV_GEM_LOCK,       struct drm_viv_gem_lock)
++#define DRM_IOCTL_VIV_GEM_UNLOCK        DRM_IOWR(DRM_COMMAND_BASE + DRM_VIV_GEM_UNLOCK,     struct drm_viv_gem_unlock)
++#define DRM_IOCTL_VIV_GEM_CACHE         DRM_IOWR(DRM_COMMAND_BASE + DRM_VIV_GEM_CACHE,      struct drm_viv_gem_cache)
++#define DRM_IOCTL_VIV_GEM_QUERY         DRM_IOWR(DRM_COMMAND_BASE + DRM_VIV_GEM_QUERY,      struct drm_viv_gem_query)
++#define DRM_IOCTL_VIV_GEM_TIMESTAMP     DRM_IOWR(DRM_COMMAND_BASE + DRM_VIV_GEM_TIMESTAMP,  struct drm_viv_gem_timestamp)
++#define DRM_IOCTL_VIV_GEM_SET_TILING    DRM_IOWR(DRM_COMMAND_BASE + DRM_VIV_GEM_SET_TILING, struct drm_viv_gem_set_tiling)
++#define DRM_IOCTL_VIV_GEM_GET_TILING    DRM_IOWR(DRM_COMMAND_BASE + DRM_VIV_GEM_GET_TILING, struct drm_viv_gem_get_tiling)
++#define DRM_IOCTL_VIV_GEM_ATTACH_AUX    DRM_IOWR(DRM_COMMAND_BASE + DRM_VIV_GEM_ATTACH_AUX, struct drm_viv_gem_attach_aux)
++#define DRM_IOCTL_VIV_GEM_REF_NODE      DRM_IOWR(DRM_COMMAND_BASE + DRM_VIV_GEM_REF_NODE,   struct drm_viv_gem_ref_node)
++
++#if defined(__cplusplus)
++}
++#endif
++
++#endif /* __VIVNATE_DRM_H__ */
+diff --git a/meson.build b/meson.build
+index fc02f552..573b773b 100644
+--- a/meson.build
++++ b/meson.build
+@@ -157,6 +157,12 @@ if _vc4 != 'false'
+   with_vc4 = _vc4 == 'true' or ['arm', 'aarch64'].contains(host_machine.cpu_family())
+ endif
+ 
++with_vivante = false
++_vivante = get_option('vivante')
++if _vivante != 'false'
++  with_vivante = _vivante == 'true' or ['arm', 'aarch64'].contains(host_machine.cpu_family())
++endif
++
+ # XXX: Apparently only freebsd and dragonfly bsd actually need this (and
+ # gnu/kfreebsd), not openbsd and netbsd
+ with_libkms = false
+@@ -267,6 +273,7 @@ foreach t : [
+              [with_nouveau, 'NOUVEAU'],
+              [with_radeon, 'RADEON'],
+              [with_vc4, 'VC4'],
++             [with_vivante, 'VIVANTE'],
+              [with_vmwgfx, 'VMWGFX'],
+              [with_cairo_tests, 'CAIRO'],
+              [with_valgrind, 'VALGRIND'],
+@@ -316,6 +323,7 @@ install_headers(
+   'include/drm/radeon_drm.h', 'include/drm/amdgpu_drm.h',
+   'include/drm/savage_drm.h', 'include/drm/sis_drm.h',
+   'include/drm/tegra_drm.h', 'include/drm/vc4_drm.h',
++  'include/drm/imx_drm.h', 'include/drm/vivante_drm.h',
+   'include/drm/via_drm.h', 'include/drm/virtgpu_drm.h',
+   subdir : 'libdrm',
+ )
+@@ -364,6 +372,9 @@ endif
+ if with_vc4
+   subdir('vc4')
+ endif
++if with_vivante
++  subdir('vivante')
++endif
+ if with_etnaviv
+   subdir('etnaviv')
+ endif
+@@ -387,5 +398,6 @@ message('  EXYNOS API     @0@'.format(with_exynos))
+ message('  Freedreno API  @0@ (kgsl: @1@)'.format(with_freedreno, with_freedreno_kgsl))
+ message('  Tegra API      @0@'.format(with_tegra))
+ message('  VC4 API        @0@'.format(with_vc4))
++message('  Vivante API    @0@'.format(with_vivante))
+ message('  Etnaviv API    @0@'.format(with_etnaviv))
+ message('')
+diff --git a/meson_options.txt b/meson_options.txt
+index 8af33f1c..1314607f 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -95,6 +95,13 @@ option(
+   choices : ['true', 'false', 'auto'],
+   description : '''Enable support for vc4's KMS API.''',
+ )
++option(
++  'vivante',
++  type : 'combo',
++  value : 'auto',
++  choices : ['true', 'false', 'auto'],
++  description : '''Enable support for imx vivante's KMS API.''',
++)
+ option(
+   'etnaviv',
+   type : 'combo',
+diff --git a/tests/vivante/Makefile.am b/tests/vivante/Makefile.am
+new file mode 100644
+index 00000000..693a922e
+--- /dev/null
++++ b/tests/vivante/Makefile.am
+@@ -0,0 +1,42 @@
++##############################################################################
++#
++#    Copyright 2012 - 2017 Vivante Corporation, Santa Clara, California.
++#    All Rights Reserved.
++#
++#    Permission is hereby granted, free of charge, to any person obtaining
++#    a copy of this software and associated documentation files (the
++#    'Software'), to deal in the Software without restriction, including
++#    without limitation the rights to use, copy, modify, merge, publish,
++#    distribute, sub license, and/or sell copies of the Software, and to
++#    permit persons to whom the Software is furnished to do so, subject
++#    to the following conditions:
++#
++#    The above copyright notice and this permission notice (including the
++#    next paragraph) shall be included in all copies or substantial
++#    portions of the Software.
++#
++#    THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
++#    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++#    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
++#    IN NO EVENT SHALL VIVANTE AND/OR ITS SUPPLIERS BE LIABLE FOR ANY
++#    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
++#    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
++#    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++#
++##############################################################################
++AM_CFLAGS = \
++	-pthread \
++	$(WARN_CFLAGS) \
++	-I$(top_srcdir)/include/drm \
++	-I$(top_srcdir)/vivante \
++	-I$(top_srcdir)
++
++LDADD = \
++	../../vivante/libdrm_vivante.la \
++	../../libdrm.la \
++	-ldl
++
++TESTS = viv_bo_test
++
++bin_PROGRAMS = $(TESTS)
++
+diff --git a/tests/vivante/viv_bo_test.c b/tests/vivante/viv_bo_test.c
+new file mode 100644
+index 00000000..4e9b066f
+--- /dev/null
++++ b/tests/vivante/viv_bo_test.c
+@@ -0,0 +1,157 @@
++/****************************************************************************
++*
++*    Copyright 2012 - 2017 Vivante Corporation, Santa Clara, California.
++*    All Rights Reserved.
++*
++*    Permission is hereby granted, free of charge, to any person obtaining
++*    a copy of this software and associated documentation files (the
++*    'Software'), to deal in the Software without restriction, including
++*    without limitation the rights to use, copy, modify, merge, publish,
++*    distribute, sub license, and/or sell copies of the Software, and to
++*    permit persons to whom the Software is furnished to do so, subject
++*    to the following conditions:
++*
++*    The above copyright notice and this permission notice (including the
++*    next paragraph) shall be included in all copies or substantial
++*    portions of the Software.
++*
++*    THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
++*    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++*    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
++*    IN NO EVENT SHALL VIVANTE AND/OR ITS SUPPLIERS BE LIABLE FOR ANY
++*    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
++*    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
++*    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++*
++*****************************************************************************/
++
++
++/*
++ * Copyright © 2015 Canonical Ltd. (Maarten Lankhorst)
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be included in
++ * all copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE COPYRIGHT HOLDER(S) OR AUTHOR(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR
++ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
++ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ * OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#ifdef HAVE_CONFIG_H
++#  include "config.h"
++#endif
++
++#include <sys/ioctl.h>
++#include <dlfcn.h>
++#include <fcntl.h>
++#include <stdio.h>
++#include <unistd.h>
++#include <errno.h>
++#include <pthread.h>
++
++#include "xf86drm.h"
++#include "vivante_bo.h"
++
++static int import_fd = -1;
++
++static void *
++openclose(void *dev)
++{
++    struct drm_vivante *drm = dev;
++    struct drm_vivante_bo *bo;
++    int i;
++
++    for (i = 0; i < 100000; ++i) {
++        if (!drm_vivante_bo_import_from_fd(drm, import_fd, &bo))
++            drm_vivante_bo_destroy(bo);
++    }
++    return NULL;
++}
++
++int main(int argc, char *argv[])
++{
++    drmVersionPtr version;
++    const char *device = NULL;
++    int err, fd1, fd2;
++    struct drm_vivante *drm1, *drm2;
++    struct drm_vivante_bo *bo;
++    pthread_t t1, t2;
++
++    if (argc < 2) {
++        fd1 = drmOpenWithType("vivante", NULL, DRM_NODE_RENDER);
++        if (fd1 >= 0)
++            fd2 = drmOpenWithType("vivante", NULL, DRM_NODE_RENDER);
++    } else {
++        device = argv[1];
++
++        fd1 = open(device, O_RDWR);
++        if (fd1 >= 0)
++            fd2 = open(device, O_RDWR);
++        else
++            fd2 = fd1 = -errno;
++    }
++
++    if (fd1 < 0) {
++        fprintf(stderr, "Opening 1st vivante render node failed with %i\n", fd1);
++        return device ? -fd1 : 77;
++    }
++
++    if (fd2 < 0) {
++        fprintf(stderr, "Opening 2nd vivante render node failed with %i\n", -errno);
++        return errno;
++    }
++
++    version = drmGetVersion(fd1);
++    if (version) {
++        printf("Version: %d.%d.%d\n", version->version_major,
++               version->version_minor, version->version_patchlevel);
++        printf("  Name: %s\n", version->name);
++        printf("  Date: %s\n", version->date);
++        printf("  Description: %s\n", version->desc);
++
++        drmFreeVersion(version);
++    }
++
++    err = drm_vivante_create(fd1, &drm1);
++    if (!err)
++        err = drm_vivante_create(fd2, &drm2);
++    if (err < 0)
++        return 1;
++
++    err = drm_vivante_bo_create(drm2, 0, 1920*1080*4, &bo);
++    if (!err)
++        err = drm_vivante_bo_export_to_fd(bo, &import_fd);
++
++    if (!err) {
++        pthread_create(&t1, NULL, openclose, (void*)drm1);
++        pthread_create(&t2, NULL, openclose, (void*)drm1);
++    }
++
++    pthread_join(t1, NULL);
++    pthread_join(t2, NULL);
++
++    drm_vivante_bo_destroy(bo);
++
++    drm_vivante_close(drm2);
++    drm_vivante_close(drm1);
++    if (device) {
++        close(fd2);
++        close(fd1);
++    } else {
++        drmClose(fd2);
++        drmClose(fd1);
++    }
++
++    return 0;
++}
+diff --git a/vivante/Android.mk b/vivante/Android.mk
+new file mode 100644
+index 00000000..a809ed5a
+--- /dev/null
++++ b/vivante/Android.mk
+@@ -0,0 +1,13 @@
++LOCAL_PATH := $(call my-dir)
++include $(CLEAR_VARS)
++
++LOCAL_MODULE := libdrm_vivante
++LOCAL_VENDOR_MODULE := true
++
++LOCAL_SRC_FILES := vivante_bo.c
++
++LOCAL_SHARED_LIBRARIES := libdrm
++
++include $(LIBDRM_COMMON_MK)
++
++include $(BUILD_SHARED_LIBRARY)
+diff --git a/vivante/Makefile.am b/vivante/Makefile.am
+new file mode 100644
+index 00000000..cd4c73e8
+--- /dev/null
++++ b/vivante/Makefile.am
+@@ -0,0 +1,52 @@
++##############################################################################
++#
++#    Copyright 2012 - 2017 Vivante Corporation, Santa Clara, California.
++#    All Rights Reserved.
++#
++#    Permission is hereby granted, free of charge, to any person obtaining
++#    a copy of this software and associated documentation files (the
++#    'Software'), to deal in the Software without restriction, including
++#    without limitation the rights to use, copy, modify, merge, publish,
++#    distribute, sub license, and/or sell copies of the Software, and to
++#    permit persons to whom the Software is furnished to do so, subject
++#    to the following conditions:
++#
++#    The above copyright notice and this permission notice (including the
++#    next paragraph) shall be included in all copies or substantial
++#    portions of the Software.
++#
++#    THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
++#    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++#    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
++#    IN NO EVENT SHALL VIVANTE AND/OR ITS SUPPLIERS BE LIABLE FOR ANY
++#    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
++#    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
++#    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++#
++##############################################################################
++
++
++AM_CPPFLAGS = \
++	-I$(top_srcdir) \
++	-I$(top_srcdir)/include/drm
++
++AM_CFLAGS = \
++	@PTHREADSTUBS_CFLAGS@ \
++	$(WARN_CFLAGS)
++
++libdrm_vivante_ladir = $(libdir)
++libdrm_vivante_la_LTLIBRARIES = libdrm_vivante.la
++libdrm_vivante_la_LDFLAGS = -version-number 1:0:0 -no-undefined
++libdrm_vivante_la_LIBADD = ../libdrm.la @PTHREADSTUBS_LIBS@
++
++libdrm_vivante_la_SOURCES = \
++	vivante_bo.c
++
++libdrm_vivanteincludedir = ${includedir}/libdrm
++libdrm_vivanteinclude_HEADERS = vivante_bo.h
++
++pkgconfigdir = @pkgconfigdir@
++pkgconfig_DATA = libdrm_vivante.pc
++
++TESTS = vivante-symbol-check
++EXTRA_DIST = $(TESTS)
+diff --git a/vivante/libdrm_vivante.pc b/vivante/libdrm_vivante.pc
+new file mode 100644
+index 00000000..474a33c0
+--- /dev/null
++++ b/vivante/libdrm_vivante.pc
+@@ -0,0 +1,11 @@
++prefix=/usr
++exec_prefix=${prefix}
++libdir=${exec_prefix}/lib
++includedir=${prefix}/include
++
++Name: libdrm_vivante
++Description: Userspace interface to Vivante kernel DRM services
++Version: 2.4.84
++Libs: -L${libdir} -ldrm_vivante
++Cflags: -I${includedir} -I${includedir}/libdrm
++Requires.private: libdrm
+diff --git a/vivante/libdrm_vivante.pc.in b/vivante/libdrm_vivante.pc.in
+new file mode 100644
+index 00000000..2598d6b3
+--- /dev/null
++++ b/vivante/libdrm_vivante.pc.in
+@@ -0,0 +1,11 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: libdrm_vivante
++Description: Userspace interface to Vivante kernel DRM services
++Version: @PACKAGE_VERSION@
++Libs: -L${libdir} -ldrm_vivante
++Cflags: -I${includedir} -I${includedir}/libdrm
++Requires.private: libdrm
+diff --git a/vivante/meson.build b/vivante/meson.build
+new file mode 100644
+index 00000000..aa0b5f69
+--- /dev/null
++++ b/vivante/meson.build
+@@ -0,0 +1,53 @@
++# Copyright © 2017 Intel Corporation
++
++# Permission is hereby granted, free of charge, to any person obtaining a copy
++# of this software and associated documentation files (the "Software"), to deal
++# in the Software without restriction, including without limitation the rights
++# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++# copies of the Software, and to permit persons to whom the Software is
++# furnished to do so, subject to the following conditions:
++
++# The above copyright notice and this permission notice shall be included in
++# all copies or substantial portions of the Software.
++
++# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++# SOFTWARE.
++
++libdrm_vivante = shared_library(
++  'drm_vivante',
++  [files('vivante_bo.c'), config_file],
++  include_directories : [inc_root, inc_drm],
++  c_args : libdrm_c_args,
++  link_with : libdrm,
++  dependencies : [dep_pthread_stubs, dep_atomic_ops],
++  version : '0.0.0',
++  install : true,
++)
++
++ext_libdrm_vivante = declare_dependency(
++  link_with : [libdrm, libdrm_vivante],
++  include_directories : [inc_drm, include_directories('.')],
++)
++
++install_headers('vivante_bo.h', subdir : 'libdrm')
++
++pkg.generate(
++  name : 'libdrm_vivante',
++  libraries : libdrm_vivante,
++  subdirs : ['.', 'libdrm', 'vivante'],
++  version : '2.4.100',
++  requires_private : 'libdrm',
++  description : 'Userspace interface to vivante kernel DRM services',
++)
++
++test(
++  'vivante-symbol-check',
++  find_program('vivante-symbol-check'),
++  env : env_test,
++  args : libdrm_vivante,
++)
+diff --git a/vivante/vivante-symbol-check b/vivante/vivante-symbol-check
+new file mode 100755
+index 00000000..177bba99
+--- /dev/null
++++ b/vivante/vivante-symbol-check
+@@ -0,0 +1,31 @@
++#!/bin/bash
++
++# The following symbols (past the first nine) are taken from vivante_bo.h.
++
++FUNCS=$(nm -D --format=bsd --defined-only ${1-.libs/libdrm_vivante.so} | awk '{print $3}'| while read func; do
++( grep -q "^$func$" || echo $func )  <<EOF
++__bss_end__
++__bss_start__
++__bss_start
++__end__
++_bss_end__
++_edata
++_end
++_fini
++_init
++drm_vivante_bo_create
++drm_vivante_bo_create_with_ts
++drm_vivante_bo_export_to_fd
++drm_vivante_bo_import_from_fd
++drm_vivante_bo_destroy
++drm_vivante_bo_get_handle
++drm_vivante_bo_mmap
++drm_vivante_bo_munmap
++drm_vivante_bo_query
++drm_vivante_bo_set_tiling
++drm_vivante_bo_get_tiling
++drm_vivante_bo_inc_timestamp
++drm_vivante_bo_get_timestamp
++drm_vivante_bo_ref_node
++EOF
++done)
+diff --git a/vivante/vivante_bo.c b/vivante/vivante_bo.c
+new file mode 100644
+index 00000000..1e184e2d
+--- /dev/null
++++ b/vivante/vivante_bo.c
+@@ -0,0 +1,565 @@
++/****************************************************************************
++*
++*    Copyright 2012 - 2017 Vivante Corporation, Santa Clara, California.
++*    All Rights Reserved.
++*
++*    Permission is hereby granted, free of charge, to any person obtaining
++*    a copy of this software and associated documentation files (the
++*    'Software'), to deal in the Software without restriction, including
++*    without limitation the rights to use, copy, modify, merge, publish,
++*    distribute, sub license, and/or sell copies of the Software, and to
++*    permit persons to whom the Software is furnished to do so, subject
++*    to the following conditions:
++*
++*    The above copyright notice and this permission notice (including the
++*    next paragraph) shall be included in all copies or substantial
++*    portions of the Software.
++*
++*    THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
++*    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++*    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
++*    IN NO EVENT SHALL VIVANTE AND/OR ITS SUPPLIERS BE LIABLE FOR ANY
++*    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
++*    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
++*    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++*
++*****************************************************************************/
++
++
++#ifdef HAVE_CONFIG_H
++#  include "config.h"
++#endif
++
++#include <errno.h>
++#include <fcntl.h>
++#include <string.h>
++#include <unistd.h>
++#include <pthread.h>
++
++#include <sys/mman.h>
++
++#include <xf86drm.h>
++
++#include <vivante_drm.h>
++
++#include "vivante_bo.h"
++
++struct drm_vivante
++{
++    /* driver fd. */
++    int fd;
++
++    struct drm_vivante_bo *bo_list;
++    pthread_mutex_t mutex;
++};
++
++struct drm_vivante_bo
++{
++    struct drm_vivante *drm;
++
++    uint32_t handle;
++
++    /* export prime fd if any */
++    int fd;
++
++    uint32_t flags;
++    uint32_t size;
++
++    void *vaddr;
++
++    int refcount;
++    struct drm_vivante_bo *next;
++};
++
++
++int drm_vivante_create(int fd, struct drm_vivante **drmp)
++{
++    int supported = 0;
++    drmVersionPtr version;
++    struct drm_vivante *drm;
++
++    version = drmGetVersion(fd);
++    if (!version)
++        return -ENOMEM;
++
++    if (!strncmp(version->name, "vivante", version->name_len))
++        supported = 1;
++
++    drmFreeVersion(version);
++
++    if (!supported)
++        return -ENOTSUP;
++
++    drm = calloc(1, sizeof(struct drm_vivante));
++    if (!drm)
++        return -ENOMEM;
++
++    drm->fd = fd;
++    drm->bo_list = NULL;
++    pthread_mutex_init(&drm->mutex, NULL);
++
++    *drmp = drm;
++    return 0;
++}
++
++void drm_vivante_close(struct drm_vivante *drm)
++{
++    free(drm);
++}
++
++static inline void drm_vivante_bo_add_locked(struct drm_vivante *drm,
++                    struct drm_vivante_bo *bo)
++{
++    bo->refcount = 1;
++    bo->next = drm->bo_list;
++    drm->bo_list = bo;
++}
++
++static void drm_vivante_bo_add(struct drm_vivante *drm,
++                    struct drm_vivante_bo *bo)
++{
++    pthread_mutex_lock(&drm->mutex);
++    drm_vivante_bo_add_locked(drm, bo);
++    pthread_mutex_unlock(&drm->mutex);
++}
++
++static struct drm_vivante_bo *drm_vivante_bo_lookup(
++                    struct drm_vivante *drm, uint32_t handle)
++{
++    struct drm_vivante_bo *bo;
++    int err;
++
++    for (bo = drm->bo_list; bo != NULL; bo = bo->next) {
++        if (bo->handle == handle)
++            break;
++    }
++    if (bo)
++        bo->refcount++;
++    return bo;
++}
++
++/* returns refcount. */
++static int drm_vivante_bo_decref(struct drm_vivante *drm,
++                struct drm_vivante_bo *bo)
++{
++    int ret;
++
++    pthread_mutex_lock(&drm->mutex);
++    ret = --bo->refcount;
++
++    if (ret > 0)
++        goto out;
++
++    /* unlink bo. */
++    if (bo == drm->bo_list)
++        drm->bo_list = bo->next;
++    else {
++        struct drm_vivante_bo *prev = NULL;
++        for (prev = drm->bo_list; prev != NULL; prev = prev->next) {
++            if (prev->next == bo) {
++                prev->next = bo->next;
++                break;
++            }
++        }
++    }
++
++out:
++    pthread_mutex_unlock(&drm->mutex);
++    return ret;
++}
++
++static int drm_vivante_bo_init(struct drm_vivante *drm,
++                struct drm_vivante_bo **bop)
++{
++    struct drm_vivante_bo *bo;
++
++    bo = calloc(1, sizeof(*bo));
++    if (!bo)
++        return -ENOMEM;
++
++    bo->drm = drm;
++    bo->fd = -1;
++    bo->vaddr = NULL;
++
++    *bop = bo;
++    return 0;
++}
++
++int drm_vivante_bo_create(struct drm_vivante *drm,
++            uint32_t flags, uint32_t size, struct drm_vivante_bo **bop)
++{
++    int err = 0;
++    struct drm_vivante_bo *bo;
++    struct drm_viv_gem_create args = {
++        .flags = flags,
++        .size  = size
++    };
++
++    if (size == 0)
++        return -EINVAL;
++
++    if (!drm || !bop)
++        return -EINVAL;
++
++    err = drm_vivante_bo_init(drm, &bo);
++    if (err) {
++        return err;
++    }
++
++    if (drmIoctl(drm->fd, DRM_IOCTL_VIV_GEM_CREATE, &args)) {
++        free(bo);
++        return -errno;
++    }
++    bo->handle = args.handle;
++    bo->flags = flags;
++    bo->size = size;
++
++    drm_vivante_bo_add(drm, bo);
++    *bop = bo;
++    return 0;
++}
++
++int drm_vivante_bo_create_with_ts(struct drm_vivante *drm,
++            uint32_t flags, uint32_t size, struct drm_vivante_bo **bop)
++{
++    int err = 0;
++    uint32_t ts_handle = 0;
++    struct drm_vivante_bo *bo;
++    struct drm_viv_gem_create args = {
++        .flags = flags,
++        .size  = size
++    };
++    struct drm_gem_close close_args;
++    struct drm_viv_gem_attach_aux aux_args;
++    const uint32_t valid_ts_flags = DRM_VIV_GEM_CONTIGUOUS |
++                        DRM_VIV_GEM_SECURE | DRM_VIV_GEM_CMA_LIMIT;
++
++    if (size == 0)
++        return -EINVAL;
++
++    if (!drm || !bop)
++        return -EINVAL;
++
++    err = drm_vivante_bo_init(drm, &bo);
++    if (err)
++        return err;
++
++    if (drmIoctl(drm->fd, DRM_IOCTL_VIV_GEM_CREATE, &args)) {
++        err = -errno;
++        goto err_close;
++    }
++    bo->handle = args.handle;
++
++    /* alloc ts handle, size is master buffer size / 256, align up to 64B. */
++    args.flags = flags & valid_ts_flags;
++    args.size  = ((size >> 8) + 0x3f) & ~0x3f;
++    if (drmIoctl(drm->fd, DRM_IOCTL_VIV_GEM_CREATE, &args)) {
++        err = -errno;
++        goto err_close;
++    }
++    ts_handle = args.handle;
++
++    /* ref ts_handle in master handle. */
++    aux_args.handle = bo->handle;
++    aux_args.ts_handle = ts_handle;
++    if (drmIoctl(drm->fd, DRM_IOCTL_VIV_GEM_ATTACH_AUX, &aux_args)) {
++        err = -errno;
++        goto err_close;
++    }
++
++    /* Now ts was attached to master, destroy it now. */
++    close_args.handle = ts_handle;
++    if (drmIoctl(drm->fd, DRM_IOCTL_GEM_CLOSE, &close_args)) {
++        err = -errno;
++        goto err_close;
++    }
++    ts_handle = 0;
++
++    bo->flags = flags;
++    bo->size = size;
++
++    drm_vivante_bo_add(drm, bo);
++    *bop = bo;
++    return 0;
++
++err_close:
++    if (bo->handle) {
++
++        if (ts_handle) {
++            close_args.handle = ts_handle;
++            drmIoctl(drm->fd, DRM_IOCTL_GEM_CLOSE, &close_args);
++        }
++
++        close_args.handle = bo->handle;
++        drmIoctl(drm->fd, DRM_IOCTL_GEM_CLOSE, &close_args);
++    }
++
++    free(bo);
++    return err;
++}
++
++int drm_vivante_bo_export_to_fd(struct drm_vivante_bo *bo, int *pfd)
++{
++    if (!bo || !pfd)
++        return -EINVAL;
++
++    if (bo->fd < 0) {
++        int fd;
++        if (drmPrimeHandleToFD(bo->drm->fd, bo->handle, O_RDWR, &fd))
++            return -errno;
++        bo->fd = fd;
++    }
++
++    *pfd = bo->fd;
++    return 0;
++}
++
++int drm_vivante_bo_import_from_fd(struct drm_vivante *drm, int fd,
++            struct drm_vivante_bo **bop)
++{
++    int err;
++    uint64_t size;
++    uint32_t handle = 0;
++    struct drm_vivante_bo *bo = NULL;
++
++    if (!drm || !bop || fd < 0)
++        return -EINVAL;
++
++    pthread_mutex_lock(&drm->mutex);
++
++    if (drmPrimeFDToHandle(drm->fd, fd, &handle)) {
++        err = -errno;
++        goto err_close;
++    }
++
++    bo = drm_vivante_bo_lookup(drm, handle);
++    if (bo) {
++        pthread_mutex_unlock(&drm->mutex);
++        *bop = bo;
++        return 0;
++    }
++
++    err = drm_vivante_bo_init(drm, &bo);
++    if (err)
++        goto err_close;
++    bo->handle = handle;
++
++    err = drm_vivante_bo_query(bo, DRM_VIV_GEM_PARAM_SIZE, &size);
++    if (err)
++        goto err_close;
++    bo->size = (uint32_t)size;
++
++    drm_vivante_bo_add_locked(drm, bo);
++    pthread_mutex_unlock(&drm->mutex);
++
++    *bop = bo;
++    return 0;
++
++err_close:
++    pthread_mutex_unlock(&drm->mutex);
++
++    if (handle > 0) {
++        struct drm_gem_close close_args = {
++            .handle = handle,
++        };
++        drmIoctl(drm->fd, DRM_IOCTL_GEM_CLOSE, &close_args);
++    }
++    free(bo);
++
++    return err;
++}
++
++void drm_vivante_bo_destroy(struct drm_vivante_bo *bo)
++{
++    struct drm_gem_close close_args;
++
++    if (!bo)
++        return;
++
++    if (drm_vivante_bo_decref(bo->drm, bo) != 0)
++        return;
++
++    if (bo->vaddr) {
++        drm_vivante_bo_munmap(bo);
++    }
++
++    close_args.handle = bo->handle;
++    drmIoctl(bo->drm->fd, DRM_IOCTL_GEM_CLOSE, &close_args);
++
++    free(bo);
++}
++
++int drm_vivante_bo_get_handle(struct drm_vivante_bo *bo, uint32_t *handle)
++{
++    if (!bo || !handle)
++        return -EINVAL;
++
++    *handle = bo->handle;
++    return 0;
++}
++
++static int clean_bo_cache(struct drm_vivante_bo *bo)
++{
++    struct drm_viv_gem_cache args = {
++        .op = DRM_VIV_GEM_CLEAN_CACHE,
++        .handle = bo->handle,
++        .logical = (uint64_t)(uintptr_t)bo->vaddr,
++        .bytes = bo->size
++    };
++
++    if (drmIoctl(bo->drm->fd, DRM_IOCTL_VIV_GEM_CACHE, &args))
++        return -errno;
++
++    return 0;
++}
++
++
++int drm_vivante_bo_mmap(struct drm_vivante_bo *bo, void **vaddr)
++{
++    struct drm_viv_gem_lock args;
++
++    if (!bo || !vaddr)
++        return -EINVAL;
++
++    /* already locked */
++    if (bo->vaddr)
++        return -EPERM;
++        
++    args.handle = bo->handle;
++    args.cacheable = (bo->flags & DRM_VIV_GEM_CACHED) ? 1 : 0;
++    if (drmIoctl(bo->drm->fd, DRM_IOCTL_VIV_GEM_LOCK, &args))
++        return -errno;
++
++    bo->vaddr = (void *)(uintptr_t)args.logical;
++
++    *vaddr = bo->vaddr;
++    return 0;
++}
++
++int drm_vivante_bo_munmap(struct drm_vivante_bo *bo)
++{
++    struct drm_viv_gem_unlock args;
++
++    if (!bo || !bo->vaddr)
++        return -EINVAL;
++
++    args.handle = bo->handle;
++    if (bo->flags & DRM_VIV_GEM_CACHED) {
++        int err = clean_bo_cache(bo);
++        if (err)
++            return err;
++    }
++
++    if (drmIoctl(bo->drm->fd, DRM_IOCTL_VIV_GEM_UNLOCK, &args))
++        return -errno;
++
++    bo->vaddr = NULL;
++    return 0;
++}
++
++int drm_vivante_bo_query(struct drm_vivante_bo *bo,
++            uint32_t param, uint64_t *value)
++{
++    struct drm_viv_gem_query args = {
++        .param = param,
++    };
++
++    if (!bo || !value)
++        return -EINVAL;
++
++    args.handle = bo->handle;
++    if (drmIoctl(bo->drm->fd, DRM_IOCTL_VIV_GEM_QUERY, &args))
++        return -errno;
++
++    *value = args.value;
++    return 0;
++}
++
++int drm_vivante_bo_set_tiling(struct drm_vivante_bo *bo,
++            const struct drm_vivante_bo_tiling *tiling)
++{
++    struct drm_viv_gem_set_tiling args;
++
++    if (!bo || !tiling)
++        return -EINVAL;
++
++    args = (struct drm_viv_gem_set_tiling) {
++        .handle = bo->handle,
++        .tiling_mode = tiling->tiling_mode,
++        .ts_mode = tiling->ts_mode,
++        .clear_value = tiling->clear_value,
++    };
++
++    if (drmIoctl(bo->drm->fd, DRM_IOCTL_VIV_GEM_SET_TILING, &args))
++        return -errno;
++
++    return 0;
++}
++
++int drm_vivante_bo_get_tiling(struct drm_vivante_bo *bo,
++            struct drm_vivante_bo_tiling *tiling)
++{
++    struct drm_viv_gem_get_tiling args;
++
++    if (!bo || !tiling)
++        return -EINVAL;
++
++    args.handle = bo->handle;
++    if (drmIoctl(bo->drm->fd, DRM_IOCTL_VIV_GEM_GET_TILING, &args))
++        return -errno;
++
++    tiling->tiling_mode = args.tiling_mode;
++    tiling->ts_mode = args.ts_mode;
++    tiling->clear_value = args.clear_value;
++
++    return 0;
++}
++
++static inline int inc_bo_timestamp(struct drm_vivante_bo *bo,
++                        uint32_t inc, uint64_t *timestamp)
++{
++    struct drm_viv_gem_timestamp args = {
++        .handle = bo->handle,
++        .inc = inc,
++    };
++    if (drmIoctl(bo->drm->fd, DRM_IOCTL_VIV_GEM_TIMESTAMP, &args))
++        return -errno;
++
++    if (timestamp)
++        *timestamp = args.timestamp;
++    return 0;
++}
++
++int drm_vivante_bo_inc_timestamp(struct drm_vivante_bo *bo,
++            uint64_t *timestamp)
++{
++    if (!bo)
++        return -EINVAL;
++    return inc_bo_timestamp(bo, 1, timestamp);
++}
++
++int drm_vivante_bo_get_timestamp(struct drm_vivante_bo *bo,
++            uint64_t *timestamp)
++{
++    if (!bo || !timestamp)
++        return -EINVAL;
++    return inc_bo_timestamp(bo, 0, timestamp);
++}
++
++int drm_vivante_bo_ref_node(struct drm_vivante_bo *bo,
++            uint32_t *node, uint32_t *ts_node)
++{
++    struct drm_viv_gem_ref_node args;
++
++    if (!bo || !node || !ts_node)
++        return -EINVAL;
++
++    args.handle = bo->handle;
++    if (drmIoctl(bo->drm->fd, DRM_IOCTL_VIV_GEM_REF_NODE, &args))
++        return -errno;
++
++    *node = args.node;
++    *ts_node = args.ts_node;
++    return 0;
++}
++
+diff --git a/vivante/vivante_bo.h b/vivante/vivante_bo.h
+new file mode 100644
+index 00000000..a254bb4e
+--- /dev/null
++++ b/vivante/vivante_bo.h
+@@ -0,0 +1,95 @@
++/****************************************************************************
++*
++*    Copyright 2012 - 2017 Vivante Corporation, Santa Clara, California.
++*    All Rights Reserved.
++*
++*    Permission is hereby granted, free of charge, to any person obtaining
++*    a copy of this software and associated documentation files (the
++*    'Software'), to deal in the Software without restriction, including
++*    without limitation the rights to use, copy, modify, merge, publish,
++*    distribute, sub license, and/or sell copies of the Software, and to
++*    permit persons to whom the Software is furnished to do so, subject
++*    to the following conditions:
++*
++*    The above copyright notice and this permission notice (including the
++*    next paragraph) shall be included in all copies or substantial
++*    portions of the Software.
++*
++*    THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
++*    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++*    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
++*    IN NO EVENT SHALL VIVANTE AND/OR ITS SUPPLIERS BE LIABLE FOR ANY
++*    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
++*    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
++*    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++*
++*****************************************************************************/
++
++
++#ifndef __DRM_VIVANTE_H__
++#define __DRM_VIVANTE_H__
++
++#include <stdint.h>
++#include <stdlib.h>
++#include <vivante_drm.h>
++
++#if defined(__cplusplus)
++extern "C" {
++#endif
++
++struct drm_vivante_bo;
++struct drm_vivante;
++
++struct drm_vivante_bo_tiling {
++    uint32_t tiling_mode;
++    uint32_t ts_mode;
++    uint64_t clear_value;
++};
++
++/* caller owns the driver fd. */
++int drm_vivante_create(int fd, struct drm_vivante **drmp);
++void drm_vivante_close(struct drm_vivante *drm);
++
++int drm_vivante_bo_create(struct drm_vivante *drm,
++            uint32_t flags, uint32_t size, struct drm_vivante_bo **bop);
++
++/* create bo with auxillary tile-status bo. */
++int drm_vivante_bo_create_with_ts(struct drm_vivante *drm,
++            uint32_t flags, uint32_t size, struct drm_vivante_bo **bop);
++
++/* caller owns the fd. */
++int drm_vivante_bo_export_to_fd(struct drm_vivante_bo *bo, int *pfd);
++/* caller still owns the fd upon return. */
++int drm_vivante_bo_import_from_fd(struct drm_vivante *drm, int fd,
++        struct drm_vivante_bo **bop);
++
++void drm_vivante_bo_destroy(struct drm_vivante_bo *bo);
++
++/* do not close the handle directly. */
++int drm_vivante_bo_get_handle(struct drm_vivante_bo *bo, uint32_t *handle);
++
++int drm_vivante_bo_mmap(struct drm_vivante_bo *bo, void **vaddr);
++int drm_vivante_bo_munmap(struct drm_vivante_bo *bo);
++
++int drm_vivante_bo_query(struct drm_vivante_bo *bo,
++            uint32_t param, uint64_t *value);
++
++int drm_vivante_bo_set_tiling(struct drm_vivante_bo *bo,
++            const struct drm_vivante_bo_tiling *tiling);
++int drm_vivante_bo_get_tiling(struct drm_vivante_bo *bo,
++            struct drm_vivante_bo_tiling *tiling);
++
++/* output inc'ed timestamp, optional. */
++int drm_vivante_bo_inc_timestamp(struct drm_vivante_bo *bo,
++            uint64_t *timestamp);
++int drm_vivante_bo_get_timestamp(struct drm_vivante_bo *bo,
++            uint64_t *timestamp);
++
++int drm_vivante_bo_ref_node(struct drm_vivante_bo *bo,
++            uint32_t *node, uint32_t *ts_node);
++
++#if defined(__cplusplus)
++}
++#endif
++
++#endif /* __DRM_VIVANTE_H__ */
+-- 
+2.17.1
+

@@ -1,3 +1,6 @@
 # From https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.18.4.tar.xz.sha256sum
 sha256  74e806bc5595b18c70e9ca93571e27e79dfb808e5d2e7967afa952b52e99c85f  gst-plugins-bad-1.18.4.tar.xz
 sha256  dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551  COPYING
+
+# Locally computed
+sha256 66e8cc80540eee18fa18d9d5754363b96d3c9e748c13e561401a828b740e6960 imx-gst-plugins-bad-2fdaef1839ebfef7ea3bc8c1c59463a9ef0ae19a.tar.gz

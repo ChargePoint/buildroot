@@ -1,0 +1,482 @@
+From 7c885c3a8155e565730a08f1ecd4f0c818975365 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Tim-Philipp=20M=C3=BCller?= <tim@centricular.com>
+Date: Tue, 3 Dec 2019 11:03:11 +0000
+Subject: [PATCH 1023/1024] Update docs
+
+---
+ docs/plugins/inspect/plugin-adder.xml              | 2 +-
+ docs/plugins/inspect/plugin-alsa.xml               | 2 +-
+ docs/plugins/inspect/plugin-app.xml                | 2 +-
+ docs/plugins/inspect/plugin-audioconvert.xml       | 2 +-
+ docs/plugins/inspect/plugin-audiomixer.xml         | 2 +-
+ docs/plugins/inspect/plugin-audiorate.xml          | 2 +-
+ docs/plugins/inspect/plugin-audioresample.xml      | 2 +-
+ docs/plugins/inspect/plugin-audiotestsrc.xml       | 2 +-
+ docs/plugins/inspect/plugin-cdparanoia.xml         | 2 +-
+ docs/plugins/inspect/plugin-compositor.xml         | 2 +-
+ docs/plugins/inspect/plugin-encoding.xml           | 2 +-
+ docs/plugins/inspect/plugin-gio.xml                | 2 +-
+ docs/plugins/inspect/plugin-libvisual.xml          | 2 +-
+ docs/plugins/inspect/plugin-ogg.xml                | 4 ++--
+ docs/plugins/inspect/plugin-opengl.xml             | 2 +-
+ docs/plugins/inspect/plugin-opus.xml               | 2 +-
+ docs/plugins/inspect/plugin-overlaycomposition.xml | 2 +-
+ docs/plugins/inspect/plugin-pango.xml              | 2 +-
+ docs/plugins/inspect/plugin-pbtypes.xml            | 2 +-
+ docs/plugins/inspect/plugin-playback.xml           | 2 +-
+ docs/plugins/inspect/plugin-rawparse.xml           | 2 +-
+ docs/plugins/inspect/plugin-subparse.xml           | 2 +-
+ docs/plugins/inspect/plugin-tcp.xml                | 2 +-
+ docs/plugins/inspect/plugin-theora.xml             | 2 +-
+ docs/plugins/inspect/plugin-typefindfunctions.xml  | 2 +-
+ docs/plugins/inspect/plugin-videoconvert.xml       | 2 +-
+ docs/plugins/inspect/plugin-videorate.xml          | 2 +-
+ docs/plugins/inspect/plugin-videoscale.xml         | 2 +-
+ docs/plugins/inspect/plugin-videotestsrc.xml       | 2 +-
+ docs/plugins/inspect/plugin-volume.xml             | 2 +-
+ docs/plugins/inspect/plugin-vorbis.xml             | 2 +-
+ docs/plugins/inspect/plugin-ximagesink.xml         | 2 +-
+ docs/plugins/inspect/plugin-xvimagesink.xml        | 2 +-
+ 33 files changed, 34 insertions(+), 34 deletions(-)
+
+diff --git a/docs/plugins/inspect/plugin-adder.xml b/docs/plugins/inspect/plugin-adder.xml
+index f137bb3c8..4e7ea1815 100644
+--- a/docs/plugins/inspect/plugin-adder.xml
++++ b/docs/plugins/inspect/plugin-adder.xml
+@@ -3,7 +3,7 @@
+   <description>Adds multiple streams</description>
+   <filename>../../gst/adder/.libs/libgstadder.so</filename>
+   <basename>libgstadder.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-alsa.xml b/docs/plugins/inspect/plugin-alsa.xml
+index 8c266884d..a7804a9e4 100644
+--- a/docs/plugins/inspect/plugin-alsa.xml
++++ b/docs/plugins/inspect/plugin-alsa.xml
+@@ -3,7 +3,7 @@
+   <description>ALSA plugin library</description>
+   <filename>../../ext/alsa/.libs/libgstalsa.so</filename>
+   <basename>libgstalsa.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-app.xml b/docs/plugins/inspect/plugin-app.xml
+index d1c05dffc..ff36563d3 100644
+--- a/docs/plugins/inspect/plugin-app.xml
++++ b/docs/plugins/inspect/plugin-app.xml
+@@ -3,7 +3,7 @@
+   <description>Elements used to communicate with applications</description>
+   <filename>../../gst/app/.libs/libgstapp.so</filename>
+   <basename>libgstapp.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-audioconvert.xml b/docs/plugins/inspect/plugin-audioconvert.xml
+index fd8daf1e0..5b48db7af 100644
+--- a/docs/plugins/inspect/plugin-audioconvert.xml
++++ b/docs/plugins/inspect/plugin-audioconvert.xml
+@@ -3,7 +3,7 @@
+   <description>Convert audio to different formats</description>
+   <filename>../../gst/audioconvert/.libs/libgstaudioconvert.so</filename>
+   <basename>libgstaudioconvert.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-audiomixer.xml b/docs/plugins/inspect/plugin-audiomixer.xml
+index e311cea58..72249c532 100644
+--- a/docs/plugins/inspect/plugin-audiomixer.xml
++++ b/docs/plugins/inspect/plugin-audiomixer.xml
+@@ -3,7 +3,7 @@
+   <description>Mixes multiple audio streams</description>
+   <filename>../../gst/audiomixer/.libs/libgstaudiomixer.so</filename>
+   <basename>libgstaudiomixer.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-audiorate.xml b/docs/plugins/inspect/plugin-audiorate.xml
+index 798493e53..b6fecf97d 100644
+--- a/docs/plugins/inspect/plugin-audiorate.xml
++++ b/docs/plugins/inspect/plugin-audiorate.xml
+@@ -3,7 +3,7 @@
+   <description>Adjusts audio frames</description>
+   <filename>../../gst/audiorate/.libs/libgstaudiorate.so</filename>
+   <basename>libgstaudiorate.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-audioresample.xml b/docs/plugins/inspect/plugin-audioresample.xml
+index 2d6693872..b4db77f4f 100644
+--- a/docs/plugins/inspect/plugin-audioresample.xml
++++ b/docs/plugins/inspect/plugin-audioresample.xml
+@@ -3,7 +3,7 @@
+   <description>Resamples audio</description>
+   <filename>../../gst/audioresample/.libs/libgstaudioresample.so</filename>
+   <basename>libgstaudioresample.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-audiotestsrc.xml b/docs/plugins/inspect/plugin-audiotestsrc.xml
+index fa56f5f40..011bc9806 100644
+--- a/docs/plugins/inspect/plugin-audiotestsrc.xml
++++ b/docs/plugins/inspect/plugin-audiotestsrc.xml
+@@ -3,7 +3,7 @@
+   <description>Creates audio test signals of given frequency and volume</description>
+   <filename>../../gst/audiotestsrc/.libs/libgstaudiotestsrc.so</filename>
+   <basename>libgstaudiotestsrc.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-cdparanoia.xml b/docs/plugins/inspect/plugin-cdparanoia.xml
+index 686072505..32f6c642a 100644
+--- a/docs/plugins/inspect/plugin-cdparanoia.xml
++++ b/docs/plugins/inspect/plugin-cdparanoia.xml
+@@ -3,7 +3,7 @@
+   <description>Read audio from CD in paranoid mode</description>
+   <filename>../../ext/cdparanoia/.libs/libgstcdparanoia.so</filename>
+   <basename>libgstcdparanoia.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-compositor.xml b/docs/plugins/inspect/plugin-compositor.xml
+index b297e9851..492fd7159 100644
+--- a/docs/plugins/inspect/plugin-compositor.xml
++++ b/docs/plugins/inspect/plugin-compositor.xml
+@@ -3,7 +3,7 @@
+   <description>Compositor</description>
+   <filename>../../gst/compositor/.libs/libgstcompositor.so</filename>
+   <basename>libgstcompositor.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-encoding.xml b/docs/plugins/inspect/plugin-encoding.xml
+index 52b1b4a13..7418390cb 100644
+--- a/docs/plugins/inspect/plugin-encoding.xml
++++ b/docs/plugins/inspect/plugin-encoding.xml
+@@ -3,7 +3,7 @@
+   <description>various encoding-related elements</description>
+   <filename>../../gst/encoding/.libs/libgstencoding.so</filename>
+   <basename>libgstencoding.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-gio.xml b/docs/plugins/inspect/plugin-gio.xml
+index 50b6d9826..6417c301f 100644
+--- a/docs/plugins/inspect/plugin-gio.xml
++++ b/docs/plugins/inspect/plugin-gio.xml
+@@ -3,7 +3,7 @@
+   <description>GIO elements</description>
+   <filename>../../gst/gio/.libs/libgstgio.so</filename>
+   <basename>libgstgio.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-libvisual.xml b/docs/plugins/inspect/plugin-libvisual.xml
+index 0661b19eb..7e87d1334 100644
+--- a/docs/plugins/inspect/plugin-libvisual.xml
++++ b/docs/plugins/inspect/plugin-libvisual.xml
+@@ -3,7 +3,7 @@
+   <description>libvisual visualization plugins</description>
+   <filename>../../ext/libvisual/.libs/libgstlibvisual.so</filename>
+   <basename>libgstlibvisual.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-ogg.xml b/docs/plugins/inspect/plugin-ogg.xml
+index a1cd840ae..f41bc6903 100644
+--- a/docs/plugins/inspect/plugin-ogg.xml
++++ b/docs/plugins/inspect/plugin-ogg.xml
+@@ -3,7 +3,7 @@
+   <description>ogg stream manipulation (info about ogg: http://xiph.org)</description>
+   <filename>../../ext/ogg/.libs/libgstogg.so</filename>
+   <basename>libgstogg.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+@@ -164,7 +164,7 @@
+           <name>src</name>
+           <direction>source</direction>
+           <presence>sometimes</presence>
+-          <details>video/mpeg, mpegversion=(int)4, systemstream=(boolean)false, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-asus, asusversion=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-asus, asusversion=(int)2, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-cirrus-logic-accupak, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-camstudio, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-compressed-yuv, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-raw, format=(string){ RGB8P, BGR, BGRx }, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-divx, divxversion=(int)3, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-divx, divxversion=(int)4, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-truemotion, trueversion=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-dv, systemstream=(boolean)false, dvversion=(int)25, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-dv, systemstream=(boolean)false, dvversion=(int)50, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-divx, divxversion=(int)5, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/mpeg, mpegversion=(int)4, systemstream=(boolean)false, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-flash-video, flvversion=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-vp6-flash, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h263, variant=(string)itu, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h263, variant=(string)lucent, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h264, variant=(string)itu, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-huffyuv, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-intel-h263, variant=(string)intel, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-raw, format=(string)I420, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-indeo, indeoversion=(int)3, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-indeo, indeoversion=(int)4, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-indeo, indeoversion=(int)5, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h263, variant=(string)lead, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h264, variant=(string)lead, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h263, variant=(string)microsoft, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/mpeg, mpegversion=(int)4, systemstream=(boolean)false, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; image/jpeg, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-msmpeg, msmpegversion=(int)42, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-msmpeg, msmpegversion=(int)43, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/mpeg, systemstream=(boolean)false, mpegversion=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/mpeg, systemstream=(boolean)false, mpegversion=(int)2, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-msmpeg, msmpegversion=(int)41, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-mszh, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; image/png, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-rle, layout=(string)microsoft, depth=(int)[ 1, 64 ], framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-indeo, indeoversion=(int)2, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/sp5x, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-truemotion, trueversion=(int)2, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-camtasia, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-ultimotion, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-raw, format=(string)UYVY, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-ati-vcr, vcrversion=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-ati-vcr, vcrversion=(int)2, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h263, variant=(string)vdolive, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h263, variant=(string)vivo, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-vmnc, version=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-vp3, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h264, variant=(string)videosoft, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-wmv, wmvversion=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-wmv, wmvversion=(int)2, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-wmv, wmvversion=(int)3, format=(string)WMV3, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/mpeg, mpegversion=(int)4, systemstream=(boolean)false, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-xan, wcversion=(int)4, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-raw, format=(string)YUY2, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-raw, format=(string)YVU9, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-zlib, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-cinepak, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h264, variant=(string)itu, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-msvideocodec, msvideoversion=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h263, variant=(string)xirlink, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-dirac, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-ffv, ffvversion=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-kmvc, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-vp5, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-vp6, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-vp6-flash, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-vp7, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-vp8, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-mimic, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-apple-video, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-theora, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-fraps, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-aasc, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-raw, format=(string)YV12, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-loco, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-zmbv, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-raw, format=(string)v210, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-raw, format=(string)r210, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]</details>
++          <details>video/mpeg, mpegversion=(int)4, systemstream=(boolean)false, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-asus, asusversion=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-asus, asusversion=(int)2, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-cineform, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-cirrus-logic-accupak, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-camstudio, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-compressed-yuv, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-raw, format=(string){ RGB8P, BGR, BGRx }, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-divx, divxversion=(int)3, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-divx, divxversion=(int)4, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-truemotion, trueversion=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-dv, systemstream=(boolean)false, dvversion=(int)25, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-dv, systemstream=(boolean)false, dvversion=(int)50, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-divx, divxversion=(int)5, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/mpeg, mpegversion=(int)4, systemstream=(boolean)false, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-flash-video, flvversion=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-vp6-flash, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h263, variant=(string)itu, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h263, variant=(string)lucent, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h264, variant=(string)itu, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-huffyuv, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-intel-h263, variant=(string)intel, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-raw, format=(string)I420, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-indeo, indeoversion=(int)3, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-indeo, indeoversion=(int)4, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-indeo, indeoversion=(int)5, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h263, variant=(string)lead, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h264, variant=(string)lead, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h263, variant=(string)microsoft, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/mpeg, mpegversion=(int)4, systemstream=(boolean)false, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; image/jpeg, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-msmpeg, msmpegversion=(int)42, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-msmpeg, msmpegversion=(int)43, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/mpeg, systemstream=(boolean)false, mpegversion=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/mpeg, systemstream=(boolean)false, mpegversion=(int)2, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-msmpeg, msmpegversion=(int)41, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-mszh, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; image/png, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-rle, layout=(string)microsoft, depth=(int)[ 1, 64 ], framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-indeo, indeoversion=(int)2, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/sp5x, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-truemotion, trueversion=(int)2, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-camtasia, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-ultimotion, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-raw, format=(string)UYVY, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-ati-vcr, vcrversion=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-ati-vcr, vcrversion=(int)2, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h263, variant=(string)vdolive, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h263, variant=(string)vivo, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-vmnc, version=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-vp3, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h264, variant=(string)videosoft, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-wmv, wmvversion=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-wmv, wmvversion=(int)2, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-wmv, wmvversion=(int)3, format=(string)WMV3, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/mpeg, mpegversion=(int)4, systemstream=(boolean)false, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-xan, wcversion=(int)4, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-raw, format=(string)YUY2, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-raw, format=(string)YVU9, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-zlib, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-cinepak, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h264, variant=(string)itu, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-msvideocodec, msvideoversion=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-h263, variant=(string)xirlink, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-dirac, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-ffv, ffvversion=(int)1, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-kmvc, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-vp5, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-vp6, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-vp6-flash, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-vp7, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-vp8, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-mimic, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-apple-video, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-theora, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-fraps, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-aasc, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-raw, format=(string)YV12, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-loco, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-zmbv, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-raw, format=(string)v210, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]; video/x-raw, format=(string)r210, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ]</details>
+         </caps>
+       </pads>
+     </element>
+diff --git a/docs/plugins/inspect/plugin-opengl.xml b/docs/plugins/inspect/plugin-opengl.xml
+index 486fa80c6..b15bd9f8a 100644
+--- a/docs/plugins/inspect/plugin-opengl.xml
++++ b/docs/plugins/inspect/plugin-opengl.xml
+@@ -3,7 +3,7 @@
+   <description>OpenGL plugin</description>
+   <filename>../../ext/gl/.libs/libgstopengl.so</filename>
+   <basename>libgstopengl.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-opus.xml b/docs/plugins/inspect/plugin-opus.xml
+index 47a263a6e..21220eb60 100644
+--- a/docs/plugins/inspect/plugin-opus.xml
++++ b/docs/plugins/inspect/plugin-opus.xml
+@@ -3,7 +3,7 @@
+   <description>OPUS plugin library</description>
+   <filename>../../ext/opus/.libs/libgstopus.so</filename>
+   <basename>libgstopus.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-overlaycomposition.xml b/docs/plugins/inspect/plugin-overlaycomposition.xml
+index 6c73339c0..a40430088 100644
+--- a/docs/plugins/inspect/plugin-overlaycomposition.xml
++++ b/docs/plugins/inspect/plugin-overlaycomposition.xml
+@@ -3,7 +3,7 @@
+   <description>Renders overlays on top of video frames</description>
+   <filename>../../gst/overlaycomposition/.libs/libgstoverlaycomposition.so</filename>
+   <basename>libgstoverlaycomposition.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-pango.xml b/docs/plugins/inspect/plugin-pango.xml
+index 542913cd7..29119057e 100644
+--- a/docs/plugins/inspect/plugin-pango.xml
++++ b/docs/plugins/inspect/plugin-pango.xml
+@@ -3,7 +3,7 @@
+   <description>Pango-based text rendering and overlay</description>
+   <filename>../../ext/pango/.libs/libgstpango.so</filename>
+   <basename>libgstpango.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-pbtypes.xml b/docs/plugins/inspect/plugin-pbtypes.xml
+index bb2efb336..f889ba24a 100644
+--- a/docs/plugins/inspect/plugin-pbtypes.xml
++++ b/docs/plugins/inspect/plugin-pbtypes.xml
+@@ -3,7 +3,7 @@
+   <description>gst-plugins-base dynamic types</description>
+   <filename>../../gst/pbtypes/.libs/libgstpbtypes.so</filename>
+   <basename>libgstpbtypes.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-playback.xml b/docs/plugins/inspect/plugin-playback.xml
+index b4451a8be..3ded51570 100644
+--- a/docs/plugins/inspect/plugin-playback.xml
++++ b/docs/plugins/inspect/plugin-playback.xml
+@@ -3,7 +3,7 @@
+   <description>various playback elements</description>
+   <filename>../../gst/playback/.libs/libgstplayback.so</filename>
+   <basename>libgstplayback.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-rawparse.xml b/docs/plugins/inspect/plugin-rawparse.xml
+index 2e980a3af..fa2eb6072 100644
+--- a/docs/plugins/inspect/plugin-rawparse.xml
++++ b/docs/plugins/inspect/plugin-rawparse.xml
+@@ -3,7 +3,7 @@
+   <description>Parses byte streams into raw frames</description>
+   <filename>../../gst/rawparse/.libs/libgstrawparse.so</filename>
+   <basename>libgstrawparse.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-subparse.xml b/docs/plugins/inspect/plugin-subparse.xml
+index 6beb24aa0..e6ed648fe 100644
+--- a/docs/plugins/inspect/plugin-subparse.xml
++++ b/docs/plugins/inspect/plugin-subparse.xml
+@@ -3,7 +3,7 @@
+   <description>Subtitle parsing</description>
+   <filename>../../gst/subparse/.libs/libgstsubparse.so</filename>
+   <basename>libgstsubparse.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-tcp.xml b/docs/plugins/inspect/plugin-tcp.xml
+index 4c8c04829..4692d17dd 100644
+--- a/docs/plugins/inspect/plugin-tcp.xml
++++ b/docs/plugins/inspect/plugin-tcp.xml
+@@ -3,7 +3,7 @@
+   <description>transfer data over the network via TCP</description>
+   <filename>../../gst/tcp/.libs/libgsttcp.so</filename>
+   <basename>libgsttcp.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-theora.xml b/docs/plugins/inspect/plugin-theora.xml
+index 292b1323d..bbcfe0cb1 100644
+--- a/docs/plugins/inspect/plugin-theora.xml
++++ b/docs/plugins/inspect/plugin-theora.xml
+@@ -3,7 +3,7 @@
+   <description>Theora plugin library</description>
+   <filename>../../ext/theora/.libs/libgsttheora.so</filename>
+   <basename>libgsttheora.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-typefindfunctions.xml b/docs/plugins/inspect/plugin-typefindfunctions.xml
+index 4ff576be4..db95da3de 100644
+--- a/docs/plugins/inspect/plugin-typefindfunctions.xml
++++ b/docs/plugins/inspect/plugin-typefindfunctions.xml
+@@ -3,7 +3,7 @@
+   <description>default typefind functions</description>
+   <filename>../../gst/typefind/.libs/libgsttypefindfunctions.so</filename>
+   <basename>libgsttypefindfunctions.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-videoconvert.xml b/docs/plugins/inspect/plugin-videoconvert.xml
+index 615c49ba4..0d913f72c 100644
+--- a/docs/plugins/inspect/plugin-videoconvert.xml
++++ b/docs/plugins/inspect/plugin-videoconvert.xml
+@@ -3,7 +3,7 @@
+   <description>Colorspace conversion</description>
+   <filename>../../gst/videoconvert/.libs/libgstvideoconvert.so</filename>
+   <basename>libgstvideoconvert.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-videorate.xml b/docs/plugins/inspect/plugin-videorate.xml
+index 8ed553415..2fdd1ac63 100644
+--- a/docs/plugins/inspect/plugin-videorate.xml
++++ b/docs/plugins/inspect/plugin-videorate.xml
+@@ -3,7 +3,7 @@
+   <description>Adjusts video frames</description>
+   <filename>../../gst/videorate/.libs/libgstvideorate.so</filename>
+   <basename>libgstvideorate.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-videoscale.xml b/docs/plugins/inspect/plugin-videoscale.xml
+index 8ff9ffa17..c34144139 100644
+--- a/docs/plugins/inspect/plugin-videoscale.xml
++++ b/docs/plugins/inspect/plugin-videoscale.xml
+@@ -3,7 +3,7 @@
+   <description>Resizes video</description>
+   <filename>../../gst/videoscale/.libs/libgstvideoscale.so</filename>
+   <basename>libgstvideoscale.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-videotestsrc.xml b/docs/plugins/inspect/plugin-videotestsrc.xml
+index 768967fd2..89907d5d9 100644
+--- a/docs/plugins/inspect/plugin-videotestsrc.xml
++++ b/docs/plugins/inspect/plugin-videotestsrc.xml
+@@ -3,7 +3,7 @@
+   <description>Creates a test video stream</description>
+   <filename>../../gst/videotestsrc/.libs/libgstvideotestsrc.so</filename>
+   <basename>libgstvideotestsrc.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-volume.xml b/docs/plugins/inspect/plugin-volume.xml
+index 74247e9f5..e9c0b7174 100644
+--- a/docs/plugins/inspect/plugin-volume.xml
++++ b/docs/plugins/inspect/plugin-volume.xml
+@@ -3,7 +3,7 @@
+   <description>plugin for controlling audio volume</description>
+   <filename>../../gst/volume/.libs/libgstvolume.so</filename>
+   <basename>libgstvolume.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-vorbis.xml b/docs/plugins/inspect/plugin-vorbis.xml
+index bdf0bed1a..e0feba4c5 100644
+--- a/docs/plugins/inspect/plugin-vorbis.xml
++++ b/docs/plugins/inspect/plugin-vorbis.xml
+@@ -3,7 +3,7 @@
+   <description>Vorbis plugin library</description>
+   <filename>../../ext/vorbis/.libs/libgstvorbis.so</filename>
+   <basename>libgstvorbis.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-ximagesink.xml b/docs/plugins/inspect/plugin-ximagesink.xml
+index 762911e5d..f4275879f 100644
+--- a/docs/plugins/inspect/plugin-ximagesink.xml
++++ b/docs/plugins/inspect/plugin-ximagesink.xml
+@@ -3,7 +3,7 @@
+   <description>X11 video output element based on standard Xlib calls</description>
+   <filename>../../sys/ximage/.libs/libgstximagesink.so</filename>
+   <basename>libgstximagesink.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+diff --git a/docs/plugins/inspect/plugin-xvimagesink.xml b/docs/plugins/inspect/plugin-xvimagesink.xml
+index 301c28a1d..4d862ff40 100644
+--- a/docs/plugins/inspect/plugin-xvimagesink.xml
++++ b/docs/plugins/inspect/plugin-xvimagesink.xml
+@@ -3,7 +3,7 @@
+   <description>XFree86 video output plugin using Xv extension</description>
+   <filename>../../sys/xvimage/.libs/libgstxvimagesink.so</filename>
+   <basename>libgstxvimagesink.so</basename>
+-  <version>1.16.1</version>
++  <version>1.16.2</version>
+   <license>LGPL</license>
+   <source>gst-plugins-base</source>
+   <package>GStreamer Base Plug-ins source release</package>
+-- 
+2.17.1
+
