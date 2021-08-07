@@ -441,13 +441,13 @@ endif
 
 ifeq ($(BR2_PACKAGE_SYSTEMD_RESOLVED),y)
 ifeq ($(BR2_PACKAGE_SYSTEMD_RESOLVED_MODE_COMPAT),y)
-define SYSTEMD_INSTALL_RESOLVCRNF_HOOK
+define SYSTEMD_INSTALL_RESOLVCONF_HOOK
 	ln -sf ../run/systemd/resolve/resolv.conf \
 		$(TARGET_DIR)/etc/resolv.conf
 endef
 endif
 ifeq ($(BR2_PACKAGE_SYSTEMD_RESOLVED_MODE_STUB),y)
-define SYSTEMD_INSTALL_RESOLVCRNF_HOOK
+define SYSTEMD_INSTALL_RESOLVCONF_HOOK
 	ln -sf ../run/systemd/resolve/stub-resolv.conf \
 		$(TARGET_DIR)/etc/resolv.conf
 endef
