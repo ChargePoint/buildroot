@@ -41,6 +41,10 @@ else
 MODEM_MANAGER_CONF_OPTS += --disable-introspection
 endif
 
+ifeq ($(BR2_PACKAGE_MODEM_MANAGER_AT_INTERFACE),y)
+MODEM_MANAGER_CONF_OPTS += --with-at-command-via-dbus
+endif
+
 define MODEM_MANAGER_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -D package/modem-manager/S44modem-manager \
 		$(TARGET_DIR)/etc/init.d/S44modem-manager
