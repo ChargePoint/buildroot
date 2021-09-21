@@ -25,6 +25,14 @@ config BR2_PACKAGE_MODEM_MANAGER_LIBQMI
 	select BR2_PACKAGE_LIBQMI
 	help
 	  This option enables support for QMI protocol
+
+config BR2_PACKAGE_MODEM_MANAGER_AT_INTERFACE
+	bool "Always enable AT commands"
+	default n
+	help
+	  This option enables the AT command interface
+	  without --debug flag being required
+
 endif
 
 comment "modemmanager needs a toolchain w/ wchar, threads"
