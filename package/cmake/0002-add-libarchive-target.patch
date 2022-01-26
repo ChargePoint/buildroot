@@ -1,0 +1,15 @@
+diff -Naur cmake-3.15.5.orig/Modules/FindLibArchive.cmake cmake-3.15.5/Modules/FindLibArchive.cmake
+--- cmake-3.15.5.orig/Modules/FindLibArchive.cmake	2019-10-30 14:00:09.000000000 +0000
++++ cmake-3.15.5/Modules/FindLibArchive.cmake	2022-01-26 05:38:52.952102632 +0000
+@@ -58,4 +58,11 @@
+ if(LibArchive_FOUND)
+   set(LibArchive_INCLUDE_DIRS ${LibArchive_INCLUDE_DIR})
+   set(LibArchive_LIBRARIES    ${LibArchive_LIBRARY})
++
++  if (NOT TARGET LibArchive::LibArchive)
++    add_library(LibArchive::LibArchive UNKNOWN IMPORTED)
++    set_target_properties(LibArchive::LibArchive PROPERTIES
++      IMPORTED_LOCATION "${LibArchive_LIBRARY}"
++      INTERFACE_INCLUDE_DIRECTORIES "${LibArchive_INCLUDE_DIR}")
++  endif ()
+ endif()
