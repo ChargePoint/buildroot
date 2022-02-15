@@ -20,12 +20,13 @@ CMAKE_IGNORE_CVES = CVE-2016-10642
 #   host-cmake package, then the (target-)cmake package can be built
 #   using the cmake infrastructure;
 # * CMake bundles its dependencies within its sources. This is the
-#   reason why the host-cmake package has no dependencies:, whereas
+#   reason why the host-cmake package has few dependencies:, whereas
 #   the (target-)cmake package has a lot of dependencies, using only
 #   the system-wide libraries instead of rebuilding and statically
 #   linking with the ones bundled into the CMake sources.
 
 CMAKE_DEPENDENCIES = zlib jsoncpp libcurl libarchive expat bzip2 xz libuv rhash
+HOST_CMAKE_DEPENDENCIES = host-openssl
 
 CMAKE_CONF_OPTS = \
 	-DKWSYS_LFS_WORKS=TRUE \
@@ -49,7 +50,6 @@ define HOST_CMAKE_CONFIGURE_CMDS
 			-DCMAKE_C_FLAGS="$(HOST_CMAKE_CFLAGS)" \
 			-DCMAKE_CXX_FLAGS="$(HOST_CMAKE_CXXFLAGS)" \
 			-DCMAKE_EXE_LINKER_FLAGS="$(HOST_LDFLAGS)" \
-			-DCMAKE_USE_OPENSSL:BOOL=OFF \
 			-DBUILD_CursesDialog=OFF \
 	)
 endef
