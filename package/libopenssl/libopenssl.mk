@@ -54,6 +54,8 @@ endif
 define HOST_LIBOPENSSL_CONFIGURE_CMDS
 	cd $(@D); \
 		$(HOST_CONFIGURE_OPTS) \
+		CC="$(HOSTCC_NOCCACHE)" \
+		CXX="$(HOSTCXX_NOCCACHE)" \
 		./config \
 		--prefix=$(HOST_DIR) \
 		--openssldir=$(HOST_DIR)/etc/ssl \
