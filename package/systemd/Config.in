@@ -616,4 +616,13 @@ config BR2_PACKAGE_SYSTEMD_VCONSOLE_DEFAULT_KEYMAP
 	  Default keymap for the system. Leave empty to not set a
 	  default keymap.
 
+config BR2_PACKAGE_SYSTEMD_SYSV_COMPAT
+	bool "enable sysvinit/sysvrcd compat"
+	help
+	  systemd-sysv-generator creates a wrapper service for sysv
+	  init scripts in /etc/init.d/* at boot and when configuration
+	  of the system manager is reloaded
+
+	  https://www.freedesktop.org/software/systemd/man/systemd-sysv-generator.html
+
 endif
