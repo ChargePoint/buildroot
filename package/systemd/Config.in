@@ -520,4 +520,13 @@ config BR2_PACKAGE_SYSTEMD_VCONSOLE
 
 	  http://www.freedesktop.org/software/systemd/man/systemd-vconsole-setup.service.html
 
+config BR2_PACKAGE_SYSTEMD_SYSV_COMPAT
+	bool "enable sysvinit/sysvrcd compat"
+	help
+	  systemd-sysv-generator creates a wrapper service for sysv
+	  init scripts in /etc/init.d/* at boot and when configuration
+	  of the system manager is reloaded
+
+	  https://www.freedesktop.org/software/systemd/man/systemd-sysv-generator.html
+
 endif
