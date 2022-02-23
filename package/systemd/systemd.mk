@@ -91,8 +91,6 @@ SYSTEMD_CONF_OPTS += \
 	-Dsulogin-path=/usr/sbin/sulogin \
 	-Dsystem-gid-max=999 \
 	-Dsystem-uid-max=999 \
-	-Dsysvinit-path= \
-	-Dsysvrcnd-path= \
 	-Dtelinit-path= \
 	-Dtests=false \
 	-Dtmpfiles=true \
@@ -503,6 +501,12 @@ ifeq ($(BR2_PACKAGE_SYSTEMD_SYSUPDATE),y)
 SYSTEMD_CONF_OPTS += -Dsysupdate=true
 else
 SYSTEMD_CONF_OPTS += -Dsysupdate=false
+endif
+
+ifeq ($(BR2_PACKAGE_SYSTEMD_SYSV_COMPAT),y)
+SYSTEMD_CONF_OPTS += -Dsysvinit-path='/etc/init.d' -Dsysvrcnd-path='/etc'
+else
+SYSTEMD_CONF_OPTS += -Dsysvinit-path='' -Dsysvrcnd-path=''
 endif
 
 ifeq ($(BR2_PACKAGE_SYSTEMD_NETWORKD),y)
