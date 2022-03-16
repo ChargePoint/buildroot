@@ -1,0 +1,22 @@
+name: buildroot-style-check
+
+on:
+  pull_request:
+    branches: [ 'chargepoint/**' ]
+
+jobs:
+  buildroot_package_check:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2.4.0
+      - name: Python setup
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Run buildroot package checks
+        run: |
+          pip install --upgrade six
+          python3 utils/check-package -v **/*.mk
+          python3 utils/check-package -v **/Config.in*
+
