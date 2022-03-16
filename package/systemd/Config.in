@@ -413,26 +413,31 @@ choice
 config BR2_PACKAGE_SYSTEMD_RESOLVED_MODE_COMPAT
 	bool "compat mode (resolve.conf managed by service)"
 	help
-	  systemd-resolved has 4 operating modes. In the buildroot default
-	  mode a hardlink is mainted where upstream dns servers are written
-	  to /run/systemd/resolve/resolv.conf and hard-linked to
-	  /etc/resolv.conf. This has no benefits of cache or other settings.
+	  systemd-resolved has 4 operating modes. In the
+	  buildroot default mode a hardlink is mainted where
+	  upstream dns servers are written to
+	  /run/systemd/resolve/resolv.conf and hard-linked to
+	  /etc/resolv.conf. This has no benefits of cache
+	  or other settings.
 
 	  https://www.freedesktop.org/software/systemd/man/systemd-resolved.service.html#/etc/resolv.conf
 
 config BR2_PACKAGE_SYSTEMD_RESOLVED_MODE_STUB
 	bool "stub mode (reslove.conf pointed at 127.0.0.53)"
 	help
-	  systemd-resolved has 4 operating modes. In stub resovler mode
-	  systemd-resolved listens on local 127.0.0.53:53 and will perform
-	  advanced functions like RR caching, advanced routing and so on.
+	  systemd-resolved has 4 operating modes. In stub
+	  resovler mode systemd-resolved listens on local
+	  127.0.0.53:53 and will perform advanced functions
+	  like RR caching, advanced routing and so on.
 
-	  In this mode the resolver hard link is set from /run/systemd/resolve/stub-resolv.conf -> /etc/resolv.conf
+	  In this mode the resolver hard link is set from
+	  /run/systemd/resolve/stub-resolv.conf ->
+	  /etc/resolv.conf
 
 	  https://www.freedesktop.org/software/systemd/man/systemd-resolved.service.html#/etc/resolv.conf
 
 endchoice
- 
+
 endif
 
 config BR2_PACKAGE_SYSTEMD_RFKILL

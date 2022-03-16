@@ -23,4 +23,3 @@ define NETWORKD_DISPATCHER_INSTALL_INIT_SYSTEMD
 endef
 
 $(eval $(generic-package))
-

@@ -4,5 +4,3 @@ config BR2_PACKAGE_PYTHON_INVOKE
 	  invoke module for fabric.
 
 	  https://pypi.org/project/invoke/
-
-	  

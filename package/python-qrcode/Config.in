@@ -1,7 +1,5 @@
 config BR2_PACKAGE_PYTHON_QRCODE
-   bool "python-qrcode"
-   help
-      qrcode module for python.
-
-      https://pypi.org/project/qrcode/
-
+	bool "python-qrcode"
+	help
+	  qrcode module for python.
+	  https://pypi.org/project/qrcode/

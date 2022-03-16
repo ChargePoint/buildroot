@@ -2,4 +2,4 @@ config BR2_PACKAGE_RAW2RGBPNM
 	bool "raw2rgbpnm"
 	select BR2_PACKAGE_LIBPNG
 	help
-          Convert raw Bayer images to netpbm format
+	  Convert raw Bayer images to netpbm format
