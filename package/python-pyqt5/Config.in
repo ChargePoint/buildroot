@@ -11,11 +11,9 @@ config BR2_PACKAGE_PYTHON_PYQT5
 
 	  http://www.riverbankcomputing.com/software/pyqt/
 
-
 if BR2_PACKAGE_PYTHON_PYQT5
 config BR2_PACKAGE_PYTHON_PYQT5_CONFIG
 	string "PyQt5 Configuration file."
 	default ""
 
 endif
-

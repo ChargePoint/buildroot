@@ -4,4 +4,3 @@ config BR2_PACKAGE_PYTHON_LABJACK
 	  Labjack module for Python.
 
 	  https://github.com/labjack/LabJackPython
-

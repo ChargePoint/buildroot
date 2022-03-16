@@ -2,6 +2,6 @@ config BR2_PACKAGE_PYTHON_DBUS_NEXT
 	bool "python-dbus-next"
 	depends on BR2_PACKAGE_PYTHON3
 	help
-          The next great DBus library for Python
+	  The next great DBus library for Python
 
-          https://github.com/altdesktop/python-dbus-next
+	  https://github.com/altdesktop/python-dbus-next

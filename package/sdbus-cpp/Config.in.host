@@ -4,10 +4,12 @@ config BR2_PACKAGE_HOST_SDBUS_CPP
 	depends on BR2_PACKAGE_HOST_SYSTEMD
 	select BR2_PACKAGE_HOST_PKGCONF
 	help
-	  sdbus-c++ is a high-level C++ D-Bus library for Linux designed to
-	  provide expressive, easy-to-use API using modern C++ '17.
+	  sdbus-c++ is a high-level C++ D-Bus library for
+	  Linux designed to provide expressive, easy-to-use
+	  API using modern C++ '17.
 
-	  This option enables the sdbus-c++-xml2cpp stub code generator for
-	  generating the adaptor and proxy interfaces from D-Bus IDL.
+	  This option enables the sdbus-c++-xml2cpp stub code
+	  generator for generating the adaptor and proxy
+	  interfaces from D-Bus IDL.
 
 	  https://github.com/Kistler-Group/sdbus-cpp

@@ -1,7 +1,5 @@
 config BR2_PACKAGE_PYTHON_JOSE
-   bool "python-jose"
-   help
-      jose module for python.
-
-      https://pypi.org/project/python-jose/
-
+	bool "python-jose"
+	help
+	  jose module for python.
+	  https://pypi.org/project/python-jose/

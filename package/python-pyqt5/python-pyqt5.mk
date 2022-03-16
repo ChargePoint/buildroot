@@ -3,6 +3,7 @@
 # python-pyqt5
 #
 ################################################################################
+
 PYTHON_PYQT5_VERSION = 5.14.2
 PYTHON_PYQT5_SOURCE = PyQt5-$(PYTHON_PYQT5_VERSION).tar.gz
 PYTHON_PYQT5_SITE = https://files.pythonhosted.org/packages/4d/81/b9a66a28fb9a7bbeb60e266f06ebc4703e7e42b99e3609bf1b58ddd232b9

@@ -1,13 +1,12 @@
 config BR2_PACKAGE_PYTHON_ZEEP
-   bool "python-zeep"
-   select BR2_PACKAGE_PYTHON_LXML
-   select BR2_PACKAGE_PYTHON_ATTRS
-   select BR2_PACKAGE_PYTHON_DEFUSEDXML
-   select BR2_PACKAGE_PYTHON_CACHED_PROPERTY
-   select BR2_PACKAGE_PYTHON_ISODATE
-   select BR2_PACKAGE_PYTHON_PYTZ
-   help
-      zeep python module
+	bool "python-zeep"
+	select BR2_PACKAGE_PYTHON_LXML
+	select BR2_PACKAGE_PYTHON_ATTRS
+	select BR2_PACKAGE_PYTHON_DEFUSEDXML
+	select BR2_PACKAGE_PYTHON_CACHED_PROPERTY
+	select BR2_PACKAGE_PYTHON_ISODATE
+	select BR2_PACKAGE_PYTHON_PYTZ
+	help
+	  zeep python module
 
-      https://pypi.org/project/zeep/
-
+	  https://pypi.org/project/zeep/
