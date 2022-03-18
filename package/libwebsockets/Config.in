@@ -9,5 +9,13 @@ config BR2_PACKAGE_LIBWEBSOCKETS
 
 	  https://libwebsockets.org/
 
+config BR2_PACKAGE_LIBWEBSOCKETS_NETLINK
+	bool "enable netlink monitoring"
+	default y
+	help
+	  libwebsockets will track link status with NETLINK
+	  on Linux if avilable. Turn off to prevent potential
+	  issues with IPv6 support.
+
 comment "libwebsockets needs a toolchain w/ dynamic library"
 	depends on BR2_STATIC_LIBS
