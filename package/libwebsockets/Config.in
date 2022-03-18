@@ -19,6 +19,14 @@ config BR2_PACKAGE_LIBWEBSOCKETS_EXT_POLL
 	  unconditionally compiled in for library versions
 	  prior to 3.2.0.
 
+config BR2_PACKAGE_LIBWEBSOCKETS_NETLINK
+	bool "enable netlink monitoring"
+	default y
+	help
+	  libwebsockets will track link status with NETLINK
+	  on Linux if avilable. Turn off to prevent potential
+	  issues with IPv6 support.
+
 endif
 
 comment "libwebsockets needs a toolchain w/ dynamic library"
