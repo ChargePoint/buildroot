@@ -29,6 +29,12 @@ endef
 PSPLASH_POST_EXTRACT_HOOKS += PSPLASH_COPY_IMAGE
 endif
 
+ifeq ($(BR2_PACKAGE_EMB_MACAW_CHAPS),y)
+define PSPLASH_BUILD_CMDS
+    cp -a $(@D)/base-images/psplash-chargepoint-macaw.png $(@D)/base-images/psplash-chargepoint.png
+endef
+endif
+
 define PSPLASH_INSTALL_INIT_SYSTEMD
 	$(INSTALL) -D -m 644 package/psplash/psplash-start.service \
 		$(TARGET_DIR)/usr/lib/systemd/system/psplash-start.service
