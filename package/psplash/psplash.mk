@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PSPLASH_VERSION = f6ac8b7b263dc7d07cc9b60e7592f7e11325fb0a
+PSPLASH_VERSION = 6d49d3a353e61a481b6189ea193ed78de46708de
 PSPLASH_SITE = $(call github,ChargePoint,psplash,$(PSPLASH_VERSION))
 PSPLASH_LICENSE = GPL-2.0+
 PSPLASH_LICENSE_FILES = COPYING
@@ -25,7 +25,8 @@ PSPLASH_IMAGE = $(call qstrip,$(BR2_PACKAGE_PSPLASH_IMAGE))
 
 ifneq ($(PSPLASH_IMAGE),)
 define PSPLASH_COPY_IMAGE
-	cp $(PSPLASH_IMAGE) $(@D)/base-images/psplash-poky.png
+	cp $(@D)/base-images/$(PSPLASH_IMAGE) \
+			$(@D)/base-images/psplash-chargepoint.png
 endef
 
 PSPLASH_POST_EXTRACT_HOOKS += PSPLASH_COPY_IMAGE
