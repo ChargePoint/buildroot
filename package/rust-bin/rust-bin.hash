@@ -1,3 +1,6 @@
+# From https://static.rust-lang.org/dist/rust-1.60.0-aarch64-unknown-linux-gnu.tar.xz.sha256
+# Verified using https://static.rust-lang.org/dist/rust-1.60.0-aarch64-unknown-linux-gnu.tar.xz.asc
+sha256  5d18bc384273edbd8a4b6d18104685651fb42d5f07bdf518ef2ec3641269c95d  rust-1.60.0-aarch64-unknown-linux-gnu.tar.xz
 # From https://static.rust-lang.org/dist/rust-1.60.0-i686-unknown-linux-gnu.tar.xz.sha256
 # Verified using https://static.rust-lang.org/dist/rust-1.60.0-i686-unknown-linux-gnu.tar.xz.asc
 sha256  94567ff691b46ef3dff64f3866445a278a17b20639e62cdc4b6fcd7aed86cec8  rust-1.60.0-i686-unknown-linux-gnu.tar.xz
