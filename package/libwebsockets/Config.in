@@ -17,5 +17,11 @@ config BR2_PACKAGE_LIBWEBSOCKETS_NETLINK
 	  on Linux if avilable. Turn off to prevent potential
 	  issues with IPv6 support.
 
+config BR2_PACKAGE_LIBWEBSOCKETS_ASYNCDNS
+	bool "enable async DNS resolution"
+	default n
+	help
+	  Use nonblocking lws internal IPv4 + IPv6 DNS resolver
+
 comment "libwebsockets needs a toolchain w/ dynamic library"
 	depends on BR2_STATIC_LIBS
