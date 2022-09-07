@@ -3,6 +3,7 @@ Description=Start psplash-systemd progress communication helper
 DefaultDependencies=no
 After=systemd-start.service
 Requires=psplash-start.service
+After=psplash-start.service
 RequiresMountsFor=/run
 
 [Service]
