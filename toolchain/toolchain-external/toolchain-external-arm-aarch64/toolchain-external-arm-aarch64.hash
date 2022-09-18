@@ -1,2 +1,3 @@
 # From https://developer.arm.com/-/media/Files/downloads/gnu/11.2-2022.02/binrel/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu.tar.xz.sha256asc
 sha256  52dbac3eb71dbe0916f60a8c5ab9b7dc9b66b3ce513047baa09fae56234e53f3  gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu.tar.xz
+sha256  e2534938d8d559ed56984c709a463ebbdf4c5db8bb396705fcf3fda1a1956131  gcc-arm-11.2-2022.02-aarch64-aarch64-none-linux-gnu.tar.xz
