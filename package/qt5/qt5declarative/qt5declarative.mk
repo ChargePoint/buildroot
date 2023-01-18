@@ -4,9 +4,21 @@
 #
 ################################################################################
 
-QT5DECLARATIVE_VERSION = 51efb2ed2f071beda188270a23ac450fe4b318f7
-QT5DECLARATIVE_SITE = $(QT5_SITE)/qtdeclarative/-/archive/$(QT5DECLARATIVE_VERSION)
-QT5DECLARATIVE_SOURCE = qtdeclarative-$(QT5DECLARATIVE_VERSION).tar.bz2
+#
+# Licensed package from QT is not available publicly and so use
+# the internal site to download the package. This is generated
+# from the qt-everything tarball release as follows.
+#
+#    tar -xJf qt-everywhere-src-5.15.12.tar.xz
+#    cd qt-everywhere-src-5.15.12
+#    tar --transform=s/^qtdeclarative/qtbase-5.15.12/ \
+#        -cvjf chargepoint-qtdeclarative-5.15.12.tar.bz2 qtdeclarative
+#
+# Then publish the resulting tarball into the qt5base directory
+#
+QT5DECLARATIVE_VERSION = 5.15.12
+QT5DECLARATIVE_SITE = $(BR2_PRIMARY_SITE)/qt5declarative
+QT5DECLARATIVE_SOURCE = chargepoint-qtdeclarative-$(QT5DECLARATIVE_VERSION).tar.bz2
 QT5DECLARATIVE_INSTALL_STAGING = YES
 QT5DECLARATIVE_SYNC_QT_HEADERS = YES
 
