@@ -22,4 +22,15 @@ else
 MEMCACHED_CONF_ENV += ac_cv_c_endian=little
 endif
 
+ifeq ($(BR2_PACKAGE_OPENSSL),y)
+MEMCACHED_CONF_OPTS += --enable-tls
+MEMCACHED_DEPENDENCIES += host-pkgconf openssl
+else
+MEMCACHED_CONF_OPTS += --disable-tls
+endif
+
+ifeq ($(BR2_STATIC_LIBS),)
+MEMCACHED_CONF_OPTS += --disable-static
+endif
+
 $(eval $(autotools-package))
