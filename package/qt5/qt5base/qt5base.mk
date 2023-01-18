@@ -4,9 +4,21 @@
 #
 ################################################################################
 
-QT5BASE_VERSION = da6e958319e95fe564d3b30c931492dd666bfaff
-QT5BASE_SITE = $(QT5_SITE)/qtbase/-/archive/$(QT5BASE_VERSION)
-QT5BASE_SOURCE = qtbase-$(QT5BASE_VERSION).tar.bz2
+#
+# Licensed package from QT is not available publicly and so use
+# the internal site to download the package. This is generated
+# from the qt-everything tarball release as follows.
+#
+#    tar -xJf qt-everywhere-src-5.15.12.tar.xz
+#    cd qt-everywhere-src-5.15.12
+#    tar --transform=s/^qtbase/qtbase-5.15.12/ \
+#        -cvjf chargepoint-qtbase-5.15.12.tar.bz2 qtbase
+#
+# Then publish the resulting tarball into the qt5base directory
+#
+QT5BASE_VERSION = 5.15.12
+QT5BASE_SITE = $(BR2_PRIMARY_SITE)/qt5base
+QT5BASE_SOURCE = chargepoint-qtbase-$(QT5BASE_VERSION).tar.bz2
 QT5BASE_CPE_ID_VENDOR = qt
 QT5BASE_CPE_ID_PRODUCT = qt
 
