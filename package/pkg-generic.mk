@@ -230,6 +230,11 @@ $(BUILD_DIR)/%/.stamp_rsynced:
 	$(foreach hook,$($(PKG)_PRE_RSYNC_HOOKS),$(call $(hook))$(sep))
 	@test -d $(SRCDIR) || (echo "ERROR: $(SRCDIR) does not exist" ; exit 1)
 	rsync -au --chmod=u=rwX,go=rX $($(PKG)_OVERRIDE_SRCDIR_RSYNC_EXCLUSIONS) $(RSYNC_VCS_EXCLUSIONS) $(call qstrip,$(SRCDIR))/ $(@D)
+	@HASH=$$(git -C $(SRCDIR) rev-parse HEAD 2>&1) && \
+		UNSTAGED=$$(git -C $(SRCDIR) diff --no-ext-diff --quiet || echo -n ", unstaged") && \
+		UNCOMMITED=$$(git -C $(SRCDIR) diff --no-ext-diff --cached --quiet || echo -n ", uncommitted") && \
+		UNTRACKED=$$(if git -C $(SRCDIR) ls-files --others --exclude-standard --directory --no-empty-directory --error-unmatch -- ':/*' >/dev/null 2>&1; then echo -n ", untracked"; fi) && \
+		printf "%s%s%s%s\n" "$${HASH}" "$${UNSTAGED}" "$${UNCOMMITED}" "$${UNTRACKED}" >$(@D)-scmversion
 	$(foreach hook,$($(PKG)_POST_RSYNC_HOOKS),$(call $(hook))$(sep))
 	@$(call step_end,rsync)
 	$(Q)touch $@
