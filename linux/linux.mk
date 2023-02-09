@@ -574,6 +574,20 @@ endif
 ifeq ($(call qstrip,$(BR2_LINUX_KERNEL_CUSTOM_REPO_URL)),)
 $(error No custom repo URL set. Check your BR2_LINUX_KERNEL_CUSTOM_REPO_URL setting)
 endif
+
+# Create a custom scm version file to reflect the source version since the
+# archive will omit source directories like .git to maintain reproducible
+# hashes for the archives
+LINUX_CUSTOM_REPO_SCMVERSION = \
+	"-repo-version-$(call qstrip,$(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION))"
+define LINUX_CUSTOM_REPO_SCMVERSION_HOOK
+	(cd $(@D); \
+		if [ ! -f .scmversion ]; then \
+			echo $(LINUX_CUSTOM_REPO_SCMVERSION) > .scmversion; \
+		fi)
+endef
+
+LINUX_POST_EXTRACT_HOOKS += LINUX_CUSTOM_REPO_SCMVERSION_HOOK
 endif
 
 ifeq ($(BR_BUILDING),y)
