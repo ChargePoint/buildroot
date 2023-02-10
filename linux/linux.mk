@@ -591,11 +591,12 @@ endif
 # archive will omit source directories like .git to maintain reproducible
 # hashes for the archives
 LINUX_CUSTOM_REPO_SCMVERSION = \
-	"-repo-version-$(call qstrip,$(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION))"
+	"-repo-$(call qstrip,$(BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION))"
 define LINUX_CUSTOM_REPO_SCMVERSION_HOOK
 	(cd $(@D); \
 		if [ ! -f .scmversion ]; then \
-			echo $(LINUX_CUSTOM_REPO_SCMVERSION) > .scmversion; \
+			echo $(LINUX_CUSTOM_REPO_SCMVERSION) | cut -c -14 \
+				> .scmversion; \
 		fi)
 endef
 

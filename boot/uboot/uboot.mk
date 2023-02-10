@@ -533,11 +533,12 @@ endif # BR2_TARGET_UBOOT_CUSTOM_GIT || BR2_TARGET_UBOOT_CUSTOM_HG
 # archive will omit source directories like .git to maintain reproducible
 # hashes for the archives
 UBOOT_CUSTOM_REPO_SCMVERSION = \
-	"-repo-version-$(call qstrip,$(BR2_UBOOT_TARGET_CUSTOM_REPO_VERSION))"
+	"-repo-$(call qstrip,$(BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION))"
 define UBOOT_CUSTOM_REPO_SCMVERSION_HOOK
 	(cd $(@D); \
 		if [ ! -f .scmversion ]; then \
-			echo $(UBOOT_CUSTOM_REPO_SCMVERSION) > .scmversion; \
+			echo $(UBOOT_CUSTOM_REPO_SCMVERSION) | cut -c -14 \
+				> .scmversion; \
 		fi)
 endef
 
