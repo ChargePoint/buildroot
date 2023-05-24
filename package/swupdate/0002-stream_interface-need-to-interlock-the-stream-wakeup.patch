@@ -1,0 +1,83 @@
+From 4a70d2c2c094158b9f3ae73f94ead1976dd82ed6 Mon Sep 17 00:00:00 2001
+From: Charles Hardin <charles.hardin@chargepoint.com>
+Date: Wed, 24 May 2023 11:48:12 -0700
+Subject: [PATCH 1/1] stream_interface: need to interlock the stream wakeup
+ condition
+
+Because the cond wait can be triggered in multiple passes, the
+condition wait needs to be paired with a condition. The indication
+of the wakeup should be a boolean so that the loop can continue
+until the wakeup event has occurred.
+
+Example pattern that is expected - indenting is for highlighting
+
+    pthread_mutex_lock();
+        while(condition_is_false)
+            pthread_cond_wait();
+    pthread_mutex_unlock();
+
+Signed-off-by: Charles Hardin <charles.hardin@chargepoint.com>
+---
+ core/network_thread.c       | 3 ++-
+ core/stream_interface.c     | 9 ++++++---
+ include/network_interface.h | 3 ++-
+ 3 files changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/core/network_thread.c b/core/network_thread.c
+index f4ee335..cf83462 100644
+--- a/core/network_thread.c
++++ b/core/network_thread.c
+@@ -562,7 +562,8 @@ void *network_thread (void *data)
+ 						cleanum_msg_list();
+ 
+ 						/* Wake-up the installer */
+-						pthread_cond_signal(&stream_wkup);
++						stream_wkup = true;
++						pthread_cond_signal(&stream_cond);
+ 					} else {
+ 						msg.type = NACK;
+ 						memset(msg.data.msg, 0, sizeof(msg.data.msg));
+diff --git a/core/stream_interface.c b/core/stream_interface.c
+index 798c285..34435fa 100644
+--- a/core/stream_interface.c
++++ b/core/stream_interface.c
+@@ -68,9 +68,9 @@ static pthread_t network_thread_id;
+  * reception of an install request
+  *
+  */
+-
++bool stream_wkup = false;
+ pthread_mutex_t stream_mutex = PTHREAD_MUTEX_INITIALIZER;
+-pthread_cond_t stream_wkup = PTHREAD_COND_INITIALIZER;
++pthread_cond_t stream_cond = PTHREAD_COND_INITIALIZER;
+ 
+ static struct installer inst;
+ 
+@@ -535,7 +535,10 @@ void *network_initializer(void *data)
+ 
+ 		/* wait for someone to issue an install request */
+ 		pthread_mutex_lock(&stream_mutex);
+-		pthread_cond_wait(&stream_wkup, &stream_mutex);
++		while (stream_wkup != true) {
++			pthread_cond_wait(&stream_cond, &stream_mutex);
++		}
++		stream_wkup = false;
+ 		inst.status = RUN;
+ 		pthread_mutex_unlock(&stream_mutex);
+ 		notify(START, RECOVERY_NO_ERROR, INFOLEVEL, "Software Update started !");
+diff --git a/include/network_interface.h b/include/network_interface.h
+index 4451877..5f138ad 100644
+--- a/include/network_interface.h
++++ b/include/network_interface.h
+@@ -13,6 +13,7 @@ void *network_initializer(void *data);
+ void *network_thread(void *data);
+ int listener_create(const char *path, int type);
+ 
++extern bool stream_wkup;
+ extern pthread_mutex_t stream_mutex;
+-extern pthread_cond_t stream_wkup;
++extern pthread_cond_t stream_cond;
+ #endif
+-- 
+2.39.2 (Apple Git-143)
+
