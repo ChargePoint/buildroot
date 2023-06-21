@@ -17,6 +17,7 @@ set -e
 #   -c REV      Use revision REV.
 #   -n NAME     Use basename NAME.
 #   -r          Recursive, i.e. use externals
+#   -s          Generate an scmversion file
 #
 # Environment:
 #   SVN      : the svn command to call
@@ -26,6 +27,7 @@ set -e
 
 quiet=
 externals=--ignore-externals
+scmversion=0
 while getopts "${BR_BACKEND_DL_GETOPTS}" OPT; do
     case "${OPT}" in
     q)  quiet=-q;;
@@ -34,6 +36,7 @@ while getopts "${BR_BACKEND_DL_GETOPTS}" OPT; do
     c)  rev="${OPTARG}";;
     n)  basename="${OPTARG}";;
     r)  externals=;;
+    s)  scmversion=1;;
     :)  printf "option '%s' expects a mandatory argument\n" "${OPTARG}"; exit 1;;
     \?) printf "unknown option '%s'\n" "${OPTARG}" >&2; exit 1;;
     esac
@@ -72,6 +75,13 @@ while [ ${#} -gt 0 ]; do
     *)              shift;;
     esac
 done
+
+if [ ${scmversion} -eq 1 ]; then
+    svnrevision="$( _plain_svn info "'${uri}@${rev}'" \
+        |sed -r -e '/^Last Changed Rev: /!d; s///'
+       )"
+    printf -- '-svn%s' "${svnrevision}" > "${basename}/.scmversion"
+fi
 
 # Get the date of the revision, to generate reproducible archives.
 # The output format is YYYY-MM-DDTHH:MM:SS.mmmuuuZ (i.e. always in the
