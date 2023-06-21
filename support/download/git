@@ -12,6 +12,7 @@ set -E
 #
 # Options:
 #   -q          Be quiet.
+#   -s          Generate an scmversion file
 #   -r          Clone and archive sub-modules.
 #   -o FILE     Generate archive in FILE.
 #   -u URI      Clone from repository at URI.
@@ -51,11 +52,13 @@ _on_error() {
 }
 
 quiet=
+scmversion=0
 large_file=0
 recurse=0
 while getopts "${BR_BACKEND_DL_GETOPTS}" OPT; do
     case "${OPT}" in
     q)  quiet=-q; exec >/dev/null;;
+    s)  scmversion=1;;
     l)  large_file=1;;
     r)  recurse=1;;
     o)  output="${OPTARG}";;
@@ -221,6 +224,11 @@ if [ ${large_file} -eq 1 ]; then
 fi
 
 popd >/dev/null
+
+# If an scmversion is needed then generate the version information
+if [ ${scmversion} -eq 1 ]; then
+    "${0%/*}/scmversion" "${git_cache}" "${git_cache}/.scmversion"
+fi
 
 # Generate the archive.
 # We do not want the .git dir; we keep other .git files, in case they are the

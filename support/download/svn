@@ -12,6 +12,7 @@ set -e
 #
 # Options:
 #   -q          Be quiet.
+#   -s          Generate an scmversion file
 #   -o FILE     Generate archive in FILE.
 #   -u URI      Checkout from repository at URI.
 #   -c REV      Use revision REV.
@@ -23,9 +24,11 @@ set -e
 . "${0%/*}/helpers"
 
 quiet=
+scmversion=0
 while getopts "${BR_BACKEND_DL_GETOPTS}" OPT; do
     case "${OPT}" in
     q)  quiet=-q;;
+    s)  scmversion=1;;
     o)  output="${OPTARG}";;
     u)  uri="${OPTARG}";;
     c)  rev="${OPTARG}";;
@@ -51,6 +54,13 @@ _plain_svn() {
 }
 
 _svn export --ignore-keywords ${quiet} "${@}" "'${uri}@${rev}'" "'${basename}'"
+
+if [ ${scmversion} -eq 1 ]; then
+    svnrevision="$( _plain_svn info "'${uri}@${rev}'" \
+        |sed -r -e '/^Last Changed Rev: /!d; s///'
+       )"
+    printf -- '-svn%s' "${svnrevision}" > "${basename}/.scmversion"
+fi
 
 # Get the date of the revision, to generate reproducible archives.
 # The output format is YYYY-MM-DDTHH:MM:SS.mmmuuuZ (i.e. always in the

@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+set -x
+set -e
+
+# Helper to generate an scmversion in a dowload script before
+# the tarball is created. Because the tarball has to exclude
+# repository directories like .git and .hg to make reproducible
+# archives on subsequent downloads the version information is
+# not available during the builds for a script like setlocalversion
+# to run.
+#
+# So, this is hook to call right before the make tarball gz that
+# will generate a .scmversion file that will be included in an
+# archive and then available during the build steps.
+#
+# Call it with:
+#   $1: the path to the srctree (see mk_tar_gz in helpers)
+#   $2: output file
+#
+# Because this can fail for a variety of reason, there is no exit
+# code to avoid build breakage. It is assumed the scripts will be
+# reproducible because they are based on the contents that get generated
+
+while getopts :q OPT; do
+    case "${OPT}" in
+    q)  exec >/dev/null;;
+    \?) exit 1;;
+    esac
+done
+shift $((OPTIND-1))
+
+srctree="${1}"
+scmversion="${2}"
+
+# Bail early if no srctree or scmversion
+if [ -z "${srctree}" -o -z "${scmversion}" ]; then
+    exit 0
+fi
+
+# Does the scmversion exist and readonly
+if [ -f "${scmversion}" -a ! -w "${scmversion}" ]; then
+    printf "WARNING: scmversion %s is readonly\n" "${scmversion}" >&2
+    exit 0
+fi
+
+#
+# Generate the scmversion from some expected locations in srctree
+# and fallback to the buildroot version of setlocalversion another
+# script is not used
+#
+if [ -x "${srctree}/setlocalversion" ]; then
+    res=$(cd "${srctree}"; ./setlocalversion ||:)
+elif [ -x "${srctree}/scripts/setlocalversion" ]; then
+    res=$(cd "${srctree}"; ./scripts/setlocalversion ||:)
+elif [ -x "${srctree}/tools/setlocalversion" ]; then
+    res=$(cd "${srctree}"; ./tools/setlocalversion ||:)
+fi
+if [ -z "${res}" ]; then
+    res=$("${0%/*}/../scripts/setlocalversion" "${srctree}")
+fi
+
+[ -n "${res}" ] && (echo "${res}" > "${scmversion}")
+exit 0
