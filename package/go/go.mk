@@ -12,7 +12,11 @@ GO_LICENSE = BSD-3-Clause
 GO_LICENSE_FILES = LICENSE
 GO_CPE_ID_VENDOR = golang
 
+ifeq ($(BR2_PACKAGE_HOST_GO_NATIVE),y)
+HOST_GO_DEPENDENCIES = host-go-native
+else
 HOST_GO_DEPENDENCIES = host-go-bootstrap
+endif
 HOST_GO_GOPATH = $(HOST_DIR)/share/go-path
 HOST_GO_HOST_CACHE = $(HOST_DIR)/share/host-go-cache
 HOST_GO_ROOT = $(HOST_DIR)/lib/go
@@ -123,10 +127,16 @@ HOST_GO_HOST_ENV = \
 
 # The go build system is not compatible with ccache, so use
 # HOSTCC_NOCCACHE.  See https://github.com/golang/go/issues/11685.
+ifeq ($(BR2_PACKAGE_HOST_GO_NATIVE),y)
 HOST_GO_MAKE_ENV = \
+	GOROOT_BOOTSTRAP=$(HOST_GO_NATIVE_ROOT)
+else
+HOST_GO_MAKE_ENV = \
+	GOROOT_BOOTSTRAP=$(HOST_GO_BOOTSTRAP_ROOT)
+endif
+HOST_GO_MAKE_ENV += \
 	GO111MODULE=off \
 	GOCACHE=$(HOST_GO_HOST_CACHE) \
-	GOROOT_BOOTSTRAP=$(HOST_GO_BOOTSTRAP_ROOT) \
 	GOROOT_FINAL=$(HOST_GO_ROOT) \
 	GOROOT="$(@D)" \
 	GOBIN="$(@D)/bin" \

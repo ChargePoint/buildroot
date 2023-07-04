@@ -1,0 +1,12 @@
+config BR2_PACKAGE_HOST_GO_NATIVE_ARCH_SUPPORTS
+	bool
+	# See https://go.dev/dl/ for supported architecture downloads
+	default y if BR2_HOSTARCH = "x86"
+	default y if BR2_HOSTARCH = "x86_64"
+	default y if BR2_HOSTARCH = "arm"
+	default y if BR2_HOSTARCH = "aarch64"
+
+config BR2_PACKAGE_HOST_GO_NATIVE
+	bool "host go-native"
+	depends on BR2_PACKAGE_HOST_GO_NATIVE_ARCH_SUPPORTS
+	default y if !BR2_PACKAGE_HOST_GO_BOOTSTRAP_ARCH_SUPPORTS
