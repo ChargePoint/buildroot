@@ -1,0 +1,6 @@
+# md5, sha256 from https://pypi.org/pypi/pykwalify/json
+md5  153197598f8508a49aefc0f44156c2b8  pykwalify-1.8.0.tar.gz
+sha256  796b2ad3ed4cb99b88308b533fb2f559c30fa6efb4fa9fda11347f483d245884  pykwalify-1.8.0.tar.gz
+# Locally computed sha256 checksums
+sha256  626fafd952ab0345edc227f2d565835fe1fd14067ae0d635ee3e47289b773dc4  LICENSE
+sha256  f89f247ddd2b9fdff655668148da4b6feaa9175fa44dd244d233006d0f551cd5  docs/license.rst
