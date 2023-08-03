@@ -1,0 +1,9 @@
+config BR2_PACKAGE_PYTHON_PYKWALIFY
+	bool "python-pykwalify"
+	select BR2_PACKAGE_PYTHON_DATEUTIL # runtime
+	select BR2_PACKAGE_PYTHON_DOCOPT # runtime
+	select BR2_PACKAGE_PYTHON_RUAMEL_YAML # runtime
+	help
+	  Python lib/cli for JSON/YAML schema validation.
+
+	  http://github.com/grokzen/pykwalify
