@@ -11,3 +11,4 @@ PYTHON_DOCOPT_LICENSE_FILES = LICENSE-MIT
 PYTHON_DOCOPT_SETUP_TYPE = setuptools
 
 $(eval $(python-package))
+$(eval $(host-python-package))
