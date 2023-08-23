@@ -11,5 +11,8 @@ PYTHON_COLORAMA_SETUP_TYPE = pep517
 PYTHON_COLORAMA_LICENSE = BSD-3-Clause
 PYTHON_COLORAMA_LICENSE_FILES = LICENSE.txt
 PYTHON_COLORAMA_DEPENDENCIES = host-python-hatchling
+HOST_PYTHON_COLORAMA_SETUP_TYPE = pep517
+HOST_PYTHON_COLORAMA_DEPENDENCIES = host-python-hatchling
 
 $(eval $(python-package))
+$(eval $(host-python-package))
