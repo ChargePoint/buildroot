@@ -154,6 +154,7 @@ HOST_NCURSES_CONF_ENV = \
 
 HOST_NCURSES_CONF_OPTS = \
 	--with-shared \
+	--enable-overwrite \
 	--without-gpm \
 	--without-manpages \
 	--without-cxx \
