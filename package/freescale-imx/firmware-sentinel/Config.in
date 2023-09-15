@@ -1,0 +1,31 @@
+config BR2_PACKAGE_FIRMWARE_SENTINEL
+	bool "firmware-sentinel"
+	depends on BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX93
+	help
+	  i.MX Sentinel firmware
+
+	  This library is provided by Freescale as-is and doesn't have
+	  an upstream.
+
+if BR2_PACKAGE_FIRMWARE_SENTINEL
+
+choice
+	prompt "i.MX Sentinel Firmware Release"
+	default BR2_PACKAGE_FIRMWARE_SENTINEL_MX93A0 if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX93
+	help
+	  Select the appropriate ahab container image to install
+	  to match the iMX asics revision.
+
+	  Note - mismatches result in a failure to boot
+
+config BR2_PACKAGE_FIRMWARE_SENTINEL_MX93A0
+	bool "imx-seco-mx93a0"
+	depends on BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX93
+
+endchoice
+
+config BR2_PACKAGE_FIRMWARE_SENTINEL_AHAB_CONTAINER_IMAGE
+	string
+	default "mx93a0-ahab-container.img" if BR2_PACKAGE_FIRMWARE_SENTINEL_MX93A0
+
+endif
