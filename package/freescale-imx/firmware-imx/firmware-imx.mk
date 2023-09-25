@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-FIRMWARE_IMX_VERSION = 8.15
+FIRMWARE_IMX_VERSION = 8.21
 FIRMWARE_IMX_SITE = $(FREESCALE_IMX_SITE)
 FIRMWARE_IMX_SOURCE = firmware-imx-$(FIRMWARE_IMX_VERSION).bin
 
@@ -47,28 +47,41 @@ endif
 
 ifeq ($(BR2_PACKAGE_FIRMWARE_IMX_LPDDR4),y)
 FIRMWARE_IMX_DDRFW_DIR = $(@D)/firmware/ddr/synopsys
+FW_NAME = $(call qstrip,$(BR2_PACKAGE_FIRMWARE_IMX_LPDDR4_FW_NAME))
+
+ifeq ($(FW_NAME),lpddr4_pmu_train)
+FW_IMEM_1D = lpddr4_pmu_train_1d_imem
+FW_DMEM_1D = lpddr4_pmu_train_1d_dmem
+FW_IMEM_2D = lpddr4_pmu_train_2d_imem
+FW_DMEM_2D = lpddr4_pmu_train_2d_dmem
+else
+FW_IMEM_1D = $(FW_NAME)_imem_1d
+FW_DMEM_1D = $(FW_NAME)_dmem_1d
+FW_IMEM_2D = $(FW_NAME)_imem_2d
+FW_DMEM_2D = $(FW_NAME)_dmem_2d
+endif
 
 define FIRMWARE_IMX_INSTALL_IMAGE_DDR_FW
-	# Create padded versions of lpddr4_pmu_* and generate lpddr4_pmu_train_fw.bin.
+	# Create padded versions of lpddr4_* and generate lpddr4_*_fw.bin.
 	# lpddr4_pmu_train_fw.bin is needed when generating imx8-boot-sd.bin
 	# which is done in post-image script.
 	$(call FIRMWARE_IMX_PREPARE_DDR_FW, \
-		lpddr4_pmu_train_1d_imem$(FIRMWARE_IMX_DDR_VERSION_SUFFIX),
-		lpddr4_pmu_train_1d_dmem$(FIRMWARE_IMX_DDR_VERSION_SUFFIX),
-		lpddr4_pmu_train_1d_fw)
+		$(FW_IMEM_1D)$(FIRMWARE_IMX_DDR_VERSION_SUFFIX),
+		$(FW_DMEM_1D)$(FIRMWARE_IMX_DDR_VERSION_SUFFIX),
+		$(FW_NAME)_1d_fw)
 	$(call FIRMWARE_IMX_PREPARE_DDR_FW, \
-		lpddr4_pmu_train_2d_imem$(FIRMWARE_IMX_DDR_VERSION_SUFFIX),
-		lpddr4_pmu_train_2d_dmem$(FIRMWARE_IMX_DDR_VERSION_SUFFIX),
-		lpddr4_pmu_train_2d_fw)
-	cat $(FIRMWARE_IMX_DDRFW_DIR)/lpddr4_pmu_train_1d_fw.bin \
-		$(FIRMWARE_IMX_DDRFW_DIR)/lpddr4_pmu_train_2d_fw.bin > \
-		$(BINARIES_DIR)/lpddr4_pmu_train_fw.bin
-	ln -sf $(BINARIES_DIR)/lpddr4_pmu_train_fw.bin $(BINARIES_DIR)/ddr_fw.bin
+		$(FW_IMEM_2D)$(FIRMWARE_IMX_DDR_VERSION_SUFFIX),
+		$(FW_DMEM_2D)$(FIRMWARE_IMX_DDR_VERSION_SUFFIX),
+		$(FW_NAME)_2d_fw)
+	cat $(FIRMWARE_IMX_DDRFW_DIR)/$(FW_NAME)_1d_fw.bin \
+		$(FIRMWARE_IMX_DDRFW_DIR)/$(FW_NAME)_2d_fw.bin > \
+		$(BINARIES_DIR)/$(FW_NAME)_fw.bin
+	ln -sf $(BINARIES_DIR)/$(FW_NAME)_fw.bin $(BINARIES_DIR)/ddr_fw.bin
 
 	# U-Boot supports creation of the combined flash.bin image. To make
 	# sure that U-Boot can access all available files copy them to
 	# the binary dir.
-	cp $(FIRMWARE_IMX_DDRFW_DIR)/lpddr4*.bin $(BINARIES_DIR)/
+	cp $(FIRMWARE_IMX_DDRFW_DIR)/$(FW_NAME)_*_fw.bin $(BINARIES_DIR)/
 endef
 endif
 
