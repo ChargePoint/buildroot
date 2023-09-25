@@ -54,21 +54,33 @@ config BR2_PACKAGE_FIRMWARE_IMX_NEEDS_DDR_FW
 	default y if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8MM
 	default y if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8MN
 	default y if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8MP
+	default y if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX93
 
 if BR2_PACKAGE_FIRMWARE_IMX_NEEDS_DDR_FW
 
 choice
-	bool "DDR training binaries"
-	default BR2_PACKAGE_FIRMWARE_IMX_LPDDR4
+	bool "DDR firmware binaries"
+	default BR2_PACKAGE_FIRMWARE_IMX_LPDDR4_PMU_TRAIN if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8M
+	default BR2_PACKAGE_FIRMWARE_IMX_LPDDR4_PMU_TRAIN if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8N
+	default BR2_PACKAGE_FIRMWARE_IMX_LPDDR4_PMU_TRAIN if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8P
+	default BR2_PACKAGE_FIRMWARE_IMX_LPDDR4 if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX93
+
+	# Needed for backward compatibility, the package used to
+	# use lpddr4_pmu_train_*.bin files
 	help
-	  Choose the DDR training binaries to be used depending on the
+	  Choose the DDR firmware binaries to be used depending on the
 	  kind of memory that is available on the target board (DDR4,
 	  LPDDR4, etc...).
 
 config BR2_PACKAGE_FIRMWARE_IMX_LPDDR4
 	bool "lpddr4"
 	help
-	  Use LPDDR4 binaries (i.e.: lpddr4_pmu_train_*.bin)
+	  Use LPDDR4 binaries (i.e.: lpddr4_*.bin)
+
+config BR2_PACKAGE_FIRMWARE_IMX_LPDDR4_PMU_TRAIN
+	bool "lpddr4_pmu_train"
+	help
+	  Use LPDDR4 PMU TRAIN binaries (i.e.: lpddr4_pmu_train_*.bin)
 
 config BR2_PACKAGE_FIRMWARE_IMX_DDR4
 	bool "DDR4"
@@ -81,6 +93,16 @@ config BR2_PACKAGE_FIRMWARE_IMX_DDR3
 	  Use DDR3 binaries (i.e.: ddr3_*_201810.bin).
 
 endchoice # DDR training FW
+
+config BR2_PACKAGE_FIRMWARE_IMX_DDR_VERSION
+	string "DDR3/DDR4/LPDDR4/LPDDR4_PMU_TRAIN firmware version"
+	# Needed for backward compatibility, the package used to
+	# unconditionally use HW version 201810 when DDR3/DDR4 was
+	# selected
+	default "201810" if BR2_PACKAGE_FIRMWARE_IMX_DDR3 || BR2_PACKAGE_FIRMWARE_IMX_DDR4
+	help
+	  Use a specific version of the imx ddr binaries. Leaving this
+	  field empty will select the default version.
 
 config BR2_PACKAGE_FIRMWARE_IMX_IMEM_LEN
 	hex "(LP)DDR IMEM padding length"
