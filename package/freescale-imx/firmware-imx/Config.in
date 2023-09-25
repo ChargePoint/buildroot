@@ -55,6 +55,7 @@ config BR2_PACKAGE_FIRMWARE_IMX_NEEDS_DDR_FW
 	default y if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8MM
 	default y if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8MN
 	default y if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX8MP
+	default y if BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX93
 
 config BR2_PACKAGE_FIRMWARE_IMX_NEEDS_DDR_FW_IMX9
 	bool
@@ -64,17 +65,17 @@ config BR2_PACKAGE_FIRMWARE_IMX_NEEDS_DDR_FW_IMX9
 if BR2_PACKAGE_FIRMWARE_IMX_NEEDS_DDR_FW
 
 choice
-	bool "DDR training binaries"
+	bool "DDR firmware binaries"
 	default BR2_PACKAGE_FIRMWARE_IMX_LPDDR4
 	help
-	  Choose the DDR training binaries to be used depending on the
+	  Choose the DDR firmware binaries to be used depending on the
 	  kind of memory that is available on the target board (DDR4,
 	  LPDDR4, etc...).
 
 config BR2_PACKAGE_FIRMWARE_IMX_LPDDR4
 	bool "lpddr4"
 	help
-	  Use LPDDR4 binaries (i.e.: lpddr4_pmu_train_*.bin)
+	  Use LPDDR4 binaries (i.e.: lpddr4_*.bin)
 
 config BR2_PACKAGE_FIRMWARE_IMX_DDR4
 	bool "DDR4"
