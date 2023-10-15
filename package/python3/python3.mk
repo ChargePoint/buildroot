@@ -58,7 +58,7 @@ HOST_PYTHON3_CONF_OPTS += --disable-bzip2
 endif
 
 ifeq ($(BR2_PACKAGE_HOST_PYTHON3_CURSES),y)
-HOST_PYTHON3_DEPENDENCIES += host-ncurses
+HOST_PYTHON3_DEPENDENCIES += host-ncurses host-readline
 else
 HOST_PYTHON3_CONF_OPTS += --disable-curses
 endif
