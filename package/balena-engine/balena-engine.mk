@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-BALENA_ENGINE_VERSION = 20.10.26
+BALENA_ENGINE_VERSION = 20.10.40
 BALENA_ENGINE_SITE = $(call github,balena-os,balena-engine,v$(BALENA_ENGINE_VERSION))
 
 BALENA_ENGINE_LICENSE = Apache-2.0
@@ -83,10 +83,10 @@ endef
 define BALENA_ENGINE_INSTALL_SYMLINK
 	ln -f -s balena-engine $(TARGET_DIR)/usr/bin/balena-engine-daemon
 	ln -f -s balena-engine $(TARGET_DIR)/usr/bin/balena-engine-containerd
-	ln -f -s balena-engine $(TARGET_DIR)/usr/bin/balena-engine-containerd-shim
 	ln -f -s balena-engine $(TARGET_DIR)/usr/bin/balena-engine-containerd-ctr
 	ln -f -s balena-engine $(TARGET_DIR)/usr/bin/balena-engine-runc
 	ln -f -s balena-engine $(TARGET_DIR)/usr/bin/balena-engine-proxy
+	ln -f -s balena-engine $(TARGET_DIR)/usr/bin/balena-containerd-shim-runc-v2
 	$(if $(BR2_PACKAGE_TINI),ln -f -s tini $(TARGET_DIR)/usr/bin/balena-engine-init)
 endef
 BALENA_ENGINE_POST_INSTALL_TARGET_HOOKS += BALENA_ENGINE_INSTALL_SYMLINK
