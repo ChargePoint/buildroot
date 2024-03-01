@@ -5,9 +5,9 @@
 ################################################################################
 
 ifeq ($(BR2_aarch64),y)
-IMX_GPU_G2D_VERSION = 6.4.11.p2.0-aarch64-173c22a
+IMX_GPU_G2D_VERSION = 6.4.3.p4.4-aarch64
 else
-IMX_GPU_G2D_VERSION = 6.4.11.p2.0-arm-173c22a
+IMX_GPU_G2D_VERSION = 6.4.3.p4.4-arm
 endif
 IMX_GPU_G2D_SITE = $(FREESCALE_IMX_SITE)
 IMX_GPU_G2D_SOURCE = imx-gpu-g2d-$(IMX_GPU_G2D_VERSION).bin
