@@ -2868,6 +2868,18 @@ N:	Stefan Nickl <Stefan.Nickl@gmail.com>
 F:	board/freescale/imx8dxlevk/
 F:	configs/freescale_imx8dxlevk_defconfig
 
+N:	Stefan Hager <stefan.hager@ginzinger.com>
+F:	package/cpuinfo/
+F:	package/farmhash/
+F:	package/fp16/
+F:	package/fft2d/
+F:	package/gemmlowp/
+F:	package/psimd/
+F:	package/pthreadpool/
+F:	package/ruy/
+F:	package/tensorflow-lite/
+F:	package/xnnpack/
+
 N:	Stefan Ott <stefan@ott.net>
 F:	package/unbound/
 

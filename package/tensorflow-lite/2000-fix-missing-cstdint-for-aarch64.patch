@@ -1,0 +1,11 @@
+diff -Naur tensorflow-lite-2.11.0.orig/tensorflow/lite/kernels/internal/spectrogram.h tensorflow-lite-2.11.0/tensorflow/lite/kernels/internal/spectrogram.h
+--- tensorflow-lite-2.11.0.orig/tensorflow/lite/kernels/internal/spectrogram.h	2022-11-15 17:17:12.000000000 -0800
++++ tensorflow-lite-2.11.0/tensorflow/lite/kernels/internal/spectrogram.h	2024-03-13 13:36:00.976492144 -0700
+@@ -32,6 +32,7 @@
+ #define TENSORFLOW_LITE_KERNELS_INTERNAL_SPECTROGRAM_H_
+ 
+ #include <complex>
++#include <cstdint>
+ #include <deque>
+ #include <vector>
+ 
