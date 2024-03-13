@@ -56,7 +56,7 @@ HOST_LIBCAP_MAKE_FLAGS = \
 	DYNAMIC=yes \
 	GOLANG=no \
 	lib=lib \
-	prefix=$(HOST_DIR) \
+	prefix= \
 	RAISE_SETFCAP=no
 
 define HOST_LIBCAP_BUILD_CMDS
@@ -65,7 +65,8 @@ define HOST_LIBCAP_BUILD_CMDS
 endef
 
 define HOST_LIBCAP_INSTALL_CMDS
-	$(HOST_MAKE_ENV) $(MAKE) -C $(@D) $(HOST_LIBCAP_MAKE_FLAGS) install
+	$(HOST_MAKE_ENV) $(MAKE) -C $(@D) $(HOST_LIBCAP_MAKE_FLAGS) \
+		DESTDIR=$(HOST_DIR) install
 endef
 
 $(eval $(generic-package))
