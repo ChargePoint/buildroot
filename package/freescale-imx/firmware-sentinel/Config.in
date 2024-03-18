@@ -22,10 +22,15 @@ config BR2_PACKAGE_FIRMWARE_SENTINEL_MX93A0
 	bool "imx-sentinel-mx93a0"
 	depends on BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX93
 
+config BR2_PACKAGE_FIRMWARE_SENTINEL_MX93A1
+	bool "imx-sentinel-mx93a1"
+	depends on BR2_PACKAGE_FREESCALE_IMX_PLATFORM_IMX93
+
 endchoice
 
 config BR2_PACKAGE_FIRMWARE_SENTINEL_AHAB_CONTAINER_IMAGE
 	string
 	default "mx93a0-ahab-container.img" if BR2_PACKAGE_FIRMWARE_SENTINEL_MX93A0
+	default "mx93a1-ahab-container.img" if BR2_PACKAGE_FIRMWARE_SENTINEL_MX93A1
 
 endif
