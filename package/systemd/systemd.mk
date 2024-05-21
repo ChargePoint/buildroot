@@ -93,8 +93,6 @@ SYSTEMD_CONF_OPTS += \
 	-Dsulogin-path=/usr/sbin/sulogin \
 	-Dsystem-gid-max=999 \
 	-Dsystem-uid-max=999 \
-	-Dsysvinit-path= \
-	-Dsysvrcnd-path= \
 	-Dtelinit-path= \
 	-Dtests=false \
 	-Dtmpfiles=true \
@@ -508,6 +506,12 @@ else
 SYSTEMD_CONF_OPTS += -Dsysupdate=false
 endif
 
+ifeq ($(BR2_PACKAGE_SYSTEMD_SYSV_COMPAT),y)
+SYSTEMD_CONF_OPTS += -Dsysvinit-path='/etc/init.d' -Dsysvrcnd-path='/etc'
+else
+SYSTEMD_CONF_OPTS += -Dsysvinit-path='' -Dsysvrcnd-path=''
+endif
+
 ifeq ($(BR2_PACKAGE_SYSTEMD_NETWORKD),y)
 SYSTEMD_CONF_OPTS += -Dnetworkd=true
 SYSTEMD_NETWORKD_USER = systemd-network -1 systemd-network -1 * - - - systemd Network Management
@@ -524,10 +528,18 @@ SYSTEMD_CONF_OPTS += -Dnetworkd=false
 endif
 
 ifeq ($(BR2_PACKAGE_SYSTEMD_RESOLVED),y)
+ifeq ($(BR2_PACKAGE_SYSTEMD_RESOLVED_MODE_COMPAT),y)
 define SYSTEMD_INSTALL_RESOLVCONF_HOOK
 	ln -sf ../run/systemd/resolve/resolv.conf \
 		$(TARGET_DIR)/etc/resolv.conf
 endef
+endif
+ifeq ($(BR2_PACKAGE_SYSTEMD_RESOLVED_MODE_STUB),y)
+define SYSTEMD_INSTALL_RESOLVCONF_HOOK
+	ln -sf ../run/systemd/resolve/stub-resolv.conf \
+		$(TARGET_DIR)/etc/resolv.conf
+endef
+endif
 SYSTEMD_CONF_OPTS += -Dnss-resolve=true -Dresolve=true
 SYSTEMD_RESOLVED_USER = systemd-resolve -1 systemd-resolve -1 * - - - systemd Resolver
 else

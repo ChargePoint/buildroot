@@ -1,2 +1,3 @@
 # From https://developer.arm.com/-/media/Files/downloads/gnu/13.2.rel1/binrel/arm-gnu-toolchain-13.2.rel1-x86_64-aarch64-none-linux-gnu.tar.xz.sha256asc
 sha256  12fcdf13a7430655229b20438a49e8566e26551ba08759922cdaf4695b0d4e23  arm-gnu-toolchain-13.2.rel1-x86_64-aarch64-none-linux-gnu.tar.xz
+sha256  1ea16dfaaca3e8a97c31ba5b441db82ba78b00cf6d3a6f63226bd35b5af3bf8e  arm-gnu-toolchain-13.2.rel1-aarch64-aarch64-none-linux-gnu.tar.xz

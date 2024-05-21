@@ -24,12 +24,14 @@ LINUX_SOURCE = $(notdir $(LINUX_TARBALL))
 else ifeq ($(BR2_LINUX_KERNEL_CUSTOM_GIT),y)
 LINUX_SITE = $(call qstrip,$(BR2_LINUX_KERNEL_CUSTOM_REPO_URL))
 LINUX_SITE_METHOD = git
+LINUX_SCMVERSION = YES
 else ifeq ($(BR2_LINUX_KERNEL_CUSTOM_HG),y)
 LINUX_SITE = $(call qstrip,$(BR2_LINUX_KERNEL_CUSTOM_REPO_URL))
 LINUX_SITE_METHOD = hg
 else ifeq ($(BR2_LINUX_KERNEL_CUSTOM_SVN),y)
 LINUX_SITE = $(call qstrip,$(BR2_LINUX_KERNEL_CUSTOM_REPO_URL))
 LINUX_SITE_METHOD = svn
+LINUX_SCMVERSION = YES
 else ifeq ($(BR2_LINUX_KERNEL_LATEST_CIP_VERSION)$(BR2_LINUX_KERNEL_LATEST_CIP_RT_VERSION),y)
 LINUX_SOURCE = linux-cip-$(LINUX_VERSION).tar.gz
 LINUX_SITE = https://git.kernel.org/pub/scm/linux/kernel/git/cip/linux-cip.git/snapshot
@@ -44,6 +46,15 @@ LINUX_SITE = $(BR2_KERNEL_MIRROR)/linux/kernel/v2.6
 else
 LINUX_SITE = $(BR2_KERNEL_MIRROR)/linux/kernel/v$(firstword $(subst ., ,$(LINUX_VERSION))).x
 endif
+endif
+
+ifneq ($(LINUX_OVERRIDE_SRCDIR),)
+define LINUX_SCMVERSION_HOOK
+	$(TOPDIR)/support/download/scmversion \
+		$(abspath $(LINUX_OVERRIDE_SRCDIR)) $(@D)/.scmversion
+endef
+
+LINUX_POST_RSYNC_HOOKS += LINUX_SCMVERSION_HOOK
 endif
 
 ifeq ($(BR2_LINUX_KERNEL)$(BR2_LINUX_KERNEL_LATEST_VERSION),y)
