@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PYTHON_PURESNMP
+    bool "python-puresnmp"
+    select BR2_PACKAGE_PYTHON_X690 # runtime
+    help
+      This is a description of puresnmp.
+
+      https://pypi.org/project/puresnmp/
