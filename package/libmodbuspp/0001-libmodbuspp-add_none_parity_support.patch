@@ -1,0 +1,28 @@
+diff --git a/src/rtulayer.cpp b/src/rtulayer.cpp
+index 4401b27..cb9548e 100644
+--- a/src/rtulayer.cpp
++++ b/src/rtulayer.cpp
+@@ -246,7 +246,7 @@ namespace Modbus {
+ 
+     if (s >= 2) {
+       char c = settings[s - 2];
+-      if ( (c == 'E') || (c == 'O')) {
++      if ( (c == 'E') || (c == 'O') || (c == 'N')) {
+         return c;
+       }
+     }
+@@ -256,10 +256,11 @@ namespace Modbus {
+   // ---------------------------------------------------------------------------
+   // static
+   int RtuLayer::stop (const std::string & settings) {
++    size_t s = settings.length();
+ 
+-    if (parity (settings) == 'N') {
+-
+-      return 2;
++    if (s >= 1) {
++      char c = settings[s - 1];
++      return (c - '0');
+     }
+     return 1;
+   }

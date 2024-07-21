@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8add28d..5ab905c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -52,7 +52,7 @@ set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
+ set(INSTALL_INCLUDE_DIR include/${PROJECT_NAME} CACHE PATH
+   "Installation directory for header files")
+ set(INSTALL_CODELITE_DIR /usr/share/codelite CACHE PATH "Installation directory for codelite templates")
+-option(MODBUSPP_USE_EXTERNAL_JSON "Use an external JSON library" OFF)
++option(MODBUSPP_USE_EXTERNAL_JSON "Use an external JSON library" ON)
+ 
+ set(DEF_INSTALL_CMAKE_DIR lib)
+ set(DEF_INSTALL_DOC_DIR share/doc)
+diff --git a/dev/cmake/GitVersion.cmake b/dev/cmake/GitVersion.cmake
+index 9490997..4e30d2c 100644
+--- a/dev/cmake/GitVersion.cmake
++++ b/dev/cmake/GitVersion.cmake
+@@ -39,9 +39,10 @@ function(GetGitVersion _prefix)
+       RESULT_VARIABLE ret OUTPUT_VARIABLE str OUTPUT_STRIP_TRAILING_WHITESPACE 
+       ERROR_QUIET)
+   endif()
+-  
++
++  set (ret 1)
+   if(NOT ret EQUAL 0)
+-    set(str v1.0-0)
++    set(str v1.1)
+     set(ret 0)
+   endif()
+   

@@ -1,0 +1,7 @@
+config BR2_PACKAGE_LIBMODBUSPP
+	bool "libmodbuspp is C++ modbus library"
+	depends on BR2_PACKAGE_LIBMODBUS
+	help
+	  libmodbuspp library for modbus
+
+          https://github.com/epsilonrt/libmodbuspp.git
