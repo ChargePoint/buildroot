@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PYTHON_PURESNMP_CRYPTO
+    bool "python-puresnmp-crypto"
+    help
+      This package provides support for DES and AES encryption in puresnmp.
+
+      https://pypi.org/project/puresnmp-crypto/

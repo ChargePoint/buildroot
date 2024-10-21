@@ -1,0 +1,5 @@
+# md5, sha256 from https://pypi.org/pypi/pure_eval/json
+md5  3d7e0b1e32245f6a7f7d598e3aa0ff8e  puresnmp-2.0.0.post1.tar.gz
+sha256  84697149f843ddc519a27199795e5b6707d13b4527d3420773270cf6f29560c7  puresnmp-2.0.0.post1.tar.gz
+# Locally computed sha256 checksums
+sha256  a46b5c89f5a9fd6516cf2a426a830dc0a0da560af6e78dd19f7697d2eea8e7fc  LICENSE.txt
