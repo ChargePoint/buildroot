@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PYTHON_X690
+	bool "python-x690"
+	select BR2_PACKAGE_PYTHON_T61CODEC #runtime
+	help
+	  Package contains a pure Python implementation of the “x690” standard for BER encoding/decoding.
+
+	  https://pypi.org/project/x690/
